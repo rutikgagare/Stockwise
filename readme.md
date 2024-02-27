@@ -1,8 +1,8 @@
-# Stokwise - MERN Stack (SaaS)
+# Stockwise - MERN Stack (SaaS)
 
 **Streamline Your Inventory, Simplify Your Business**
 
-Welcome to Stokwise, your comprehensive inventory management solution. Stokwise is a Software as a Service (SaaS) application built on the MERN (MongoDB, Express.js, React.js, Node.js) stack. It empowers organizations to efficiently manage their inventory, streamline stock tracking, record sales transactions, and analyze sales and profit data with ease.
+Welcome to Stockwise, your comprehensive inventory management solution. Stockwise is a Software as a Service (SaaS) application built on the MERN (MongoDB, Express.js, React.js, Node.js) stack. It empowers organizations to efficiently manage their inventory, streamline stock tracking, record sales transactions, and analyze sales and profit data with ease.
 
 ## Features
 
@@ -35,26 +35,33 @@ Welcome to Stokwise, your comprehensive inventory management solution. Stokwise 
 
 ## Schema
 
-organization acc - group like
-	- warehouse
+### User
+- **_id**: Unique identifier
+- **username**: Username for login
+- **email**: Email address
+- **password**: Hashed password
+- **role**: Role of the user (admin, manager, staff, etc.)
+- **createdAt**: Date and time when the user was created
 
-#### User
-- type [Admin, Employee]
-- ...
-	
-#### Product
-- quantity
-- Price
-- ...
-	
-#### Create Product
-- Attributes
-	- Category [Electronics, food, etc...]
-	- Price
-	- Model
-	- IMEI
-	- MAC
-	
+### Product
+- **_id**: Unique identifier
+- **name**: Name of the product
+- **description**: Description of the product
+- **category**: Category of the product (electronics, food, clothing, etc.)
+- **quantity**: Quantity of the product available in stock
+- **costPrice**: Cost price of the product
+- **sellingPrice**: Selling price of the product
+- **createdAt**: Date and time when the product was added to inventory
+
+### Transaction
+- **_id**: Unique identifier
+- **type**: Type of transaction (purchase, sale, transfer, etc.)
+- **productId**: Reference to the product involved in the transaction
+- **quantity**: Quantity of the product involved in the transaction
+- **unitPrice**: Unit price of the product in the transaction
+- **totalPrice**: Total price of the transaction
+- **userId**: Reference to the user who initiated the transaction
+- **createdAt**: Date and time when the transaction took place
 
 ## Technologies Used
 
@@ -63,6 +70,5 @@ organization acc - group like
 - React.js: Frontend library for building user interfaces.
 - Node.js: Server-side JavaScript runtime environment.
 - Redux: State management library for React.
-- Bootstrap: Frontend framework for responsive design.
 - JWT: JSON Web Tokens for user authentication.
 - Chart.js: Library for creating charts and graphs.
