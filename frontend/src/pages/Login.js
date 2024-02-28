@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import classes from "./Signup.module.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,35 +13,42 @@ const Login = () => {
   };
 
   return (
-    <form className="login" onSubmit={handleSubmit}>
-      <h3>Login</h3>
-      <label htmlFor="">Email:</label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-        }}
-      />
+    <div className={classes.main}>
+      <form className="login" onSubmit={handleSubmit}>
+        <h2>Login</h2>
 
-      <label htmlFor="">Password:</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-      />
+        <div className={classes.inputDiv}>
+          <label htmlFor="">Email</label>
 
-      <button disabled={isLoading} type="submit">Login</button>
-
-      {error && 
-        <div className="error">
-            {error}
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
         </div>
-     }
-        
-    </form>
+
+        <div className={classes.inputDiv}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+        </div>
+
+        <button disabled={isLoading} type="submit">
+          Login
+        </button>
+
+        {error && <div className="error">{error}</div>}
+      </form>
+    </div>
   );
 };
 

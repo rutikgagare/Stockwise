@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import LandingPage from "./pages/LandingPage";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/" element={user ? <Home /> : <Login/>} />
         <Route path="/login" element={!user ? <Login /> : <Home></Home>} />
         <Route path="/signup" element={!user ? <Signup /> : <Home></Home>} />
+        <Route path="/landing" element={<LandingPage/>} />
       </Routes>
     </BrowserRouter>
   );
