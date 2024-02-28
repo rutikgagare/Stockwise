@@ -1,9 +1,16 @@
 
 const express = require('express')
-const {createOrganization} = require("../controllers/organizationController")
+const { 
+    createOrganization,
+    addEmployeeToOrganization,
+    removeEmployeeFromOrganization,
+    deleteOrganization
+} = require("../controllers/organizationController")
 const router = express.Router()
 
-// create a new organization
-router.post('/create', createOrganization);
+router.post('/create', createOrganization); // create a new organization
+router.post('/add', addEmployeeToOrganization);
+router.post('/remove', removeEmployeeFromOrganization);
+router.delete('/deleteOrg', deleteOrganization);
 
 module.exports = router
