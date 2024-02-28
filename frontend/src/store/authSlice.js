@@ -1,4 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+
+// thunk
+// you can call fetchUser using dispatch similer to other actions
+export const fetchUser = createAsyncThunk("fetchUser", async()=>{
+
+})
 
 const authSlice = createSlice({
     name: "user",
@@ -10,6 +16,17 @@ const authSlice = createSlice({
         logout:(state)=>{
             state.user = null
         }
+    },
+    extraReducers:(builder)=>{
+        builder.addCase(fetchUser.fulfilled, (state, action)=>{
+
+        })
+        .addCase(fetchUser.pending, (state, action)=>{
+
+        })
+        .addCase(fetchUser.rejected, (state, action)=>{
+
+        })
     }
 });
 
