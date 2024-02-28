@@ -12,6 +12,7 @@ const authSlice = createSlice({
     reducers:{
         login:(state, action)=>{
             state.user = action.payload
+            console.log("Inside login reducer ", state.user)
         },
         logout:(state)=>{
             state.user = null

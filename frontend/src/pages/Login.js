@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import classes from "./Signup.module.css";
 
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+
 const Login = () => {
+  const user = useSelector(state => state.auth.user);
+  const navigate = useNavigate();
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoading, error } = useLogin();
@@ -10,6 +16,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password);
+
+    if(user.role === "admin"){
+      navigate('/landing');
+    }
+    navigate('/');
   };
 
   return (

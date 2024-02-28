@@ -29,10 +29,10 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={user ? <Home /> : <Login/>} />
+        <Route path="/" element={user ? <Home /> : <Signup/>} />
         <Route path="/login" element={!user ? <Login /> : <Home></Home>} />
         <Route path="/signup" element={!user ? <Signup /> : <Home></Home>} />
-        <Route path="/landing" element={<LandingPage/>} />
+        <Route path="/landing" element={user && user.role === "admin" ? <LandingPage/> : <Home></Home>} />
       </Routes>
     </BrowserRouter>
   );

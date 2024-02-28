@@ -3,19 +3,34 @@ import { useSignup } from "../hooks/useSignup";
 import classes from "./Signup.module.css";
 
 const Signup = () => {
+
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+
   const { signup, isLoading, error } = useSignup();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signup(email, password);
+    await signup(name, email, password);
   };
 
   return (
     <div className={classes.main}>
       <form className="signup" onSubmit={handleSubmit}>
         <h2>Sign up</h2>
+
+        <div className={classes.inputDiv}>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+        </div>
 
         <div className={classes.inputDiv}>
           <label htmlFor="email">Email</label>
@@ -45,6 +60,7 @@ const Signup = () => {
           Sign up
         </button>
         {error && <div className="error">{error}</div>}
+    
       </form>
     </div>
   );

@@ -9,6 +9,7 @@ const createOrganization = async (req, res)=>{
     
     // check if orgData.adminId exists
     const adminId = new ObjectId(orgData.adminId)
+    
     if (!adminId) {
         res.status(400).json({ error: `adminId not provided!`});
     }
@@ -28,7 +29,6 @@ const createOrganization = async (req, res)=>{
 
     try{
         const org = await Organization.create(orgDataToInsert);
-
         res.status(200).json({ org });
 
     }catch(error){
