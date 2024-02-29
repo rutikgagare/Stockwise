@@ -1,18 +1,21 @@
 // CreateEmployee.js
 
 import React, { useState } from 'react';
+import axios from "axios";
 import './CreateEmployee.css';
 
-const CreateEmployee = ({ onAddEmployee }) => {
+const CreateEmployee = () => {
   const [showInputs, setShowInputs] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleAddEmployee = () => {
+  const handleAddEmployee = async () => {
     // Validate input if needed before adding
     if (email && password) {
-      onAddEmployee({ email, password });
       // Clear input fields after adding
+      const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"});
+      console.log("newEmp", newEmp)
       setEmail('');
       setPassword('');
     }
@@ -29,6 +32,12 @@ const CreateEmployee = ({ onAddEmployee }) => {
       </button>
       {showInputs && (
         <>
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <input
             type="text"
             placeholder="Email"
