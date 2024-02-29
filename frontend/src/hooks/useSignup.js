@@ -16,7 +16,7 @@ export const useSignup = () => {
     const response = await fetch("http://localhost:9999/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, role: "admin"}),
     });
 
     const json = await response.json();
@@ -54,6 +54,8 @@ export const useSignup = () => {
       setIsLoading(false);
       dispatch(organizationActions.setOrg(res.json))
     }
+
+    console.log("signup successfull")
   };
 
   return { signup, isLoading, error };

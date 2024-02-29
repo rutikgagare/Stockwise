@@ -25,6 +25,7 @@ const SetOrganization = () => {
           adminId: user?.id,
         }),
       });
+      
       navigate("/dashboard");
       
     } catch (err) {
