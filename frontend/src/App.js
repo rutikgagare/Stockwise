@@ -8,9 +8,7 @@ import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import SetOrganization from "./pages/SetOrganization";
-import Dashboard from "./pages/Dashboard";
+
 
 function App() {
 
@@ -44,10 +42,10 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={!user ? <Home/> : <Dashboard/>} />
-        <Route path="/login" element={!user ? <Login /> : <Dashboard></Dashboard>} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/setOrg" element={user && user.role === "admin" ? <SetOrganization/> : (user ? <Dashboard/> : <Home/>)} />
+        <Route path="/" element={user ? <Home /> : <Signup/>} />
+        <Route path="/login" element={!user ? <Login /> : <Home></Home>} />
+        <Route path="/signup" element={!user ? <Signup /> : <Home></Home>} />
+        <Route path="/landing" element={user && user.role === "admin" ? <LandingPage/> : <Home></Home>} />
       </Routes>
     </BrowserRouter>
   );

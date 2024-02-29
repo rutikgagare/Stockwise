@@ -1,0 +1,25 @@
+/* EmployeeTable.css */
+.employee-table-container {
+    margin: 20px;
+}
+
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.employee-table th,
+.employee-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.employee-table th {
+    background-color: #f2f2f2;
+}
+
+.employee-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
