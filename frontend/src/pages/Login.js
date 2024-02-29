@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     await login(email, password);
 
-    if(user.role === "admin"){
+    if(user?.role === "admin"){
       navigate('/landing');
     }
     navigate('/');

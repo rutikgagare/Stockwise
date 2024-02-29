@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import LandingPage from "./pages/LandingPage";
+import EmployeeManagementPage from "./pages/EmployeeManagementPage";
 
 
 function App() {
@@ -32,7 +33,8 @@ function App() {
         <Route path="/" element={user ? <Home /> : <Signup/>} />
         <Route path="/login" element={!user ? <Login /> : <Home></Home>} />
         <Route path="/signup" element={!user ? <Signup /> : <Home></Home>} />
-        <Route path="/landing" element={user && user.role === "admin" ? <LandingPage/> : <Home></Home>} />
+        <Route path="/landing" element={user && user?.role === "admin" ? <LandingPage/> : <Home></Home>} />
+        <Route path="/employees" element={!user ? <Login /> : <EmployeeManagementPage></EmployeeManagementPage>} />
       </Routes>
     </BrowserRouter>
   );
