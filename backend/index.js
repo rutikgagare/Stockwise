@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
-app.use("/organization", organizationRoutes);
+app.use("/org", organizationRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port: ${process.env.PORT}`)

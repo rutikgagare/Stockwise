@@ -18,9 +18,11 @@ form{
     border-radius: 0.5rem;
 }
 
-form h2{
-    text-align: center;
-    margin-bottom: 1.5rem;
+form .heading{
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
 }
 
 form .inputDiv{
@@ -29,12 +31,17 @@ form .inputDiv{
     gap: 0.5rem;
 }
 
-.inputDiv input{
-    padding: 0.5rem;
+
+form input{
+    padding: 0.7rem 1rem;
     outline: none;
     border: none;
-    border: 2px solid #cae3fb;
-    border-radius: 0.3rem;
+    border: 1px solid rgb(228, 227, 227);
+    border-radius: 0.2rem;
+}
+
+input:focus{
+    border: 1px solid #0183ff;
 }
 
 form button{
@@ -43,7 +50,13 @@ form button{
     padding: 0.5rem 1rem;
     background-color: #0183ff;
     color: white;
-    font-size: 1rem;
+    font-size: 1.1rem;
     border-radius: 0.2rem;
     margin: 0.5rem 0;
+}
+
+::placeholder {
+    color: grey;
+    opacity: 1; 
+    font-size: 1rem;
 }

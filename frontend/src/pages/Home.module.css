@@ -1,0 +1,15 @@
+.main{
+    width: 100%;
+    min-height: 91vh;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.main h2{ 
+    margin: 2rem 0;
+}
+
+.main p{
+    font-size: 1.1rem;
+}

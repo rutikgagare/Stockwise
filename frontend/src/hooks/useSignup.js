@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { authActions } from "../store/authSlice";
+import { organizationActions } from "../store/organizationSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
 
 export const useSignup = () => {
-  const navigate = useNavigate();
 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const dispatch = useDispatch();
 
-  const signup = async (name, email, password) => {
+  const signup = async (name, email, password, orgName) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("/auth/signup", {
+    const response = await fetch("http://localhost:9999/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -25,6 +24,7 @@ export const useSignup = () => {
     if (!response.ok) {
       setIsLoading(false);
       setError(json.error);
+      return;
     }
 
     if (response.ok) {
@@ -38,8 +38,21 @@ export const useSignup = () => {
       setIsLoading(false);
     }
 
-    if(json.role === "admin"){
-      navigate('/landing');
+    console.log("json", json)
+    const res = await fetch("http://localhost:9999/org/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: orgName, adminId: json?.id}),
+    });
+  
+    if(!res.ok){
+      setIsLoading(false);
+      setError(res.error)
+    }
+
+    if(res.ok){
+      setIsLoading(false);
+      dispatch(organizationActions.setOrg(res.json))
     }
   };
 

@@ -11,12 +11,10 @@ const organizationSchema = new Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: true
     },
     address: {
         type: String,
-        reqruied: false
     },
     admins: [
         {
@@ -34,16 +32,6 @@ const organizationSchema = new Schema({
 
 // Static Create Organization method
 organizationSchema.statics.createOrganization = async (orgData) => {
-    const user = await this.findOne({ email: orgData.email });
-
-    if (user) {
-        throw Error(`Organization with email: ${orgData.email} already exists`);
-    }
-
-    if (!validator.isEmail(orgData.email)) {
-        throw Error("Email is not valid");
-    }
-
     const org = this.create(orgData);
     return org;
 }

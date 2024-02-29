@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux"
 import { authActions } from "../store/authSlice"
+import { organizationActions } from "../store/organizationSlice";
 
 export const useLogout = () => {
 
@@ -11,6 +12,9 @@ export const useLogout = () => {
 
         // dispatch logout action
         dispatch(authActions.logout());
+
+        // dispatch reset org
+        dispatch(organizationActions.setOrg(null))
     }
 
     return {logout};

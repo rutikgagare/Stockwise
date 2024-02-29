@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { authActions } from "../store/authSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
 
 export const useLogin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const login = async (email, password) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("/auth/login", {
+    const response = await fetch("http://localhost:9999/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -33,10 +31,6 @@ export const useLogin = () => {
 
       // update loading state
       setIsLoading(false);
-    }
-
-    if(json.role === "admin"){
-      navigate('/landing');
     }
   };
 

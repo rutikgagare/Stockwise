@@ -15,14 +15,14 @@ const createOrganization = async (req, res) => {
     }
 
     const admin = await User.findById(adminId);
+
     if (!admin) {
         res.status(404).json({ error: `Admin with adminId: ${adminId} does not exist` });
+        return;
     }
 
     const orgDataToInsert = {
         name: orgData.name,
-        email: orgData.email,
-        address: orgData.address || "",
         admins: [admin._id],
         employees: []
     }
@@ -33,6 +33,63 @@ const createOrganization = async (req, res) => {
 
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+}
+
+const getOrganization = async (req, res)=>{
+
+    const userId = req.params.userId;
+
+    try {
+        const user = await User.findById(new ObjectId(userId));
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const userRole = user.role;
+
+        const organizations = await Organization.find()
+       
+        organizations.forEach(org => {
+            if (userRole === 'admin' && org.admins.includes(userId)) {
+                return res.json(org)
+            } else if (userRole === 'user' && org.users.includes(userId)) {
+                return res.satus(200).json(org);
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+const updateOrganization = async(req, res)=>{
+    const orgData = req.body
+
+    const orgId = new ObjectId(orgData.orgId)
+
+    if (!orgId) {
+        res.status(400).json({ error: `orgId not provided!` });
+    }
+
+    const organization = await Organization.findById(orgId);
+
+    if(!organization){
+        res.status(404).json({ error: `Organization with otgId: ${orgId} does not exist` });
+        return;
+    }
+
+    const result = await Organization.updateOne(
+        { _id: orgId}, 
+        { $set: req.body}
+    );
+
+    if(result){
+        res.status(200).json({ message: "Organization updated successfully" });
+    }
+    else{
+        res.status(400).json({ message: "Update Unsuccessful" });
     }
 }
 
@@ -107,5 +164,7 @@ module.exports = {
     createOrganization,
     addEmployeeToOrganization,
     removeEmployeeFromOrganization,
-    deleteOrganization
+    deleteOrganization,
+    updateOrganization,
+    getOrganization
 };
