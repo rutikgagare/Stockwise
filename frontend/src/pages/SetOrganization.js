@@ -5,9 +5,9 @@ import { useNavigate } from "react-router";
 
 const SetOrganization = () => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
+  const org = useSelector((state) => state.org.organization);
 
-  const [orgName, setOrgName] = useState();
+  const [orgName, setOrgName] = useState(org.name);
   const [email, setEmail] = useState();
   const [address, setAdress] = useState();
 
@@ -15,17 +15,17 @@ const SetOrganization = () => {
     event.preventDefault();
 
     try {
-      await fetch("/organization/create", {
-        method: "POST",
+      await fetch("/org/update", {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: orgName,
+          orgId: org._id,
           email,
-          address,
-          adminId: user?.id,
+          address
         }),
       });
-      
+
       navigate("/dashboard");
       
     } catch (err) {

@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import classes from './Dashboard.module.css';
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className={classes.main}>
       Dashboard
     </div>
   )

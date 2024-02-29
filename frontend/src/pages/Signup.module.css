@@ -60,3 +60,16 @@ form button{
     opacity: 1; 
     font-size: 1rem;
 }
+
+@media screen and (max-width: 1000px) {
+   form{
+    width: 50%;
+   }
+}
+
+@media screen and (max-width: 600px) {
+   form{
+    width: 90%;
+    margin: 2rem;
+   }
+}
