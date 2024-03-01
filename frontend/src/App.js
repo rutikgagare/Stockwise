@@ -30,17 +30,21 @@ function App() {
       try {
         if (user) {
           const response = await fetch(
-            `http://localhost:9999/org/getOrg/${user.id}`
+            `http://localhost:9999/org/getOrg`,{
+              headers:{
+                'Authorization': `Bearer ${user?.token}`
+              }
+            }
           );
-          const json = await response.json();
-
-          dispatch(organizationActions.setOrg(json));
+          const orgDetails = await response.json();
+          dispatch(organizationActions.setOrg(orgDetails));
         }
       } catch (err) {
         console.log(err);
       }
     };
     getOrganizationInfo();
+    
   }, [dispatch, user]);
 
   return (

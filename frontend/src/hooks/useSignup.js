@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { authActions } from "../store/authSlice";
 import { organizationActions } from "../store/organizationSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 
 export const useSignup = () => {
-
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const dispatch = useDispatch();
@@ -16,7 +15,7 @@ export const useSignup = () => {
     const response = await fetch("http://localhost:9999/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role: "admin"}),
+      body: JSON.stringify({ name, email, password, role: "admin" }),
     });
 
     const json = await response.json();
@@ -38,24 +37,30 @@ export const useSignup = () => {
       setIsLoading(false);
     }
 
-    console.log("json", json)
+
     const res = await fetch("http://localhost:9999/org/create", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: orgName, adminId: json?.id}),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${json?.token}`,
+      },
+      body: JSON.stringify({ name: orgName, email }),
     });
-  
-    if(!res.ok){
+
+    const orgDetails = await res.json()
+
+    if (!res.ok) {
       setIsLoading(false);
-      setError(res.error)
+      setError(res.error);
+      return;
     }
 
-    if(res.ok){
+    if(res.ok) {
       setIsLoading(false);
-      dispatch(organizationActions.setOrg(res.json))
+      dispatch(organizationActions.setOrg(orgDetails));
     }
 
-    console.log("signup successfull")
+    console.log("signup successfull");
   };
 
   return { signup, isLoading, error };

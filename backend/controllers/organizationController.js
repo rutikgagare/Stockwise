@@ -5,62 +5,52 @@ const { ObjectId } = require("mongodb");
 
 // Create a new organization
 const createOrganization = async (req, res) => {
-    const orgData = req.body;
 
-    // check if orgData.adminId exists
-    const adminId = new ObjectId(orgData.adminId)
-    
-    if (!adminId) {
-        res.status(400).json({ error: `adminId not provided!` });
-    }
+    console.log("Inside create organiZation");
+    try{
+        const orgData = req.body;
+        const adminId = new ObjectId(req.user._id)
+        
+        const org = new Organization({
+            name: orgData.name,
+            email: orgData.email,
+            admins: [adminId],
+            employees: []
+        })
 
-    const admin = await User.findById(adminId);
+        await org.save()        
+        res.status(200).json(org);
 
-    if (!admin) {
-        res.status(404).json({ error: `Admin with adminId: ${adminId} does not exist` });
-        return;
-    }
-
-    const orgDataToInsert = {
-        name: orgData.name,
-        admins: [admin._id],
-        employees: []
-    }
-
-    try {
-        const org = await Organization.create(orgDataToInsert);
-        res.status(200).json({ org });
-
-    } catch (error) {
+    }catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
 const getOrganization = async (req, res)=>{
 
-    const userId = req.params.userId;
+    const userId = req.user._id
 
     try {
-        const user = await User.findById(new ObjectId(userId));
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        const userRole = user.role;
+    
+        const userRole = req.user.role;
 
         const organizations = await Organization.find()
-       
-        organizations.forEach(org => {
-            if (userRole === 'admin' && org.admins.includes(userId)) {
-                return res.json(org)
-            } else if (userRole === 'user' && org.users.includes(userId)) {
-                return res.satus(200).json(org);
-            }
-        });
 
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        if(organizations){
+            organizations.forEach(org => {
+                if (userRole === 'admin' && org.admins.includes(userId)) {
+                    return res.json(org)
+                } else if (userRole === 'user' && org.users.includes(userId)) {
+                    return res.satus(200).json(org);
+                }
+            });
+        }
+        else{
+            throw Error("Internal server error");
+        }
+        
+    }catch (error) {
+        res.status(500).json({ error: error.message});
     }
 }
 

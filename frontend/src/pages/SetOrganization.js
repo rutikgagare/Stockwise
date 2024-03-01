@@ -5,9 +5,10 @@ import { useNavigate } from "react-router";
 
 const SetOrganization = () => {
   const navigate = useNavigate();
-  const org = useSelector((state) => state.org.organization);
+  const org = useSelector((state) => state?.org?.organization);
+  const user = useSelector((state) => state?.auth?.user);
 
-  const [orgName, setOrgName] = useState(org.name);
+  const [orgName, setOrgName] = useState(org?.name);
   const [email, setEmail] = useState();
   const [address, setAdress] = useState();
 
@@ -17,17 +18,19 @@ const SetOrganization = () => {
     try {
       await fetch("/org/update", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user?.token}`,
+        },
         body: JSON.stringify({
           name: orgName,
-          orgId: org._id,
+          orgId: org?._id,
           email,
-          address
+          address,
         }),
       });
 
       navigate("/dashboard");
-      
     } catch (err) {
       console.log(err);
     }

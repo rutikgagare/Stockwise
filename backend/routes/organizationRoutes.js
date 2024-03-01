@@ -8,13 +8,20 @@ const {
     updateOrganization,
     getOrganization
 } = require("../controllers/organizationController")
-const router = express.Router()
 
-router.post('/create', createOrganization); // create a new organization
-router.post('/add', addEmployeeToOrganization);
-router.put('/update', updateOrganization);
-router.post('/remove', removeEmployeeFromOrganization);
-router.delete('/deleteOrg', deleteOrganization);
-router.get('/getOrg/:userId', getOrganization);
+const requireAuth = require('../middleware/requireAuth.js');
+const requireAdmin = require('../middleware/requireAdmin.js');
+
+const router = express.Router()
+router.use(requireAuth);
+
+router.post('/create', requireAdmin, createOrganization); // create a new organization
+router.post('/add', requireAdmin, addEmployeeToOrganization);
+router.put('/update', requireAdmin, updateOrganization);
+router.post('/remove', requireAdmin, removeEmployeeFromOrganization);
+router.delete('/deleteOrg', requireAdmin, deleteOrganization);
+
+// don not require admin access
+router.get('/getOrg', getOrganization);
 
 module.exports = router

@@ -11,7 +11,6 @@ const organizationSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true
     },
     address: {
         type: String,
@@ -29,11 +28,5 @@ const organizationSchema = new Schema({
         },
     ],
 }, { timestamps: true })
-
-// Static Create Organization method
-organizationSchema.statics.createOrganization = async (orgData) => {
-    const org = this.create(orgData);
-    return org;
-}
 
 module.exports = mongoose.model('Organization', organizationSchema)
