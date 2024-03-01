@@ -19,7 +19,7 @@ const Navbar = () => {
     <div className={classes.navbar}>
       <div className={classes.logo}>
         <i className="fas fa-laptop"></i>
-        <h3>{org ? org.name : "StockWise"}</h3>
+        <Link to="/"><h3>{org ? org.name : "StockWise"}</h3></Link>
       </div>
 
       {!user && (

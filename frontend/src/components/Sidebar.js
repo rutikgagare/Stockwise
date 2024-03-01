@@ -7,7 +7,7 @@ const Sidebar = () => {
     <div className="sidebar-container">
       <Link to="/employees" className="sidebar-item">Employees</Link>
       <div className="sidebar-item">Products</div>
-      <div className="sidebar-item">Inventory</div>
+      <Link to="/inventory" className="sidebar-item">Inventory</Link>
     </div>
   );
 };

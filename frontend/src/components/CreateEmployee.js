@@ -17,9 +17,7 @@ const CreateEmployee = ({appendNewEmp}) => {
   const [isCreatingUser, setIsCreatingUser] = useState(false)
 
   const addEmpToOrg = async (emp) => {
-    console.log("emp", emp)
     const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data.id, orgId: org._id })
-    console.log("res", res)
 
     if (res.status == 200 || res.status == 201) {
       appendNewEmp(emp.data)
@@ -31,13 +29,19 @@ const CreateEmployee = ({appendNewEmp}) => {
     if (email && password) {
       // Clear input fields after adding
       setIsCreatingUser(true);
-      const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"});
-      addEmpToOrg(newEmp)
-      setIsCreatingUser(false);
-
-      if (newEmp.status == 200 || newEmp.status == 201) {
-
+      let newEmp;
+      try {
+        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"});
+        addEmpToOrg(newEmp)
+        setIsCreatingUser(false);
+      } 
+      catch (err) {
+        console.log(err.response.data.error);
+        alert(err?.response?.data?.error || "Something went wrong! Try again later")
+        setIsCreatingUser(false);
+        return;
       }
+
       setName('');
       setEmail('');
       setPassword('');

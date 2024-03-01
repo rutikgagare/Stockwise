@@ -27,7 +27,9 @@ const EmployeeManagementPage = () => {
   }
 
   useEffect(() => { 
-    if (org) fetchEmployees();
+    if (org) {
+      fetchEmployees();
+    }
   })
 
   
