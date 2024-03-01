@@ -1,21 +1,44 @@
 // CreateEmployee.js
 
 import React, { useState } from 'react';
+import { useSelector } from "react-redux";
 import axios from "axios";
 import './CreateEmployee.css';
 
-const CreateEmployee = () => {
+const CreateEmployee = ({appendNewEmp}) => {
+
+  const org = useSelector((state)=> state.org.organization);
+
   const [showInputs, setShowInputs] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isCreatingUser, setIsCreatingUser] = useState(false)
+
+  const addEmpToOrg = async (emp) => {
+    console.log("emp", emp)
+    const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data.id, orgId: org._id })
+    console.log("res", res)
+
+    if (res.status == 200 || res.status == 201) {
+      appendNewEmp(emp.data)
+    }
+  }
+
   const handleAddEmployee = async () => {
     // Validate input if needed before adding
     if (email && password) {
       // Clear input fields after adding
+      setIsCreatingUser(true);
       const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"});
-      console.log("newEmp", newEmp)
+      addEmpToOrg(newEmp)
+      setIsCreatingUser(false);
+
+      if (newEmp.status == 200 || newEmp.status == 201) {
+
+      }
+      setName('');
       setEmail('');
       setPassword('');
     }

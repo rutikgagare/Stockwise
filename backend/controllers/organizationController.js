@@ -160,11 +160,31 @@ const deleteOrganization = async (req, res) => {
     }
 }
 
+const getEmployees = async (req, res) => {
+    const orgId = req.params.orgId;
+
+    try {
+        const org = await Organization.findById(new ObjectId(orgId));
+
+        if (!org) {
+            res.status(404).json({ error: `Organization with orgId: ${orgId} not found` });
+            return;
+        }
+
+        console.log("org", org)
+
+        res.status(200).json({ employees: org.employees });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = { 
     createOrganization,
     addEmployeeToOrganization,
     removeEmployeeFromOrganization,
     deleteOrganization,
     updateOrganization,
-    getOrganization
+    getOrganization,
+    getEmployees
 };

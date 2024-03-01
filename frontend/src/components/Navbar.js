@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <div className={classes.navbar}>
       <div className={classes.logo}>
-        <i class="fas fa-laptop"></i>
+        <i className="fas fa-laptop"></i>
         <h3>{org ? org.name : "StockWise"}</h3>
       </div>
 

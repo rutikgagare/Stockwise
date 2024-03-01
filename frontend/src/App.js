@@ -51,6 +51,7 @@ function App() {
         <Route path="/signup" element={!user ? <Signup /> : <Dashboard></Dashboard>} />
         <Route path="/setOrg" element={ user && user?.role === "admin" ? <SetOrganization/> :<Dashboard/>} />
         <Route path="/dashboard" element={user ? <Dashboard/> : <Home></Home>} />
+        <Route path="/employees" element={user ? <EmployeeManagementPage/> : <Home></Home>} />
 
       </Routes>
     </BrowserRouter>
