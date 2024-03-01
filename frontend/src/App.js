@@ -12,6 +12,7 @@ import EmployeeManagementPage from "./pages/EmployeeManagementPage";
 import Dashboard from "./pages/Dashboard";
 import SetOrganization from "./pages/SetOrganization";
 import Login from "./pages/Login";
+import InventoryPage from "./pages/InventoryPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +77,14 @@ function App() {
         <Route
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/" />}
+        />
+         <Route
+          path="/employees"
+          element={user ? <EmployeeManagementPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/inventory"
+          element={user ? <InventoryPage /> : <Navigate to="/" />}
         />
         <Route
           path="/employee"

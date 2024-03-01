@@ -6,7 +6,8 @@ const {
     removeEmployeeFromOrganization,
     deleteOrganization,
     updateOrganization,
-    getOrganization
+    getOrganization,
+    getEmployees
 } = require("../controllers/organizationController")
 
 const requireAuth = require('../middleware/requireAuth.js');

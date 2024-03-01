@@ -2,6 +2,7 @@ import React from 'react';
 import './EmployeeTable.css';
 
 const EmployeeTable = ({ employees }) => {
+
   return (
     <div className="employee-table-container">
       <table className="employee-table">
