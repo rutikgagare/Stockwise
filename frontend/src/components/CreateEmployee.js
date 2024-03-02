@@ -6,7 +6,7 @@ import axios from "axios";
 import './CreateEmployee.css';
 
 const CreateEmployee = ({appendNewEmp}) => {
-
+  const user = useSelector(state => state.auth.user);
   const org = useSelector((state)=> state.org.organization);
 
   const [showInputs, setShowInputs] = useState(false);
@@ -17,9 +17,14 @@ const CreateEmployee = ({appendNewEmp}) => {
   const [isCreatingUser, setIsCreatingUser] = useState(false)
 
   const addEmpToOrg = async (emp) => {
-    const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data.id, orgId: org._id })
 
-    if (res.status == 200 || res.status == 201) {
+    const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data.id, orgId: org._id },{
+      headers: {
+        "Authorization": `Bearer ${user?.token}`
+      }
+    })
+
+    if (res.status === 200 || res.status === 201) {
       appendNewEmp(emp.data)
     }
   }
@@ -29,9 +34,13 @@ const CreateEmployee = ({appendNewEmp}) => {
     if (email && password) {
       // Clear input fields after adding
       setIsCreatingUser(true);
-      let newEmp;
+      // let newEmp;
       try {
-        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"});
+        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"},{
+          headers: {
+            "Authorization": `Bearer ${user?.token}`
+          }
+        });
         addEmpToOrg(newEmp)
         setIsCreatingUser(false);
       } 

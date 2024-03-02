@@ -4,6 +4,16 @@ const { ObjectId } = require("mongodb");
 const Product = require("../models/productModel.js");
 const Organization = require("../models/organizationModel.js");
 
+const getProducts = async (req, res)=>{
+  const orgId = req.params.orgId;
+  try{
+    const products = await Product.find({orgId});
+    res.json(products)
+  }catch(err){
+    res.send({error : err.message})
+  }
+}
+
 const createProduct = async (req, res) => {
   try {
 
@@ -44,7 +54,7 @@ const deleteProduct = async(req, res)=>{
             throw Error(`Product with productId ${productId} doesn't exist`);
         }
     
-        res.status(201).json(`Product ${product.name} (${productId}) deleted successfully`);
+        res.status(201).json(product);
     
       } catch (error) {
         res.status(400).json({ message: error.message });
@@ -79,4 +89,4 @@ const updateProduct = async(req, res)=>{
       }
 }
 
-module.exports = { createProduct, deleteProduct, updateProduct };
+module.exports = { createProduct, deleteProduct, updateProduct, getProducts };

@@ -5,7 +5,14 @@
 }
 
 .main .right{
+    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     padding: 1rem;
 }
+
+.right h3{
+    margin: 1rem 0;
+    font-weight: 500;
+}
+

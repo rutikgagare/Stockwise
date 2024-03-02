@@ -1,4 +1,10 @@
-.inventory-container {
+.main{
+    width: 100%;
+    min-height: 91vh;
+    display: flex;
+}
+
+.inventory_container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

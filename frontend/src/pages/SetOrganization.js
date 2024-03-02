@@ -38,7 +38,7 @@ const SetOrganization = () => {
 
   return (
     <div className={classes.main}>
-      <form className={classes.signup} onSubmit={createOrganization}>
+      <form className={classes.signupForm} onSubmit={createOrganization}>
         <div className={classes.heading}>
           <h2>Set up organization profile</h2>
         </div>

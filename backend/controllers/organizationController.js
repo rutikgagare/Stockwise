@@ -28,12 +28,10 @@ const createOrganization = async (req, res) => {
 
 const getOrganization = async (req, res)=>{
 
-    const userId = req.user._id
-
-    try {
+    const userId = req.user._id;
     
+    try {
         const userRole = req.user.role;
-
         const organizations = await Organization.find()
 
         if(organizations){
@@ -162,7 +160,6 @@ const getEmployees = async (req, res) => {
         }
 
         console.log("org", org)
-
         res.status(200).json({ employees: org.employees });
     } catch (error) {
         res.status(500).json({ error: error.message });
