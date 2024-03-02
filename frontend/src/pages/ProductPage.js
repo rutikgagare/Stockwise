@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "../components/Sidebar";
 import AddProduct from "../components/AddProduct";
+import UpdateProduct from "../components/UpdateProduct";
 import classes from "./ProductPage.module.css";
 import { productActions } from "../store/productSlice";
 
@@ -10,41 +11,18 @@ const ProductPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const products = useSelector((state) => state.product.data);
-  const org = useSelector((state) => state.org.organization);
 
   const [showAddItem, setShowAddItem] = useState(false);
+  const [showUdateItem, setShowUPdateItem] = useState(false);
+  const [updateItem, setUpdateItem] = useState();
 
   const toggleShowAddItem = () => {
     setShowAddItem((prevState) => !prevState);
   };
 
-  const createProductHandler = async (name, unit, costPrice, sellingPrice) => {
-    try {
-      const response = await fetch("http://localhost:9999/product/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          name,
-          unit,
-          costPrice,
-          sellingPrice,
-          orgId: org?._id,
-        }),
-      });
-
-      if (response.ok) {
-        const json = await response.json();
-        console.log("INside product page", json);
-        dispatch(productActions.addProduct(json));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    toggleShowAddItem();
-  };
+  const toggleShowUdateItem = () =>{
+    setShowUPdateItem((prevState) => !prevState);
+  }
 
   const deleProductHandler = async (id) => {
     try {
@@ -59,9 +37,9 @@ const ProductPage = () => {
         }),
       });
 
-      if(resposnse.ok){
-        const json = await resposnse.json()
-        dispatch(productActions.deleteProduct({id: json?._id}));
+      if (resposnse.ok) {
+        const json = await resposnse.json();
+        dispatch(productActions.deleteProduct({ id: json?._id }));
       }
     } catch (err) {
       console.log(err);
@@ -74,10 +52,10 @@ const ProductPage = () => {
         <Sidebar />
       </div>
 
-      {!showAddItem && (
+      {!showAddItem && !showUdateItem && (
         <div className={classes.right}>
           <div className={classes.header}>
-            <h3>Active Product</h3>
+            <h3>Active Products</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
           </div>
 
@@ -88,8 +66,8 @@ const ProductPage = () => {
                   <tr>
                     <th>Product Name</th>
                     <th>Unit</th>
-                    <th>Selling Price</th>
                     <th>Cost Price</th>
+                    <th>Selling Price</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -98,11 +76,20 @@ const ProductPage = () => {
                     <tr key={product?._id}>
                       <td>{product?.name}</td>
                       <td>{product?.unit}</td>
-                      <td>{product?.sellingPrice} Rs</td>
                       <td>{product?.costPrice} Rs</td>
+                      <td>{product?.sellingPrice} Rs</td>
 
                       <td className={classes.actions}>
-                        <button className={classes.update}>Update</button>
+                        <button
+                          onClick={() => {
+                            toggleShowUdateItem();
+                            setUpdateItem(product?._id);
+                          }}
+                          className={classes.update}
+                        >
+                          Update
+                        </button>
+
                         <button
                           onClick={() => {
                             deleProductHandler(product._id);
@@ -121,12 +108,15 @@ const ProductPage = () => {
         </div>
       )}
 
-      {showAddItem && (
+      {showAddItem && !showUdateItem && (
         <div className={classes.right}>
-          <AddProduct
-            onClose={toggleShowAddItem}
-            onSubmit={createProductHandler}
-          />
+          <AddProduct onClose={toggleShowAddItem} />
+        </div>
+      )}
+
+      {!showAddItem && showUdateItem && (
+        <div className={classes.right}>
+          <UpdateProduct product = {updateItem} onClose={toggleShowUdateItem} />
         </div>
       )}
     </div>

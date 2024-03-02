@@ -19,6 +19,16 @@ const productSlice = createSlice({
         },
         deleteProduct:(state, action)=>{
             state.data = state.data.filter(item => item._id !== action.payload.id)
+        },
+        updateProduct:(state, action)=>{
+            state.data = state.data.map(item =>{
+                if(item._id == action.payload._id){
+                    return action.payload;
+                }
+                else{
+                    return item;
+                }
+            })
         }
     },
 

@@ -1,48 +1,45 @@
 import React, { useState } from "react";
 import classes from "./AddProduct.module.css";
-import {useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../store/productSlice";
 
-const AddProduct = (props) => {
-
+const UpdateProduct = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const org = useSelector((state) => state.org.organization);
 
-  const [name, setName] = useState();
-  const [unit, setUnit] = useState();
-  const [costPrice, setCostPrice] = useState();
-  const [sellingPrice, setSellingPrice] = useState();
+  const product = props.product;
 
-  const createProductHandler = async(e)=> {
+  const [name, setName] = useState(product.name);
+  const [unit, setUnit] = useState(product.unit);
+  const [costPrice, setCostPrice] = useState(product.costPrice);
+  const [sellingPrice, setSellingPrice] = useState(product.sellingPrice);
 
+  const updateProductHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:9999/product/create", {
-        method: "POST",
+      const response = await fetch("http://localhost:9999/product/update", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          'Authorization': `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
+          productId: product?._id,
           name,
           unit,
           costPrice,
           sellingPrice,
-          orgId: org?._id,
         }),
       });
 
       if (response.ok) {
         const json = await response.json();
-        dispatch(productActions.addProduct(json));
+        dispatch(productActions.updateProduct(json));
       }
-
     } catch (err) {
       console.log(err);
     }
     props.onClose();
-
   };
 
   return (
@@ -53,7 +50,7 @@ const AddProduct = (props) => {
           <button onClick={() => props.onClose()}>Cancel</button>
         </div>
 
-        <div className={classes.addProductForm} onSubmit={createProductHandler}>
+        <div className={classes.addProductForm} onSubmit={updateProductHandler}>
           <form>
             <div className={classes.inputDiv}>
               <label htmlFor="name">Product Name</label>
@@ -110,7 +107,7 @@ const AddProduct = (props) => {
               />
             </div>
 
-            <button type="submit">Add Product</button>
+            <button type="submit">Update Product</button>
           </form>
         </div>
       </div>
@@ -118,4 +115,4 @@ const AddProduct = (props) => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;
