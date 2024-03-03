@@ -77,6 +77,10 @@ select {
   background-color: transparent;
 }
 
+/* .inputDiv select{
+  overflow-y:auto;
+} */
+
 .inputDiv input:focus,
 select:focus {
   border: 1px solid #0183ff;

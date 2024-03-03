@@ -13,6 +13,7 @@ const UpdateProduct = (props) => {
   const [unit, setUnit] = useState(product.unit);
   const [costPrice, setCostPrice] = useState(product.costPrice);
   const [sellingPrice, setSellingPrice] = useState(product.sellingPrice);
+  const [category, setCategory] = useState();
 
   const updateProductHandler = async (e) => {
     e.preventDefault();
@@ -29,6 +30,7 @@ const UpdateProduct = (props) => {
           unit,
           costPrice,
           sellingPrice,
+          category
         }),
       });
 
@@ -80,6 +82,29 @@ const UpdateProduct = (props) => {
                 <option value="box">box</option>
                 <option value="dz">dz</option>
                 <option value="l">dz</option>
+              </select>
+            </div>
+
+            <div className={classes.inputDiv}>
+              <label htmlFor="productCategory">Product category</label>
+              <select
+                id="productCategory"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Slect Category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing/Apparel">Clothing/Apparel</option>
+                <option value="Home Goods">Home Goods</option>
+                <option value="Beauty/Personal Care">
+                  Beauty/Personal Care
+                </option>
+                <option value="Health/Wellness">Health/Wellness</option>
+                <option value="Food/Beverage">Food/Beverage</option>
+                <option value="Toys/Games">Toys/Games</option>
+                <option value="Office Supplies">Office Supplies</option>
+                <option value="Books/Media">Books/Media</option>
+                <option value="Tools/Hardware">Tools/Hardware</option>
               </select>
             </div>
 

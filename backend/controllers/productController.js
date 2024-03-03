@@ -15,7 +15,7 @@ const getProducts = async (req, res)=>{
 }
 
 const createProduct = async (req, res) => {
-  const { name, unit, sellingPrice, costPrice, orgId} = req.body;
+  const { name, unit, sellingPrice, costPrice, category, orgId} = req.body;
 
   try {
     
@@ -25,7 +25,7 @@ const createProduct = async (req, res) => {
       throw Error(`Organization with orgId: ${orgId} does not exist`);
     }
 
-    const product = new Product({ name, unit, sellingPrice, costPrice, orgId });
+    const product = new Product({ name, unit, sellingPrice, costPrice,category, orgId });
 
     await product.save();
 

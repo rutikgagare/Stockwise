@@ -64,7 +64,8 @@ const ProductPage = () => {
               <table className={classes.employee_table}>
                 <thead>
                   <tr>
-                    <th>Product Name</th>
+                    <th>Name</th>
+                    <th>Category</th>
                     <th>Unit</th>
                     <th>Cost Price</th>
                     <th>Selling Price</th>
@@ -75,6 +76,7 @@ const ProductPage = () => {
                   {products?.map((product) => (
                     <tr key={product?._id}>
                       <td>{product?.name}</td>
+                      <td>{product?.category}</td>
                       <td>{product?.unit}</td>
                       <td>{Number(product?.costPrice).toLocaleString()} Rs</td>
                       <td>{Number(product?.sellingPrice).toLocaleString()} Rs</td>

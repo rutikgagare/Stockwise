@@ -1,26 +1,24 @@
 import React, { useState } from "react";
 import classes from "./AddProduct.module.css";
-import {useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../store/productSlice";
 
 const AddProduct = (props) => {
-
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
 
   const [name, setName] = useState();
   const [unit, setUnit] = useState();
+  const [category, setCategory] = useState();
   const [costPrice, setCostPrice] = useState();
   const [sellingPrice, setSellingPrice] = useState();
   const [error, setError] = useState(null);
 
-  const createProductHandler = async(e)=> {
-
+  const createProductHandler = async (e) => {
     e.preventDefault();
     try {
-
-      if(!name || !unit || !sellingPrice || !costPrice){
+      if (!name || !unit || !sellingPrice || !costPrice || !category) {
         throw Error("All field must be field");
       }
 
@@ -28,19 +26,20 @@ const AddProduct = (props) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          'Authorization': `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
           name,
           unit,
           costPrice,
           sellingPrice,
+          category,
           orgId: org?._id,
         }),
       });
 
-      if(!response.ok){
-        const error = await response.json()
+      if (!response.ok) {
+        const error = await response.json();
         setError(error.message);
         return;
       }
@@ -50,9 +49,8 @@ const AddProduct = (props) => {
         dispatch(productActions.addProduct(json));
         props.onClose();
       }
-
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
   };
 
@@ -63,9 +61,9 @@ const AddProduct = (props) => {
           <h3>New Product</h3>
           <button onClick={() => props.onClose()}>Cancel</button>
         </div>
-        
+
         <div className={classes.addProductForm} onSubmit={createProductHandler}>
-        {error && <div className={classes.error}>{error}</div> }
+          {error && <div className={classes.error}>{error}</div>}
           <form>
             <div className={classes.inputDiv}>
               <label htmlFor="name">Product Name</label>
@@ -93,6 +91,29 @@ const AddProduct = (props) => {
                 <option value="box">box</option>
                 <option value="dz">dz</option>
                 <option value="l">dz</option>
+              </select>
+            </div>
+
+            <div className={classes.inputDiv}>
+              <label htmlFor="productCategory">Product category</label>
+              <select
+                id="productCategory"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Slect Category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing/Apparel">Clothing/Apparel</option>
+                <option value="Home Goods">Home Goods</option>
+                <option value="Beauty/Personal Care">
+                  Beauty/Personal Care
+                </option>
+                <option value="Health/Wellness">Health/Wellness</option>
+                <option value="Food/Beverage">Food/Beverage</option>
+                <option value="Toys/Games">Toys/Games</option>
+                <option value="Office Supplies">Office Supplies</option>
+                <option value="Books/Media">Books/Media</option>
+                <option value="Tools/Hardware">Tools/Hardware</option>
               </select>
             </div>
 
