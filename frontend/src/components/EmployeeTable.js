@@ -3,6 +3,8 @@ import './EmployeeTable.css';
 
 const EmployeeTable = ({ employees }) => {
 
+  console.log(employees,"Iside employee table")
+
   return (
     <div className="employee-table-container">
       <table className="employee-table">
@@ -10,7 +12,7 @@ const EmployeeTable = ({ employees }) => {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Phone</th>
+            <th>Role</th>
             <th>Password</th>
           </tr>
         </thead>
@@ -19,7 +21,7 @@ const EmployeeTable = ({ employees }) => {
             <tr key={index}>
               <td>{employee.name}</td>
               <td>{employee.email}</td>
-              <td>{employee.phone}</td>
+              <td>{employee.role}</td>
               <td>{employee.password}</td>
             </tr>
           ))}

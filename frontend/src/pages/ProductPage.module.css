@@ -16,14 +16,14 @@
 }
 
 .right .header{
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-bottom: 2px solid #e4e4e4;
 }
 
 .header h3{
-    margin: 1rem 0;
     font-weight: 500;
 }
 

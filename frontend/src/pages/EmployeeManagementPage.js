@@ -24,7 +24,7 @@ const EmployeeManagementPage = () => {
           }
         );
         
-        const employees = await res.data.employees;
+        const employees = await res.data;
         setEmployees(employees);
 
       }
@@ -58,8 +58,14 @@ const EmployeeManagementPage = () => {
       </div>
 
       <div className={classes.right}>
-        <h3>Employees</h3>
-        <CreateEmployee appendNewEmp={appendNewEmp} />
+
+        <div className={classes.header}>
+          <h3>Employees</h3>
+
+          <CreateEmployee appendNewEmp={appendNewEmp} />
+
+        </div>
+
         {employees && <EmployeeTable employees={employees} />}
       </div>
     </div>

@@ -152,6 +152,7 @@ const getEmployees = async (req, res) => {
     const orgId = req.params.orgId;
 
     try {
+
         const org = await Organization.findById(new ObjectId(orgId));
 
         if (!org) {
@@ -159,8 +160,27 @@ const getEmployees = async (req, res) => {
             return;
         }
 
-        console.log("org", org)
-        res.status(200).json({ employees: org.employees });
+        const employeeIds = org.employees;
+
+        const query = {
+            _id: {
+              $in: employeeIds
+            }
+        };
+
+        const user = await User.find(query);
+
+        const employeeDetails = user.map(user =>{
+            return{
+                name: user?.name,
+                email: user?.email,
+                role: user?.role,
+                password: user?.password
+            }
+        })
+
+        res.status(200).json(employeeDetails);
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
