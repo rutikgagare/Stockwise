@@ -3,3 +3,9 @@
     min-height: 91vh;
     display: flex;
 }
+
+.main .right{
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}

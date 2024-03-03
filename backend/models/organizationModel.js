@@ -29,12 +29,4 @@ const organizationSchema = new Schema({
     ],
 }, { timestamps: true })
 
-// Static Create Organization method
-organizationSchema.statics.createOrganization = async function(orgData) {
-    console.log("orgData", orgData);
-    const org = await this.create(orgData);
-    console.log("return org: ", org);
-    return org;
-}
-
 module.exports = mongoose.model('Organization', organizationSchema)

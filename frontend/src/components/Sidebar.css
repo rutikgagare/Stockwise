@@ -1,20 +1,25 @@
 .sidebar-container {
     width: 200px;
     height: 100%;
-    background-color: #333;
+    background-color: #f7f7fe;
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    gap: 0.2rem;
+    padding: 1rem 0.5rem;
+    border-right: 2px solid #e4e4e4
   }
   
   .sidebar-item {
+    font-size: 1rem;
     padding: 10px;
-    color: #fff;
+    color: black;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
   
-  .sidebar-item:hover {
-    background-color: #555;
+  .sidebar-item:hover, .sidebar-item:active {
+    background-color: #0183ff;
+    border-radius: 0.5rem;
+    color: white;
+    transition: 0.1s ease-in;
   }
   

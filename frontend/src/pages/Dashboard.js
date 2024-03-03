@@ -8,7 +8,7 @@ const Dashboard = () => {
       <div className='left'>
         <Sidebar />
       </div>
-      <div className='right'>
+      <div className={classes.right}>
         Dashboard
       </div>
     </div>

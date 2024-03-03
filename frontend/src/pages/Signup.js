@@ -18,13 +18,12 @@ const Signup = () => {
     e.preventDefault();
     await signup(name, email, password, orgName);
     navigate('/setOrg');
-
     console.log("hello")
   };
 
   return (
     <div className={classes.main}>
-      <form className="signup" onSubmit={handleSignUp}>
+      <form className={classes.signupForm} onSubmit={handleSignUp}>
         
         <div className={classes.heading}>
           <h2>Sign up</h2>

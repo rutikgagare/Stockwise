@@ -17,10 +17,13 @@ const Navbar = () => {
 
   return (
     <div className={classes.navbar}>
+
       <div className={classes.logo}>
         <i className="fas fa-laptop"></i>
         <Link to="/"><h3>{org ? org.name : "StockWise"}</h3></Link>
       </div>
+
+      <div className={classes.middle}></div>
 
       {!user && (
         <div className={classes.nav}>
@@ -33,7 +36,7 @@ const Navbar = () => {
 
       {user && (
         <div className={classes.nav}>
-          <span>{user.name}</span>
+          <h4>{user?.name}</h4>
           <button onClick={logoutHandler}>Logout</button>
         </div>
       )}

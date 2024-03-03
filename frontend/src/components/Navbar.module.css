@@ -1,6 +1,7 @@
 .navbar{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100vw;
     background-color: #0183ff;
     color: white;
@@ -11,10 +12,10 @@
 }
 
 .navbar .logo{
-    width: 30%;
     padding: 0 1rem;
     display: flex;
     align-items: center;
+    width: 270px;
 }
 
 .logo h3{
@@ -27,14 +28,17 @@
     font-size: 1.3rem;
 }
 
+.navbar .middle{
+    width: 100%;
+}
+
 .navbar .nav{
     display: flex;
     gap: 1rem;
-    width: 70%;
+    width: fit-content;
     padding: 0rem 1rem;
     justify-content: flex-end;
     align-items: center;
-    /* border: 2px solid red; */
 }
 
 .nav ul{
@@ -53,8 +57,10 @@ a{
     font-weight: 400;
 }
 
-.nav span{
-    font-size: 1rem;
+.nav h4{
+    font-size: 1.1rem;
+    white-space: nowrap;
+    font-weight: 400;
 }
 
 .nav button{
