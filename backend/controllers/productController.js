@@ -15,14 +15,10 @@ const getProducts = async (req, res)=>{
 }
 
 const createProduct = async (req, res) => {
+  const { name, unit, sellingPrice, costPrice, orgId} = req.body;
+
   try {
-
-    const { name, unit, sellingPrice, costPrice, orgId} = req.body;
-
-    if(!name || !unit || !sellingPrice || !costPrice || !orgId){
-        throw Error("All field must be field");
-    }
-
+    
     const organization = Organization.findById(new ObjectId(orgId));
 
     if (!organization) {
@@ -30,11 +26,15 @@ const createProduct = async (req, res) => {
     }
 
     const product = new Product({ name, unit, sellingPrice, costPrice, orgId });
+
     await product.save();
 
     res.status(201).json(product);
 
   } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.name && error.keyPattern.orgId) {
+      return res.status(400).json({ message: `Product ${name} already exist` });
+    }
     res.status(400).json({ message: error.message });
   }
 };

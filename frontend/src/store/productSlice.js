@@ -22,7 +22,7 @@ const productSlice = createSlice({
         },
         updateProduct:(state, action)=>{
             state.data = state.data.map(item =>{
-                if(item._id == action.payload._id){
+                if(item._id === action.payload._id){
                     return action.payload;
                 }
                 else{

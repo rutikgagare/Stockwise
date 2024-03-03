@@ -13,11 +13,17 @@ const AddProduct = (props) => {
   const [unit, setUnit] = useState();
   const [costPrice, setCostPrice] = useState();
   const [sellingPrice, setSellingPrice] = useState();
+  const [error, setError] = useState(null);
 
   const createProductHandler = async(e)=> {
 
     e.preventDefault();
     try {
+
+      if(!name || !unit || !sellingPrice || !costPrice){
+        throw Error("All field must be field");
+      }
+
       const response = await fetch("http://localhost:9999/product/create", {
         method: "POST",
         headers: {
@@ -33,16 +39,21 @@ const AddProduct = (props) => {
         }),
       });
 
+      if(!response.ok){
+        const error = await response.json()
+        setError(error.message);
+        return;
+      }
+
       if (response.ok) {
         const json = await response.json();
         dispatch(productActions.addProduct(json));
+        props.onClose();
       }
 
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      setError(error.message)
     }
-    props.onClose();
-
   };
 
   return (
@@ -52,8 +63,9 @@ const AddProduct = (props) => {
           <h3>New Product</h3>
           <button onClick={() => props.onClose()}>Cancel</button>
         </div>
-
+        
         <div className={classes.addProductForm} onSubmit={createProductHandler}>
+        {error && <div className={classes.error}>{error}</div> }
           <form>
             <div className={classes.inputDiv}>
               <label htmlFor="name">Product Name</label>
@@ -63,7 +75,6 @@ const AddProduct = (props) => {
                 value={name}
                 placeholder="Enter product name"
                 onChange={(e) => setName(e.target.value)}
-                required="true"
               />
             </div>
 
@@ -74,11 +85,10 @@ const AddProduct = (props) => {
                 id="unit"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                required="true"
               >
                 <option value="">Slect Unit</option>
                 <option value="pcs">pcs</option>
-                <option value="Kg">Kg</option>
+                <option value="kg">kg</option>
                 <option value="g">g</option>
                 <option value="box">box</option>
                 <option value="dz">dz</option>
@@ -94,7 +104,6 @@ const AddProduct = (props) => {
                 value={costPrice}
                 onChange={(e) => setCostPrice(e.target.value)}
                 placeholder="Enter cost price in INR"
-                required="true"
               />
             </div>
 
@@ -106,7 +115,6 @@ const AddProduct = (props) => {
                 value={sellingPrice}
                 onChange={(e) => setSellingPrice(e.target.value)}
                 placeholder="Enter cost price in INR"
-                required="true"
               />
             </div>
 

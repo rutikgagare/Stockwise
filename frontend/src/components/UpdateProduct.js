@@ -46,7 +46,7 @@ const UpdateProduct = (props) => {
     <div className={classes.main}>
       <div className={classes.addProduct}>
         <div className={classes.header}>
-          <h3>New Product</h3>
+          <h3>Update Product</h3>
           <button onClick={() => props.onClose()}>Cancel</button>
         </div>
 

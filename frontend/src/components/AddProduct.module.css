@@ -1,88 +1,100 @@
-.main{
-    width: 100%;
-    min-height: 91vh;
-    display: flex;
+.main {
+  width: 100%;
+  min-height: 91vh;
+  display: flex;
 }
 
-.addProduct{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.addProduct {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.addProduct .header{
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 2px solid #e4e4e4;
+.addProduct .header {
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #e4e4e4;
 }
 
-.header h3{
-    margin: 1rem 0;
-    font-weight: 500;
+.header h3 {
+  margin: 1rem 0;
+  font-weight: 500;
 }
 
-.header button{
-    border: none;
-    outline: none;
-    padding: 0.5rem 1rem;
-    background-color: #0183ff;
-    color: white;
-    font-size: 1rem;
-    border-radius: 0.2rem;
-    margin: 0.5rem 0;
+.header button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #0183ff;
+  color: white;
+  font-size: 1rem;
+  border-radius: 0.2rem;
+  margin: 0.5rem 0;
 }
 
-.addProduct .addProductForm{
-    padding: 0.5rem 1rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.addProduct .addProductForm {
+  padding: 0.5rem 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-.addProductForm form{
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.addProductForm .error {
+  background-color: rgb(252, 235, 235);
+  border-radius: 0.2rem;
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  background-color: #ffebee;
+  color: #d32f2f;
 }
 
-form .inputDiv{
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.addProductForm form {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.inputDiv input, select{
-    padding: 0.5rem 1rem;
-    outline: none;
-    border: none;
-    border: 1px solid rgb(228, 227, 227);
-    border-radius: 0.2rem;
-    font-size: 1rem;
-    background-color: transparent;
+form .inputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.inputDiv input:focus, select:focus{
-    border: 1px solid #0183ff;
+.inputDiv input,
+select {
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: none;
+  border: 1px solid rgb(228, 227, 227);
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: transparent;
 }
 
-form button{
-    border: none;
-    outline: none;
-    padding: 0.5rem 1rem;
-    background-color: #0183ff;
-    color: white;
-    font-size: 1.1rem;
-    border-radius: 0.2rem;
-    margin: 0.5rem 0;
+.inputDiv input:focus,
+select:focus {
+  border: 1px solid #0183ff;
+}
+
+form button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #0183ff;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 0.2rem;
+  margin: 0.5rem 0;
 }
 
 ::placeholder {
-    color: grey;
-    opacity: 1; 
-    font-size: 1rem;
+  color: grey;
+  opacity: 1;
+  font-size: 1rem;
 }
-

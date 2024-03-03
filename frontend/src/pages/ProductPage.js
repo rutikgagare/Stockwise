@@ -76,14 +76,14 @@ const ProductPage = () => {
                     <tr key={product?._id}>
                       <td>{product?.name}</td>
                       <td>{product?.unit}</td>
-                      <td>{product?.costPrice} Rs</td>
-                      <td>{product?.sellingPrice} Rs</td>
+                      <td>{Number(product?.costPrice).toLocaleString()} Rs</td>
+                      <td>{Number(product?.sellingPrice).toLocaleString()} Rs</td>
 
                       <td className={classes.actions}>
                         <button
                           onClick={() => {
+                            setUpdateItem(product);
                             toggleShowUdateItem();
-                            setUpdateItem(product?._id);
                           }}
                           className={classes.update}
                         >
