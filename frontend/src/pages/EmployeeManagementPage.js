@@ -12,6 +12,8 @@ const EmployeeManagementPage = () => {
 
   const fetchEmployees = async () => {
     const e = await axios.get(`http://localhost:9999/org/employees/${org._id}`)
+    setEmployees(e.data.employees)
+    console.log("e", e)
   }
 
   const appendNewEmp = (emp) => {
@@ -30,7 +32,7 @@ const EmployeeManagementPage = () => {
     if (org) {
       fetchEmployees();
     }
-  })
+  }, [])
 
   
   return (

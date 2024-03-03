@@ -11,7 +11,6 @@ const organizationSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true
     },
     address: {
         type: String,
@@ -31,8 +30,10 @@ const organizationSchema = new Schema({
 }, { timestamps: true })
 
 // Static Create Organization method
-organizationSchema.statics.createOrganization = async (orgData) => {
-    const org = this.create(orgData);
+organizationSchema.statics.createOrganization = async function(orgData) {
+    console.log("orgData", orgData);
+    const org = await this.create(orgData);
+    console.log("return org: ", org);
     return org;
 }
 

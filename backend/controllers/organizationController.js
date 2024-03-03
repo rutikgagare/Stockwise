@@ -27,11 +27,21 @@ const createOrganization = async (req, res) => {
         employees: []
     }
 
+    console.log("orgDataToInsert: ", orgDataToInsert)
     try {
-        const org = await Organization.create(orgDataToInsert);
+        const org = new Organization({
+            name: orgData.name,
+            email: orgData.email,
+            admins: [admin._id],
+            employees: []
+        });
+        console.log("org: ", org);
+        await org.save();
+        console.log("returning org: ", org)
         res.status(200).json({ org });
 
     } catch (error) {
+        console.log("error: ", error)
         res.status(400).json({ error: error.message });
     }
 }
@@ -76,7 +86,7 @@ const updateOrganization = async(req, res)=>{
     const organization = await Organization.findById(orgId);
 
     if(!organization){
-        res.status(404).json({ error: `Organization with otgId: ${orgId} does not exist` });
+        res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
         return;
     }
 
@@ -171,9 +181,11 @@ const getEmployees = async (req, res) => {
             return;
         }
 
-        console.log("org", org)
+        const employeeIds = org.employees.map(employee => new ObjectId(employee._id));
 
-        res.status(200).json({ employees: org.employees });
+        const employees = await User.find({ _id: { $in: employeeIds } });
+
+        res.status(200).json({ employees });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

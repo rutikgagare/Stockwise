@@ -2,6 +2,7 @@ import { useState } from "react";
 import { authActions } from "../store/authSlice";
 import { organizationActions } from "../store/organizationSlice";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 export const useSignup = () => {
 
@@ -19,6 +20,7 @@ export const useSignup = () => {
       body: JSON.stringify({ name, email, password, role: "admin"}),
     });
 
+    console.log("response in useSignup", response)
     const json = await response.json();
 
     if (!response.ok) {
@@ -39,12 +41,13 @@ export const useSignup = () => {
     }
 
     console.log("json", json)
-    const res = await fetch("http://localhost:9999/org/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: orgName, adminId: json?.id}),
-    });
+    const res = await axios.post("http://localhost:9999/org/create", { 
+      name: orgName, 
+      email,
+      adminId: json?.id
+    })
   
+    console.log("res org/create", res);
     if(!res.ok){
       setIsLoading(false);
       setError(res.error)
