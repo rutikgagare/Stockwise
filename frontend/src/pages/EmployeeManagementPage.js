@@ -39,6 +39,7 @@ const EmployeeManagementPage = () => {
       {
         name: emp.name,
         email: emp.email,
+        role: emp.role,
         phone: emp.phone,
         password: "[REDACTED]",
       },

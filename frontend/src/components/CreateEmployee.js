@@ -12,6 +12,7 @@ const CreateEmployee = ({appendNewEmp}) => {
   const [showInputs, setShowInputs] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('employee');
   const [password, setPassword] = useState('');
 
   const [isCreatingUser, setIsCreatingUser] = useState(false)
@@ -36,7 +37,7 @@ const CreateEmployee = ({appendNewEmp}) => {
       setIsCreatingUser(true);
       // let newEmp;
       try {
-        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role: "employee"},{
+        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role },{
           headers: {
             "Authorization": `Bearer ${user?.token}`
           }
@@ -80,6 +81,10 @@ const CreateEmployee = ({appendNewEmp}) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <select onChange={(e) => { setRole(e.target.value )}}>
+            <option>employee</option>
+            <option>admin</option>
+          </select>
           <input
             type="password"
             placeholder="Password"
