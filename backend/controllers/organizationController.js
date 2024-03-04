@@ -64,7 +64,7 @@ const updateOrganization = async(req, res)=>{
     const organization = await Organization.findById(orgId);
 
     if(!organization){
-        res.status(404).json({ error: `Organization with otgId: ${orgId} does not exist` });
+        res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
         return;
     }
 

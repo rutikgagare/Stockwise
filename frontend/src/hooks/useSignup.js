@@ -18,6 +18,7 @@ export const useSignup = () => {
       body: JSON.stringify({ name, email, password, role: "admin" }),
     });
 
+    console.log("response in useSignup", response)
     const json = await response.json();
 
     if (!response.ok) {

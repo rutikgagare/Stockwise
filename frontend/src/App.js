@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import InventoryPage from "./pages/InventoryPage";
 import ProductPage from "./pages/ProductPage";
 import { productActions } from "./store/productSlice";
+import PlaceOrderPage from "./pages/PlaceOrderPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -129,6 +130,10 @@ function App() {
                 <Navigate to="/" />
               )
             }
+          />
+          <Route
+            path="/order"
+            element={user ? <PlaceOrderPage /> : <Navigate to="/login" />}
           />
           <Route
             path="/product"
