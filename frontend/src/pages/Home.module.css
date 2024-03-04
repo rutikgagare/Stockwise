@@ -1,15 +1,31 @@
-.main{
+.home{
     width: 100%;
     min-height: 91vh;
     display: flex;
-    flex-direction: column;
     padding: 2rem;
+    align-items: center;
 }
 
-.main h2{ 
+.left{
+    width: 50%;
+}
+
+.right{
+    width: 50%;
+}
+
+.right h2{ 
+    color: #0183ff;
     margin: 2rem 0;
+    font-size: 2rem;
 }
 
-.main p{
-    font-size: 1.1rem;
+.right p{
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+}
+
+.left img{
+    width: 100%;
+    margin: auto;
 }
