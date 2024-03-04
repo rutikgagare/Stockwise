@@ -12,6 +12,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -21,20 +22,22 @@
     margin-bottom: 15px;
     border-radius: 10px;
     max-width: 450px;
+    height: 400px;
     background-color: grey;
     margin: 7px;
     background-color: #fff;
-    /* Set your background color */
     border-radius: 10px;
-    /* Adjust as needed */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Adjust the shadow values as needed */
     transition: box-shadow 0.25s ease;
-    /* Optional: Add a transition for a smooth effect */
 }
 
 .order_form:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.orders {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .order_form label {
