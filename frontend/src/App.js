@@ -16,6 +16,7 @@ import InventoryPage from "./pages/InventoryPage";
 import ProductPage from "./pages/ProductPage";
 import { productActions } from "./store/productSlice";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
+import VendorsPage from "./pages/VendorsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -118,6 +119,10 @@ function App() {
           <Route
             path="/inventory"
             element={user ? <InventoryPage /> : <Navigate to="/" />}
+          />
+           <Route
+            path="/vendors"
+            element={user ? <VendorsPage /> : <Navigate to="/" />}
           />
           <Route
             path="/employees"
