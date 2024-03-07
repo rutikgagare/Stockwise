@@ -32,7 +32,7 @@ const PlaceOrderPage = () => {
         try {
             const res = await axios.post("http://localhost:9999/order/create", {
                 orgId: org?._id,
-                vendeeId: user?.id,
+                adminId: user?.id,
                 cart: orders
             })
             console.log("res: ", res);

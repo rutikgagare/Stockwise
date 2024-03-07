@@ -7,15 +7,10 @@ const orderSchema = new Schema({
         required: true,
         ref: "Organization",
     },
-    vendeeId: {
+    adminId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User",
-    },
-    vendorId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Vendor",
     },
     cart: {
         type: Array,
