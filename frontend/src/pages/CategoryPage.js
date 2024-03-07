@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "../components/Sidebar";
-import AddProduct from "../components/AddProduct";
-import UpdateProduct from "../components/UpdateProduct";
-import classes from "./ProductPage.module.css";
-import { productActions } from "../store/productSlice";
+import AddCategory from "../components/AddCategory";
+import UpdateCategory from "../components/UpdateCategory";
+import classes from "./CategoryPage.module.css";
+import { categoryActions } from "../store/categorySlice";
 
-const ProductPage = () => {
+const CategoryPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const products = useSelector((state) => state.product.data);
+  const categories = useSelector((state) => state.category.data);
+  
 
   const [showAddItem, setShowAddItem] = useState(false);
   const [showUdateItem, setShowUPdateItem] = useState(false);
@@ -24,22 +25,22 @@ const ProductPage = () => {
     setShowUPdateItem((prevState) => !prevState);
   }
 
-  const deleProductHandler = async (id) => {
+  const deleCategoryHandler = async (id) => {
     try {
-      const resposnse = await fetch("http://localhost:9999/product/delete", {
+      const resposnse = await fetch("http://localhost:9999/Category/delete", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
-          productId: id,
+          categoryId: id,
         }),
       });
 
       if (resposnse.ok) {
         const json = await resposnse.json();
-        dispatch(productActions.deleteProduct({ id: json?._id }));
+        dispatch(categoryActions.deleteCategory({ id: json?._id }));
       }
     } catch (err) {
       console.log(err);
@@ -55,36 +56,30 @@ const ProductPage = () => {
       {!showAddItem && !showUdateItem && (
         <div className={classes.right}>
           <div className={classes.header}>
-            <h3>Active Products</h3>
+            <h3>Active Categories</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
           </div>
 
-          <div className={classes.employee_table_container}>
-            {products && (
-              <table className={classes.employee_table}>
+          <div className={classes.category_table_container}>
+            {categories && (
+              <table className={classes.category_table}>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Unit</th>
-                    <th>Cost Price</th>
-                    <th>Selling Price</th>
+                    <th> Category Name</th>
+                    <th> Identification Type</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {products?.map((product) => (
-                    <tr key={product?._id}>
-                      <td>{product?.name}</td>
-                      <td>{product?.category}</td>
-                      <td>{product?.unit}</td>
-                      <td>{Number(product?.costPrice).toLocaleString()} Rs</td>
-                      <td>{Number(product?.sellingPrice).toLocaleString()} Rs</td>
-
+                  {categories?.map((category) => (
+                    <tr key={category?._id}>
+                      <td>{category?.name}</td>
+                      <td>{category?.identificationType}</td>
+              
                       <td className={classes.actions}>
                         <button
                           onClick={() => {
-                            setUpdateItem(product);
+                            setUpdateItem(category);
                             toggleShowUdateItem();
                           }}
                           className={classes.update}
@@ -94,7 +89,7 @@ const ProductPage = () => {
 
                         <button
                           onClick={() => {
-                            deleProductHandler(product._id);
+                            deleCategoryHandler(category._id);
                           }}
                           className={classes.delete}
                         >
@@ -112,17 +107,17 @@ const ProductPage = () => {
 
       {showAddItem && !showUdateItem && (
         <div className={classes.right}>
-          <AddProduct onClose={toggleShowAddItem} />
+          <AddCategory onClose={toggleShowAddItem} />
         </div>
       )}
 
       {!showAddItem && showUdateItem && (
         <div className={classes.right}>
-          <UpdateProduct product = {updateItem} onClose={toggleShowUdateItem} />
+          <UpdateCategory Category = {updateItem} onClose={toggleShowUdateItem} />
         </div>
       )}
     </div>
   );
 };
 
-export default ProductPage;
+export default CategoryPage;
