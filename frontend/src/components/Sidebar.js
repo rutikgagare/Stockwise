@@ -13,6 +13,7 @@ const Sidebar = () => {
       <Link to="/category" className="sidebar-item">Category</Link>
       <Link to="/inventory" className="sidebar-item">Inventory</Link>
       <Link to="/order" className="sidebar-item">Place Order</Link>
+      <Link to="/vendors" className="sidebar-item">Vendors</Link>
     </div>
   );
 };

@@ -13,8 +13,11 @@ import Dashboard from "./pages/Dashboard";
 import SetOrganization from "./pages/SetOrganization";
 import Login from "./pages/Login";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
+
 import InventoryPage from "./pages/InventoryPage";
 import CategoryPage from "./pages/CategoryPage";
+import VendorsPage from "./pages/VendorsPage";
+
 import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
@@ -152,6 +155,10 @@ function App() {
           <Route
             path="/inventory"
             element={user ? <InventoryPage /> : <Navigate to="/" />}
+          />
+           <Route
+            path="/vendors"
+            element={user ? <VendorsPage /> : <Navigate to="/" />}
           />
           <Route
             path="/employees"

@@ -38,11 +38,10 @@
     /* padding: 15px; */
     margin-bottom: 15px;
     border-radius: 10px;
-    /* max-width: 450px; */
-    /* height: 400px; */
-    /* background-color: grey; */
-    padding: 1.5rem;
-    /* margin: 7px; */
+    width: 350px;
+    height: 400px;
+    background-color: grey;
+    margin: 7px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
@@ -69,7 +68,7 @@
     font-weight: bold;
 }
 
-.order_form input {
+.order_form input, select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
