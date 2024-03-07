@@ -12,16 +12,20 @@ import EmployeeManagementPage from "./pages/EmployeeManagementPage";
 import Dashboard from "./pages/Dashboard";
 import SetOrganization from "./pages/SetOrganization";
 import Login from "./pages/Login";
-import InventoryPage from "./pages/InventoryPage";
-import ProductPage from "./pages/ProductPage";
-import { productActions } from "./store/productSlice";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
+
+import InventoryPage from "./pages/InventoryPage";
+import CategoryPage from "./pages/CategoryPage";
 import VendorsPage from "./pages/VendorsPage";
+
+import { categoryActions } from "./store/categorySlice";
+import { inventoryActions } from "./store/inventorySlice";
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.user);
   const org = useSelector((state) => state?.org?.organization);
+  const inventory = useSelector((state) => state?.inventory?.data);
   const [loading, setIsloading] = useState(true);
 
   useEffect(() => {
@@ -51,10 +55,10 @@ function App() {
   }, [dispatch, user]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategorys = async () => {
       try {
         if (org) {
-          const res = await fetch(`http://localhost:9999/product/${org?._id}`, {
+          const res = await fetch(`http://localhost:9999/Category/${org?._id}`, {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
@@ -70,16 +74,48 @@ function App() {
             throw new Error("Response is not an array");
           }
 
-          dispatch(productActions.setProduct(json));
+          dispatch(categoryActions.setCategory(json));
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching Categorys:", error);
       }
     };
 
-    fetchProducts();
+    fetchCategorys();
     setIsloading(false);
   }, [org]);
+
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        if (org) {
+          const res = await fetch(`http://localhost:9999/inventory/${org?._id}`, {
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          });
+
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const json = await res.json();
+
+          if (!Array.isArray(json)) {
+            throw new Error("Response is not an array");
+          }
+
+          dispatch(inventoryActions.setInventory(json));
+        }
+      } catch (error) {
+        console.error("Error fetching Inventory:", error);
+      }
+    };
+
+    fetchInventory();
+    setIsloading(false);
+
+  }, [inventory]);
 
   return (
     <BrowserRouter>
@@ -141,9 +177,10 @@ function App() {
             element={user ? <PlaceOrderPage /> : <Navigate to="/login" />}
           />
           <Route
-            path="/product"
-            element={user ? <ProductPage /> : <Navigate to="/login" />}
+            path="/category"
+            element={user ? <CategoryPage /> : <Navigate to="/login" />}
           />
+         
         </Routes>
       )}
     </BrowserRouter>

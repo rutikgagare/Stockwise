@@ -1,45 +1,147 @@
-import ProductCard from "../components/ProductCard";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import Sidebar from "../components/Sidebar";
-import classes from "./InventoryPage.module.css";
+import AddItem from "../components/AddItem";
+import UpdateItem from "../components/UpdateItem";
+import { inventoryActions } from "../store/inventorySlice";
+
+import classes from "./CategoryPage.module.css";
 
 const InventoryPage = () => {
-  const products = [
-    {
-      name: "HP Laptop",
-      img: "data:image/jpeg;base64,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",
-      quantity: 45,
-    },
-    {
-      name: "Office chairs",
-      img: "https://static.vecteezy.com/system/resources/previews/022/449/441/original/office-chair-isolated-on-transparent-free-png.png",
-      quantity: 100,
-    },
-    {
-      name: "Water bottles",
-      img: "",
-      quantity: 20,
-    },
-    {
-      name: "A4 Notebook",
-      img: "",
-      quantity: 25,
-    },
-    {
-      name: "LED Bulb",
-      img: "",
-      quantity: 50,
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+  const org = useSelector((state) => state?.org?.organization);
+  const inventory = useSelector((state) => state.inventory.data);
+
+  const [showAddItem, setShowAddItem] = useState(false);
+  const [showUdateItem, setShowUPdateItem] = useState(false);
+  const [updateItem, setUpdateItem] = useState();
+
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        if (org) {
+          const res = await fetch(
+            `http://localhost:9999/inventory/${org?._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.token}`,
+              },
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const json = await res.json();
+
+          if (!Array.isArray(json)) {
+            throw new Error("Response is not an array");
+          }
+
+          dispatch(inventoryActions.setInventory(json));
+        }
+      } catch (error) {
+        console.error("Error fetching Inventory:", error);
+      }
+    };
+
+    fetchInventory();
+  }, [org]);
+
+  const deleteItemHandler = async (id) => {
+    try {
+      const resposnse = await fetch("http://localhost:9999/inventory/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          itemId: id,
+        }),
+      });
+
+      if (resposnse.ok) {
+        const json = await resposnse.json();
+        dispatch(inventoryActions.deleteItem({ id: json?._id }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const toggleShowAddItem = () => {
+    setShowAddItem((prevState) => !prevState);
+  };
+
+  const toggleShowUdateItem = () => {
+    setShowUPdateItem((prevState) => !prevState);
+  };
+
   return (
     <div className={classes.main}>
       <div className={classes.left}>
         <Sidebar />
       </div>
-      <div className={classes.inventory_container}>
-        {products.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))}
-      </div>
+
+      {!showAddItem && !showUdateItem && (
+        <div className={classes.right}>
+          <div className={classes.header}>
+            <h3>Inventory Items</h3>
+            <button onClick={() => setShowAddItem(true)}>+ Add Item</button>
+          </div>
+
+          <div className={classes.category_table_container}>
+            {inventory && (
+              <table className={classes.category_table}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>quantity</th>
+                    <th>Serial Number</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventory?.map((item) => (
+                    <tr key={item?._id}>
+                      <td>{item?.name}</td>
+                      <td>{item?.quantity}</td>
+                      <td>{item?.serialNumber}</td>
+
+                      <td className={classes.actions}>
+                        <button className={classes.update} onClick={()=>{
+                          setUpdateItem(item)
+                          toggleShowUdateItem()}
+                        }>Update</button>
+
+                        <button className={classes.delete} onClick={()=> 
+                          deleteItemHandler(item?._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showAddItem && !showUdateItem && (
+        <div className={classes.right}>
+          <AddItem onClose={toggleShowAddItem} />
+        </div>
+      )}
+
+      {!showAddItem && showUdateItem && (
+        <div className={classes.right}>
+          <UpdateItem item={updateItem} onClose={toggleShowUdateItem} />
+        </div>
+      )}
     </div>
   );
 };

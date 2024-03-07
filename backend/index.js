@@ -4,7 +4,9 @@ const cors = require("cors")
 // const userRoutes = require("./routes/userRoutes")
 const authRoutes = require("./routes/authRoutes")
 const organizationRoutes = require("./routes/organizationRoutes")
-const productRoutes = require("./routes/productRoutes")
+const categoryRoutes = require("./routes/categoryRoutes")
+const inventoryRoutes = require("./routes/inventoryRoutes");
+
 const vendorRoutes = require("./routes/vendorRoutes")
 const orderRoutes = require("./routes/orderRoutes")
 require('dotenv').config()
@@ -21,7 +23,8 @@ mongoose.connect(process.env.MONGO_URI)
 // app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/org", organizationRoutes);
-app.use("/product", productRoutes);
+app.use("/category", categoryRoutes);
+app.use("/inventory", inventoryRoutes);
 app.use("/vendor", vendorRoutes);
 app.use("/order", orderRoutes);
 

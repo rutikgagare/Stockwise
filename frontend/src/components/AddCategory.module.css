@@ -4,14 +4,14 @@
   display: flex;
 }
 
-.addProduct {
+.addCategory {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.addProduct .header {
+.addCategory .header {
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
@@ -34,16 +34,18 @@
   margin: 0.5rem 0;
 }
 
-.addProduct .addProductForm {
+.addCategory .addCategoryForm {
+  height: 80vh;
   padding: 0.5rem 1rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  overflow-y: scroll;
 }
 
-.addProductForm .error {
+.addCategoryForm .error {
   background-color: rgb(252, 235, 235);
   border-radius: 0.2rem;
   width: 100%;
@@ -53,8 +55,8 @@
   color: #d32f2f;
 }
 
-.addProductForm form {
-  width: 50%;
+.addCategoryForm form {
+  width: 60%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -77,6 +79,10 @@ select {
   background-color: transparent;
 }
 
+input[type="checkbox"] {
+  padding: 2rem 1rem;
+}
+
 /* .inputDiv select{
   overflow-y:auto;
 } */
@@ -92,9 +98,9 @@ form button {
   padding: 0.5rem 1rem;
   background-color: #0183ff;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-radius: 0.2rem;
-  margin: 0.5rem 0;
+  margin-top: 1rem;
 }
 
 ::placeholder {
@@ -102,3 +108,39 @@ form button {
   opacity: 1;
   font-size: 1rem;
 }
+
+.customField{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  border-radius: 0.2rem;
+  padding: 1rem;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+input[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #0183ff; 
+  border-radius: 4px;
+  outline: none; 
+  margin: 0.5rem;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #0183ff; 
+}
+
+
+.customField i{
+  font-size: 2rem;
+  color: red;
+  padding: 0.5rem;
+}
+
+.custFieldBtn{
+  background-color: green;
+}
+
+

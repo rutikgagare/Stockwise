@@ -6,30 +6,30 @@ export const fetchUser = createAsyncThunk("fetchUser", async()=>{
 
 })
 
-const productSlice = createSlice({
-    name: "products",
+const inventorySlice = createSlice({
+    name: "inventory",
     initialState:{ data: null},
 
     reducers:{
-        setProduct:(state, action)=>{
+        setInventory:(state, action)=>{
             state.data = action.payload
         },
-        addProduct:(state, action)=>{
+        addItem:(state, action)=>{
             state.data = [...state.data, action.payload];
         },
-        deleteProduct:(state, action)=>{
+        deleteItem:(state, action)=>{
             state.data = state.data.filter(item => item._id !== action.payload.id)
         },
-        updateProduct:(state, action)=>{
-            state.data = state.data.map(item =>{
-                if(item._id === action.payload._id){
-                    return action.payload;
-                }
-                else{
-                    return item;
-                }
-            })
-        }
+        // updateCategory:(state, action)=>{
+        //     state.data = state.data.map(item =>{
+        //         if(item._id === action.payload._id){
+        //             return action.payload;
+        //         }
+        //         else{
+        //             return item;
+        //         }
+        //     })
+        // }
     },
 
     extraReducers:(builder)=>{
@@ -45,5 +45,5 @@ const productSlice = createSlice({
     }
 });
 
-export const productActions = productSlice.actions;
-export default productSlice;
+export const inventoryActions = inventorySlice.actions;
+export default inventorySlice;
