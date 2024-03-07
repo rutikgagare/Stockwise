@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import classes from "./AddVendor.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { productActions } from "../store/productSlice";
 
 const AddVendor = (props) => {
   const dispatch = useDispatch();

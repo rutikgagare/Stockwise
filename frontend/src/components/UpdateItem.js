@@ -16,6 +16,7 @@ const UpdateItem = (props) => {
     createdAt,
     updatedAt,
     __v,
+    assignedTo,
     ...itemFields
   } = item;
 

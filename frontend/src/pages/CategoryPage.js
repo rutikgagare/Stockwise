@@ -6,12 +6,12 @@ import AddCategory from "../components/AddCategory";
 import UpdateCategory from "../components/UpdateCategory";
 import classes from "./CategoryPage.module.css";
 import { categoryActions } from "../store/categorySlice";
+import noItem from "../Images/noItem.jpg";
 
 const CategoryPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const categories = useSelector((state) => state.category.data);
-  
 
   const [showAddItem, setShowAddItem] = useState(false);
   const [showUdateItem, setShowUPdateItem] = useState(false);
@@ -21,9 +21,9 @@ const CategoryPage = () => {
     setShowAddItem((prevState) => !prevState);
   };
 
-  const toggleShowUdateItem = () =>{
+  const toggleShowUdateItem = () => {
     setShowUPdateItem((prevState) => !prevState);
-  }
+  };
 
   const deleCategoryHandler = async (id) => {
     try {
@@ -61,12 +61,12 @@ const CategoryPage = () => {
           </div>
 
           <div className={classes.category_table_container}>
-            {categories && (
+            {categories && categories.length > 0  && (
               <table className={classes.category_table}>
                 <thead>
                   <tr>
-                    <th> Category Name</th>
-                    <th> Identification Type</th>
+                    <th>Category Name</th>
+                    <th>Identification Type</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -75,7 +75,7 @@ const CategoryPage = () => {
                     <tr key={category?._id}>
                       <td>{category?.name}</td>
                       <td>{category?.identificationType}</td>
-              
+
                       <td className={classes.actions}>
                         <button
                           onClick={() => {
@@ -101,6 +101,12 @@ const CategoryPage = () => {
                 </tbody>
               </table>
             )}
+
+            {categories && categories.length === 0 && (
+              <div className={classes.noItem}>
+                <img src={noItem} alt="" />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -113,7 +119,7 @@ const CategoryPage = () => {
 
       {!showAddItem && showUdateItem && (
         <div className={classes.right}>
-          <UpdateCategory Category = {updateItem} onClose={toggleShowUdateItem} />
+          <UpdateCategory Category={updateItem} onClose={toggleShowUdateItem} />
         </div>
       )}
     </div>

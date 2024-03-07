@@ -3,11 +3,9 @@ import './EmployeeTable.css';
 
 const EmployeeTable = ({ employees }) => {
 
-  console.log(employees,"Iside employee table")
-
   return (
     <div className="employee-table-container">
-      <table className="employee-table">
+      { employees.length > 0 && <table className="employee-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -26,7 +24,7 @@ const EmployeeTable = ({ employees }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>}
     </div>
   );
 };
