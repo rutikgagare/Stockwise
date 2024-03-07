@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import classes from "./AddProduct.module.css";
+import classes from "./AddVendor.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../store/productSlice";
 
-const AddProduct = (props) => {
+const AddVendor = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
@@ -124,4 +124,4 @@ const AddProduct = (props) => {
   );
 };
 
-export default AddProduct;
+export default AddVendor;
