@@ -27,7 +27,7 @@
   }
 
   .sidebar-item:hover, .sidebar-item:active {
-    background-color: #7abaf6;
+    background-color: #8bc4fa;
     border-radius: 0.5rem;
     color: white;
     transition: 0.1s ease-in;
