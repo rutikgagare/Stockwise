@@ -1,15 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import classes from "./PlaceOrderPage.module.css"
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import "./PlaceOrderPage.module.css"
 
 const PlaceOrderPage = () => {
     const [orders, setOrders] = useState([]);
+    const [vendors, setVendors] = useState([]);
+
+    const user = useSelector((state) => state.auth.user);
+    const org = useSelector((state) => state.org.organization);
 
     const handleClearAll = () => {
         // const res = confirm("Are You Sure Want to clear all items?");
         setOrders([])
     }
+
+    const handlePlaceOrder = async () => {
+        console.log(orders);
+        if (!org) {
+            alert("Organization data not found!");
+            return;
+        } 
+        if (!user) {
+            alert("User not found!")
+            return;
+        }
+
+        if (user) console.log('user: ', user)
+        try {
+            const res = await axios.post("http://localhost:9999/order/create", {
+                orgId: org?._id,
+                vendeeId: user?.id,
+                cart: orders
+            })
+            console.log("res: ", res);
+        }
+        catch (err) {
+            alert("could not create order: ", err);
+        }
+
+    }
+
+    useEffect(() => {
+        const fetchVendors = async () => {
+            const res = await fetch("http://localhost:9999/vendor/vendors", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${user?.token}`,
+                },
+                body: JSON.stringify({
+                    orgId: org?._id
+                }),
+            });
+
+            const resJson = await res.json()
+            console.log("resJson", resJson);
+            if (!res.ok) { }
+
+            if (res.ok) {
+
+                setVendors(resJson);
+            }
+
+        }
+        fetchVendors();
+        console.log("vendors:", vendors);
+    }, [])
 
     return (
         <>
@@ -23,7 +82,8 @@ const PlaceOrderPage = () => {
                     <div className={classes.orders}>
                         {orders.map((order, idx) => (
                             <div className={classes.order_form} key={idx}>
-                                Product Name:
+                                <label for="vendor">Product Name</label>
+                                
                                 <input
                                     type="text"
                                     value={order?.name}
@@ -33,27 +93,25 @@ const PlaceOrderPage = () => {
                                         setOrders(newOrders);
                                     }}
                                 />
-                                Product Vendor:
-                                <input
-                                    type="text"
-                                    value={order?.vendor}
-                                    onChange={(e) => {
+                                <label for="vendor">Product Vendor</label>
+
+                                <select 
+                                    name="vendor" 
+                                    id="vendor"
+                                    onChange={(e) => { 
+                                        console.log(idx, e.target.value)
                                         const newOrders = [...orders];
                                         newOrders[idx] = { ...order, vendor: e.target.value };
                                         setOrders(newOrders);
-                                    }}
-                                />
-                                Vendor Email:
-                                <input
-                                    type="email"
-                                    value={order?.email}
-                                    onChange={(e) => {
-                                        const newOrders = [...orders];
-                                        newOrders[idx] = { ...order, email: e.target.value };
-                                        setOrders(newOrders);
-                                    }}
-                                />
-                                Quntity:
+                                     }}
+                                >
+                                    <option></option>
+                                    {vendors?.map((v) => (
+                                        <option value={v?._id}>{v.name}</option>
+                                    ))}
+                                </select>
+
+                                <label for="vendor">Quantity</label>
                                 <input
                                     type="number"
                                     min={1}
@@ -85,7 +143,7 @@ const PlaceOrderPage = () => {
                             Remove All
                         </button>
 
-                        <button className={classes.order_btn} onClick={() => { console.log('orders', orders) }} >
+                        <button className={classes.order_btn} onClick={handlePlaceOrder} >
                             Place Order
                         </button>
                     </div>

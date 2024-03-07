@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes")
 const organizationRoutes = require("./routes/organizationRoutes")
 const productRoutes = require("./routes/productRoutes")
 const vendorRoutes = require("./routes/vendorRoutes")
+const orderRoutes = require("./routes/orderRoutes")
 require('dotenv').config()
 
 const app = express()
@@ -22,6 +23,7 @@ app.use("/auth", authRoutes);
 app.use("/org", organizationRoutes);
 app.use("/product", productRoutes);
 app.use("/vendor", vendorRoutes);
+app.use("/order", orderRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port: ${process.env.PORT}`)

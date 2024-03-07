@@ -21,7 +21,7 @@
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 10px;
-    max-width: 450px;
+    width: 350px;
     height: 400px;
     background-color: grey;
     margin: 7px;
@@ -46,7 +46,7 @@
     font-weight: bold;
 }
 
-.order_form input {
+.order_form input, select {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
