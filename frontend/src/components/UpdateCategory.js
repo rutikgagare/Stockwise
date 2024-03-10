@@ -10,11 +10,20 @@ const UpdateCategory = (props) => {
   const category = props.Category;
 
   const [name, setName] = useState(category.name);
-  const [identificationType, setIdentificationType] = useState(category.identificationType);
+  const [identificationType, setIdentificationType] = useState(
+    category.identificationType
+  );
   const [customFields, setCustomFields] = useState(category.customFields);
 
   const handleCustomFieldChange = (index, field, value) => {
-    customFields[index][field] = value;
+    setCustomFields((prevCustomFields) => {
+      const updatedCustomFields = [...prevCustomFields];
+      updatedCustomFields[index] = {
+        ...updatedCustomFields[index],
+        [field]: value,
+      };
+      return updatedCustomFields;
+    });
   };
 
   const handleAddCustomField = () => {
@@ -91,7 +100,7 @@ const UpdateCategory = (props) => {
             </div>
 
             <div className={classes.inputDiv}>
-              <label htmlFor="Product Name">Product Name</label>
+              <label htmlFor="">Item Name</label>
               <input type="text" disabled placeholder="Fixed field" />
             </div>
 
@@ -164,12 +173,20 @@ const UpdateCategory = (props) => {
                   />
                 </div>
 
-                <i class="fa-regular fa-circle-xmark" onClick={() => handleRemoveCustomField(index)}></i>
-
+                <i
+                  class="fa-regular fa-circle-xmark"
+                  onClick={() => handleRemoveCustomField(index)}
+                ></i>
               </div>
             ))}
 
-            <button type="button" onClick={handleAddCustomField} className={classes.custFieldBtn}>Add Custom Field</button>
+            <button
+              type="button"
+              onClick={handleAddCustomField}
+              className={classes.custFieldBtn}
+            >
+              Add Custom Field
+            </button>
 
             <button type="submit">Save changes</button>
           </form>

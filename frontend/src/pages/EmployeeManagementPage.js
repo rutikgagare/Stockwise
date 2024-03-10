@@ -5,6 +5,7 @@ import CreateEmployee from "../components/CreateEmployee";
 import Sidebar from "../components/Sidebar";
 import classes from "./EmployeeManagementPage.module.css";
 import axios from "axios";
+import noItem from '../Images/noItem.jpg'
 
 const EmployeeManagementPage = () => {
   const user = useSelector((state) => state?.auth?.user);
@@ -67,7 +68,10 @@ const EmployeeManagementPage = () => {
 
         </div>
 
-        {employees && <EmployeeTable employees={employees} />}
+        {employees && employees.length > 0 && <EmployeeTable employees={employees} />}
+        {employees && employees.length === 0 &&  <div className={classes.noItem}>
+        <img src={noItem} alt="" /></div> }
+
       </div>
     </div>
   );

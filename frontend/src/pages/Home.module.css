@@ -2,6 +2,7 @@
     width: 100%;
     min-height: 91vh;
     display: flex;
+    gap: 2rem;
     padding: 2rem;
     align-items: center;
 }
@@ -12,12 +13,17 @@
 
 .right{
     width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 2rem;
+    padding: 1rem;
 }
 
-.right h2{ 
-    color: #0183ff;
-    margin: 2rem 0;
-    font-size: 2rem;
+.tagline h2{ 
+    color: #1d6db3;
+    margin: 0.7rem 0;
+    font-size: 1.8rem;
 }
 
 .right p{

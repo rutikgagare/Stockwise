@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import AddVendor from "../components/AddVendor";
 import classes from "./VendorsPage.module.css";
+import noItem from "../Images/noItem.jpg";
 
 const VendorPage = () => {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
 
@@ -22,15 +22,15 @@ const VendorPage = () => {
 
   const toggleShowUdateItem = () => {
     setShowUPdateItem((prevState) => !prevState);
-  }
+  };
 
   const updateVendor = async (vendorIdx) => {
-    console.log("vendorIdx", vendorIdx)
+    console.log("vendorIdx", vendorIdx);
     console.log("vendors", vendors);
-    console.log("updating vendor: ", vendors[vendorIdx])
+    console.log("updating vendor: ", vendors[vendorIdx]);
 
     if (!vendors[vendorIdx]) {
-      alert(vendorIdx, "vendor not found?!")
+      alert(vendorIdx, "vendor not found?!");
       return;
     }
 
@@ -38,31 +38,31 @@ const VendorPage = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${user?.token}`,
+        Authorization: `Bearer ${user?.token}`,
       },
       body: JSON.stringify({
-        ...vendors[vendorIdx]
+        ...vendors[vendorIdx],
       }),
     });
 
     const resJson = await res.json();
 
-    console.log("updateVendor resJson: ", resJson)
+    console.log("updateVendor resJson: ", resJson);
     if (!res.ok) {
-      alert("Could not update the vendor")
+      alert("Could not update the vendor");
     }
 
     if (res.ok) {
-      alert("Vendor udpated successfully!")
+      alert("Vendor udpated successfully!");
     }
-  }
+  };
 
   const deleteVendor = async (idx) => {
     const res = await fetch("http://localhost:9999/vendor/delete", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${user?.token}`,
+        Authorization: `Bearer ${user?.token}`,
       },
       body: JSON.stringify({ vendorId: vendors[idx]._id }),
     });
@@ -85,34 +85,32 @@ const VendorPage = () => {
     if (res.ok) {
       alert("Vendor deleted successfully");
     }
-
-  }
+  };
   useEffect(() => {
-    console.log('useEffect triggered')
+    console.log("useEffect triggered");
     const fetchVendors = async () => {
       const res = await fetch("http://localhost:9999/vendor/vendors", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
-          orgId: org?._id
+          orgId: org?._id,
         }),
       });
 
-      const resJson = await res.json()
+      const resJson = await res.json();
       console.log("resJson", resJson);
-      if (!res.ok) { }
-
-      if (res.ok) {
-
-        setVendors(resJson);
+      if (!res.ok) {
       }
 
-    }
+      if (res.ok) {
+        setVendors(resJson);
+      }
+    };
     fetchVendors();
-  }, [])
+  }, []);
 
   return (
     <div className={classes.main}>
@@ -123,12 +121,12 @@ const VendorPage = () => {
       {!showAddItem && !showUdateItem && (
         <div className={classes.right}>
           <div className={classes.header}>
-            <h3>Vendors</h3>
+            <h3>Active Vendors</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
           </div>
 
           <div className={classes.employee_table_container}>
-            {vendors && (
+            {vendors && vendors?.length > 0 && (
               <table className={classes.employee_table}>
                 <thead>
                   <tr>
@@ -191,7 +189,7 @@ const VendorPage = () => {
                         />
                       </td>
                       <td className={classes.actions}>
-                        {idx == updateItem ?
+                        {idx == updateItem ? (
                           <button
                             className={classes.done}
                             onClick={() => {
@@ -201,7 +199,7 @@ const VendorPage = () => {
                           >
                             Done
                           </button>
-                          :
+                        ) : (
                           <button
                             onClick={() => {
                               if (updateItem !== -1) {
@@ -214,31 +212,36 @@ const VendorPage = () => {
                           >
                             Update
                           </button>
-                        }
+                        )}
 
-                        {
-                          updateItem == idx ?
-                            <button
-                              onClick={() => setUpdateItem(-1)}
-                              className={classes.cancel}
-                            >
-                              Cancel
-                            </button>
-                            :
-                            <button
-                              onClick={() => {
-                                deleteVendor(idx);
-                              }}
-                              className={classes.delete}
-                            >
-                              Delete
-                            </button>
-                        }
+                        {updateItem == idx ? (
+                          <button
+                            onClick={() => setUpdateItem(-1)}
+                            className={classes.cancel}
+                          >
+                            Cancel
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              deleteVendor(idx);
+                            }}
+                            className={classes.delete}
+                          >
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            )}
+
+            {vendors && vendors.length === 0 && (
+              <div className={classes.noItem}>
+                <img src={noItem} alt="" />
+              </div>
             )}
           </div>
         </div>
@@ -246,7 +249,11 @@ const VendorPage = () => {
 
       {showAddItem && !showUdateItem && (
         <div className={classes.right}>
-          <AddVendor onClose={toggleShowAddItem} updateVendors={setVendors} vendors={vendors}/>
+          <AddVendor
+            onClose={toggleShowAddItem}
+            updateVendors={setVendors}
+            vendors={vendors}
+          />
         </div>
       )}
 

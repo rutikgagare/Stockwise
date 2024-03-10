@@ -52,6 +52,7 @@ const AddItem = (props) => {
       const itemDetails = {
         name,
         categoryId: selectedCategory._id,
+        assignedTo: null,
         orgId: org._id,
         identificationType: selectedCategory.identificationType
       };
@@ -71,8 +72,6 @@ const AddItem = (props) => {
           itemDetails[field.name] = fieldValue;
         });
       }
-
-      console.log(itemDetails);
 
       const response = await fetch("http://localhost:9999/inventory/create", {
         method: "POST",

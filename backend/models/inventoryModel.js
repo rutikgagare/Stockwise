@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Category = require("./categoryModel.js");
 const Organization = require("./organizationModel.js");
+const User = require("./userModel.js");
+
 
 const inventorySchema = new Schema(
   {
@@ -23,6 +25,10 @@ const inventorySchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Organization",
+    },
+    assignedTo:{
+      type: Schema.Types.ObjectId,
+      ef: "User"
     },
     quantity:{
         type: Number,

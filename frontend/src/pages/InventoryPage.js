@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import AddItem from "../components/AddItem";
 import UpdateItem from "../components/UpdateItem";
 import { inventoryActions } from "../store/inventorySlice";
+import noItem from "../Images/noItem.jpg";
 
 import classes from "./CategoryPage.module.css";
 
@@ -96,7 +97,7 @@ const InventoryPage = () => {
           </div>
 
           <div className={classes.category_table_container}>
-            {inventory && (
+            {inventory && inventory.length > 0 && (
               <table className={classes.category_table}>
                 <thead>
                   <tr>
@@ -112,15 +113,26 @@ const InventoryPage = () => {
                       <td>{item?.name}</td>
                       <td>{item?.quantity}</td>
                       <td>{item?.serialNumber}</td>
-
                       <td className={classes.actions}>
-                        <button className={classes.update} onClick={()=>{
-                          setUpdateItem(item)
-                          toggleShowUdateItem()}
-                        }>Update</button>
 
-                        <button className={classes.delete} onClick={()=> 
-                          deleteItemHandler(item?._id)}>Delete</button>
+                        <button className={classes.checkout}>CheckOut</button>
+
+                        <button
+                          className={classes.update}
+                          onClick={() => {
+                            setUpdateItem(item);
+                            toggleShowUdateItem();
+                          }}
+                        >
+                          Update
+                        </button>
+
+                        <button
+                          className={classes.delete}
+                          onClick={() => deleteItemHandler(item?._id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -128,6 +140,12 @@ const InventoryPage = () => {
               </table>
             )}
           </div>
+
+          {inventory && inventory.length === 0 && (
+              <div className={classes.noItem}>
+                <img src={noItem} alt="" />
+              </div>
+            )}
         </div>
       )}
 

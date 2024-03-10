@@ -52,7 +52,7 @@
 .employee_table th,
 .employee_table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 0.6rem;
     text-align: left;
 }
 
@@ -96,4 +96,17 @@
 .actions .delete{
     background-color: red;
     width: 75px;
+}
+
+.right .noItem{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.noItem img{
+    height: 30rem;
+    width: 30rem;
 }

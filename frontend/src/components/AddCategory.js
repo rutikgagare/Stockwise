@@ -54,7 +54,14 @@ const AddCategory = (props) => {
   };
 
   const handleCustomFieldChange = (index, field, value) => {
-    customFields[index][field] = value;
+    setCustomFields((prevCustomFields) => {
+      const updatedCustomFields = [...prevCustomFields];
+      updatedCustomFields[index] = {
+        ...updatedCustomFields[index],
+        [field]: value,
+      };
+      return updatedCustomFields;
+    });
   };
 
   const handleAddCustomField = () => {
@@ -193,6 +200,7 @@ const AddCategory = (props) => {
             </div>
             <div className={classes.inputDiv}>
               <label htmlFor="Product Name">Product Name</label>
+              <label htmlFor="">Item Name</label>
               <input type="text" disabled placeholder="Fixed field" />
             </div>
 
@@ -274,7 +282,11 @@ const AddCategory = (props) => {
               </div>
             ))}
 
-            <button type="button" onClick={handleAddCustomField} className={classes.custFieldBtn}>
+            <button
+              type="button"
+              onClick={handleAddCustomField}
+              className={classes.custFieldBtn}
+            >
               Add Custom Field
             </button>
 

@@ -1,6 +1,7 @@
 /* EmployeeTable.css */
 .employee-table-container {
-    margin: 20px;
+    width: 90%;
+    margin: 20px auto;
 }
 
 .employee-table {
