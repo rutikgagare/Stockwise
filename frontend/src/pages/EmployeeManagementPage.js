@@ -51,7 +51,7 @@ const EmployeeManagementPage = () => {
     fetchEmployees();
   }, [org]);
 
-  console.log("Employees ", employees);
+  // console.log("Employees ", employees);
 
   return (
     <div className={classes.main}>

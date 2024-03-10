@@ -144,3 +144,19 @@ input[type="checkbox"]:checked {
 }
 
 
+.vendors_div {
+  /* position: absolute; */
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.75);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.vendorDiv {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.75);
+  padding: 3px;
+  border-bottom: 1px solid #bbb;
+}

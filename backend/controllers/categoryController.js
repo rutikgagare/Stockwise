@@ -16,8 +16,11 @@ const getCategorys = async (req, res)=>{
 
 const createCategory = async (req, res) => {
 
-  const { name, identificationType, customFields, orgId} = req.body;
+  const { name, identificationType, vendors, customFields, orgId} = req.body;
 
+  const v = [];
+  for (const vendor of vendors) v.push(new ObjectId(vendor));
+  
   try {
     
     const organization = Organization.findById(new ObjectId(orgId));
@@ -26,7 +29,7 @@ const createCategory = async (req, res) => {
       throw Error(`Organization with orgId: ${orgId} does not exist`);
     }
 
-    const category = new Category({ name, identificationType, customFields, orgId });
+    const category = new Category({ name, identificationType, vendors: v, customFields, orgId });
 
     await category.save();
 

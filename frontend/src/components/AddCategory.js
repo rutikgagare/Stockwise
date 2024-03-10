@@ -23,6 +23,9 @@ const AddCategory = (props) => {
         throw Error("All field must be field");
       }
 
+      const selectedVendorsIds = [];
+      for (const sv of selectedVendors) selectedVendorsIds.push(sv._id);
+
       const response = await fetch("http://localhost:9999/category/create", {
         method: "POST",
         headers: {
@@ -33,6 +36,7 @@ const AddCategory = (props) => {
           name,
           identificationType,
           customFields,
+          vendors: selectedVendorsIds,
           orgId: org?._id,
         }),
       });
@@ -93,7 +97,6 @@ const AddCategory = (props) => {
   };
 
   useEffect(() => {
-    console.log('useEffect triggered')
     const fetchVendors = async () => {
       const res = await fetch("http://localhost:9999/vendor/vendors", {
         method: "POST",
@@ -107,7 +110,7 @@ const AddCategory = (props) => {
       });
 
       const resJson = await res.json()
-      console.log("resJson", resJson);
+      
       if (!res.ok) { }
 
       if (res.ok) {
@@ -158,9 +161,9 @@ const AddCategory = (props) => {
 
             <div className={classes.inputDiv}>
               <label htmlFor="Vendors">Vendors</label>
-              <div style={{ border: '1px solid #ccc', marginTop: '5px', padding: '10px' }}>
+              <div className={classes.vendors_div}>
                   {selectedVendors?.map((vendor, idx) => (
-                    <div 
+                    <div className={classes.vendorDiv}
                     disabled={true} 
                     onClick={() => {
                       handleRemoveVendor(idx);
@@ -175,17 +178,10 @@ const AddCategory = (props) => {
                 Select Vendors
               </div>
               {isOpen && (
-                <div
-                style={{
-                  top: '100%', // Position below the triggering element
-                  left: '0',
-                  zIndex: '1', // Ensure the dropdown is above other elements
-                  border: '1px solid #ccc',
-                  padding: '10px',
-                }}
-                >
+                <div className={`${classes.vendors_div}`}>
                   {vendors?.map((vendor, idx) => (
                     <div 
+                    className={classes.vendorDiv}
                       disabled={true} 
                       onClick={() => {
                         handleAddVendor(idx);
@@ -199,7 +195,6 @@ const AddCategory = (props) => {
               )}
             </div>
             <div className={classes.inputDiv}>
-              <label htmlFor="Product Name">Product Name</label>
               <label htmlFor="">Item Name</label>
               <input type="text" disabled placeholder="Fixed field" />
             </div>
