@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../store/categorySlice";
@@ -12,6 +12,9 @@ const AddCategory = (props) => {
   const [identificationType, setIdentificationType] = useState(null);
   const [customFields, setCustomFields] = useState([]);
   const [error, setError] = useState(null);
+
+  const [vendors, setVendors] = useState([]);
+  const [selectedVendors, setSelectedVendors] = useState([]);
 
   const createCategoryHandler = async (e) => {
     e.preventDefault();
@@ -63,6 +66,52 @@ const AddCategory = (props) => {
     setCustomFields(updatedCustomFields);
   };
 
+  const handleAddVendor = (idx) => {
+    setSelectedVendors([...selectedVendors, vendors[idx]]);
+    const newVendors = vendors.filter((v, i, a) => i != idx);
+    setVendors(newVendors);
+  }
+  
+  const handleRemoveVendor = (idx) => {
+    setVendors([...vendors, selectedVendors[idx]]);
+    const newSelectedVendors = selectedVendors.filter((v, i, a) => i != idx);
+    setSelectedVendors(newSelectedVendors);
+    
+  }
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    console.log('useEffect triggered')
+    const fetchVendors = async () => {
+      const res = await fetch("http://localhost:9999/vendor/vendors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          orgId: org?._id
+        }),
+      });
+
+      const resJson = await res.json()
+      console.log("resJson", resJson);
+      if (!res.ok) { }
+
+      if (res.ok) {
+
+        setVendors(resJson);
+      }
+
+    }
+    fetchVendors();
+  }, [])
+
   return (
     <div className={classes.main}>
       <div className={classes.addCategory}>
@@ -100,6 +149,48 @@ const AddCategory = (props) => {
               </select>
             </div>
 
+            <div className={classes.inputDiv}>
+              <label htmlFor="Vendors">Vendors</label>
+              <div style={{ border: '1px solid #ccc', marginTop: '5px', padding: '10px' }}>
+                  {selectedVendors?.map((vendor, idx) => (
+                    <div 
+                    disabled={true} 
+                    onClick={() => {
+                      handleRemoveVendor(idx);
+                    }}
+                    >
+                      {vendor.name}
+
+                  </div>
+                  ))}
+                </div>
+              <div onClick={toggleDropdown} style={{ cursor: 'pointer', padding: '10px', border: '1px solid #ccc' }}>
+                Select Vendors
+              </div>
+              {isOpen && (
+                <div
+                style={{
+                  top: '100%', // Position below the triggering element
+                  left: '0',
+                  zIndex: '1', // Ensure the dropdown is above other elements
+                  border: '1px solid #ccc',
+                  padding: '10px',
+                }}
+                >
+                  {vendors?.map((vendor, idx) => (
+                    <div 
+                      disabled={true} 
+                      onClick={() => {
+                        handleAddVendor(idx);
+                      }}
+                      >
+                        {vendor.name}
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div className={classes.inputDiv}>
               <label htmlFor="Product Name">Product Name</label>
               <input type="text" disabled placeholder="Fixed field" />

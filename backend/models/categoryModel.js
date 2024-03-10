@@ -20,6 +20,9 @@ const categorySchema = new Schema(
       required: true,
       ref: "Organization",
     },
+    vendors: {
+      type: Array,
+    },
     customFields:[],
   },
   { timestamps: true }
