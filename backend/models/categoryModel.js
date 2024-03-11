@@ -32,6 +32,9 @@ const categorySchema = new Schema(
         default: false, 
       },
     }],
+    vendors: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );

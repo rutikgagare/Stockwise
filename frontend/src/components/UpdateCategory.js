@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../store/categorySlice";
@@ -6,6 +6,7 @@ import { categoryActions } from "../store/categorySlice";
 const UpdateCategory = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const org = useSelector((state) => state.org.organization);
 
   const category = props.Category;
 
@@ -14,6 +15,9 @@ const UpdateCategory = (props) => {
     category.identificationType
   );
   const [customFields, setCustomFields] = useState(category.customFields);
+
+  const [vendors, setVendors] = useState([]);
+  const [selectedVendors, setSelectedVendors] = useState([]);
 
   const handleCustomFieldChange = (index, field, value) => {
     setCustomFields((prevCustomFields) => {
@@ -35,9 +39,31 @@ const UpdateCategory = (props) => {
     setCustomFields(updatedCustomFields);
   };
 
+  const handleAddVendor = (idx) => {
+    setSelectedVendors([...selectedVendors, vendors[idx]]);
+    const newVendors = vendors.filter((v, i, a) => i != idx);
+    setVendors(newVendors);
+  }
+
+  const handleRemoveVendor = (idx) => {
+    setVendors([...vendors, selectedVendors[idx]]);
+    const newSelectedVendors = selectedVendors.filter((v, i, a) => i != idx);
+    setSelectedVendors(newSelectedVendors);
+
+  }
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
   const updateCategoryHandler = async (e) => {
     e.preventDefault();
     try {
+      const selectedVendorsIds = [];
+      for (const sv of selectedVendors) selectedVendorsIds.push(sv._id);
+      
       const response = await fetch("http://localhost:9999/Category/update", {
         method: "PUT",
         headers: {
@@ -48,6 +74,7 @@ const UpdateCategory = (props) => {
           categoryId: category?._id,
           name,
           identificationType,
+          vendors: selectedVendorsIds,
           customFields,
         }),
       });
@@ -61,6 +88,50 @@ const UpdateCategory = (props) => {
     }
     props.onClose();
   };
+
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const res = await fetch("http://localhost:9999/vendor/vendors", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${user?.token}`,
+          },
+          body: JSON.stringify({
+            orgId: org?._id
+          }),
+        });
+  
+        const resJson = await res.json();
+  
+        if (res.ok) {
+          setVendors(resJson);
+  
+          // set selected vendors
+          const sv = [];
+          const rm_idx = [];
+          for (const v_id of category.vendors) {
+            for (let i = 0; i < resJson.length; i++) {
+              if (v_id === resJson[i]._id) {
+                sv.push(resJson[i]);
+                rm_idx.push(i);
+              }
+            }
+          }
+  
+          setSelectedVendors(sv);
+          let filteredVendors = resJson.filter((vendor, idx) => rm_idx.indexOf(idx) === -1);
+          setVendors(filteredVendors);
+        }
+  
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchVendors();
+  }, []); // Empty dependency array to run the effect only once on component mount  
 
   return (
     <div className={classes.main}>
@@ -98,6 +169,43 @@ const UpdateCategory = (props) => {
                 <option value="non-unique">non-unique</option>
               </select>
             </div>
+
+            <div className={classes.inputDiv}>
+              <label htmlFor="Vendors">Vendors</label>
+              <div className={classes.vendors_div}>
+                {selectedVendors?.map((vendor, idx) => (
+                  <div className={classes.vendorDiv}
+                    disabled={true}
+                    onClick={() => {
+                      handleRemoveVendor(idx);
+                    }}
+                  >
+                    {vendor.name}
+
+                  </div>
+                ))}
+              </div>
+              <div onClick={toggleDropdown} style={{ cursor: 'pointer', padding: '10px', border: '1px solid #ccc' }}>
+                Select Vendors
+              </div>
+              {isOpen && (
+                <div className={`${classes.vendors_div}`}>
+                  {vendors?.map((vendor, idx) => (
+                    <div
+                      className={classes.vendorDiv}
+                      disabled={true}
+                      onClick={() => {
+                        handleAddVendor(idx);
+                      }}
+                    >
+                      {vendor.name}
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
 
             <div className={classes.inputDiv}>
               <label htmlFor="">Item Name</label>

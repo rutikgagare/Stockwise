@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../store/categorySlice";
@@ -13,6 +13,9 @@ const AddCategory = (props) => {
   const [customFields, setCustomFields] = useState([]);
   const [error, setError] = useState(null);
 
+  const [vendors, setVendors] = useState([]);
+  const [selectedVendors, setSelectedVendors] = useState([]);
+
   const createCategoryHandler = async (e) => {
     e.preventDefault();
     try {
@@ -20,6 +23,9 @@ const AddCategory = (props) => {
         throw Error("All field must be field");
       }
       console.log(customFields);
+
+      const selectedVendorsIds = [];
+      for (const sv of selectedVendors) selectedVendorsIds.push(sv._id);
 
       const response = await fetch("http://localhost:9999/category/create", {
         method: "POST",
@@ -31,6 +37,7 @@ const AddCategory = (props) => {
           name,
           identificationType,
           customFields,
+          vendors: selectedVendorsIds,
           orgId: org?._id,
         }),
       });
@@ -74,6 +81,51 @@ const AddCategory = (props) => {
     setCustomFields(updatedCustomFields);
   };
 
+  const handleAddVendor = (idx) => {
+    setSelectedVendors([...selectedVendors, vendors[idx]]);
+    const newVendors = vendors.filter((v, i, a) => i != idx);
+    setVendors(newVendors);
+  }
+  
+  const handleRemoveVendor = (idx) => {
+    setVendors([...vendors, selectedVendors[idx]]);
+    const newSelectedVendors = selectedVendors.filter((v, i, a) => i != idx);
+    setSelectedVendors(newSelectedVendors);
+    
+  }
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const fetchVendors = async () => {
+      const res = await fetch("http://localhost:9999/vendor/vendors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          orgId: org?._id
+        }),
+      });
+
+      const resJson = await res.json()
+      
+      if (!res.ok) { }
+
+      if (res.ok) {
+
+        setVendors(resJson);
+      }
+
+    }
+    fetchVendors();
+  }, [])
+
   return (
     <div className={classes.main}>
       <div className={classes.addCategory}>
@@ -114,6 +166,41 @@ const AddCategory = (props) => {
             <h4>Fixed fields</h4>
 
 
+            <div className={classes.inputDiv}>
+              <label htmlFor="Vendors">Vendors</label>
+              <div className={classes.vendors_div}>
+                  {selectedVendors?.map((vendor, idx) => (
+                    <div className={classes.vendorDiv}
+                    disabled={true} 
+                    onClick={() => {
+                      handleRemoveVendor(idx);
+                    }}
+                    >
+                      {vendor.name}
+
+                  </div>
+                  ))}
+                </div>
+              <div onClick={toggleDropdown} style={{ cursor: 'pointer', padding: '10px', border: '1px solid #ccc' }}>
+                Select Vendors
+              </div>
+              {isOpen && (
+                <div className={`${classes.vendors_div}`}>
+                  {vendors?.map((vendor, idx) => (
+                    <div 
+                    className={classes.vendorDiv}
+                      disabled={true} 
+                      onClick={() => {
+                        handleAddVendor(idx);
+                      }}
+                      >
+                        {vendor.name}
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div className={classes.inputDiv}>
               <label htmlFor="">Item Name</label>
               <input type="text" disabled placeholder="Fixed field" />

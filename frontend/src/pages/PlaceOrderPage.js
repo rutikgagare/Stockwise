@@ -12,9 +12,10 @@ const PlaceOrderPage = () => {
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
 
-  const handleClearAll = () => {
-    setOrders([]);
-  };
+    const handleClearAll = () => {
+        // const res = confirm("Are You Sure Want to clear all items?");
+        setOrders([])
+    }
 
   const handlePlaceOrder = async () => {
     console.log(orders);
