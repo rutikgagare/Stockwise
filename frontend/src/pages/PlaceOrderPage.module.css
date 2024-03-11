@@ -1,129 +1,92 @@
-.main {
-    width: 100%;
-    min-height: 91vh;
-    display: flex;
+.placeOrder {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.main .left {
-    width: fit-content;
+.placeOrder .header {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e4e4e4;
 }
 
-.main .right {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    /* flex-wrap: wrap; */
-    gap: 1rem;
+.placeOrder .orders_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
-.right .header{
-    width: 100%;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #e4e4e4;
+.placeOrder .order_form {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
-.header h3{
-    font-weight: 500;
+.placeOrder .inputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.order_form {
-    display: flex;
-    flex-direction: column;
-    width: 60%;
-    background-color: #f7f7f7;
-    /* padding: 15px; */
-    margin-bottom: 15px;
-    border-radius: 10px;
-    width: 350px;
-    height: 400px;
-    background-color: grey;
-    margin: 7px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.25s ease;
-    gap: 0.5rem;
+.placeOrder .inputDiv input,
+.placeOrder select {
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: none;
+  border: 1px solid rgb(228, 227, 227);
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: transparent;
 }
 
-.order_form:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.placeOrder .inputDiv input:focus,
+.placeOrder select:focus {
+  border: 1px solid #0183ff;
 }
 
-.orders {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 70vh;
-    overflow-y: scroll;
-    gap: 1rem;
+.placeOrder button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 0.2rem;
+  margin: 0.5rem 0;
+  font-size: 1rem;
 }
 
-.order_form label {
-    display: block;
-    font-weight: bold;
+.placeOrder .remove {
+  background-color: red;
+  width: 15%;
 }
 
-.order_form input, select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.placeOrder .action_buttons {
+  width: 50%;
+  padding: 0.5rem;
+  justify-content: space-between;
+  display: flex;
+  gap: 1rem;
+  margin: 2rem;
 }
 
-.order_form button {
-    background-color: red;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 20%;
+.placeOrder .action_buttons .add_btn {
+  background-color: #0183ff;
 }
 
-.order_form button:hover {
-    opacity: 0.74;
-    background-color: red;
+.placeOrder .action_buttons .order_btn {
+  background-color: green;
 }
 
-.action_buttons {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.action_buttons button {
-    width: 100px;
-}
-
-.add_btn {
-    background-color: #0183ff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.clear_btn {
-    background-color: red;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.order_btn {
-    background-color: #181818;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.placeOrder .action_buttons .clear_btn {
+  background-color: red;
 }
