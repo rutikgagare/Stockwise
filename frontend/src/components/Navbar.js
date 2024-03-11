@@ -1,15 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import classes from "./Navbar.module.css";
 import { useSelector } from "react-redux";
 import { useLogout } from "../hooks/useLogout";
+import Sidebar from "./Sidebar";
 
+import { RiFunctionLine } from "react-icons/ri";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const user = useSelector((state) => state.auth.user);
-  const org = useSelector((state)=> state.org.organization);
+  const org = useSelector((state) => state.org.organization);
 
-  const {logout} = useLogout();
+  const { logout } = useLogout();
 
   const logoutHandler = () => {
     logout();
@@ -17,10 +19,18 @@ const Navbar = () => {
 
   return (
     <div className={classes.navbar}>
+      <div className={classes.left}>
 
-      <div className={classes.logo}>
-        <i className="fas fa-laptop"></i>
-        <Link to="/"><h3>{org ? org.name : "StockWise"}</h3></Link>
+        {user &&  <div className={classes.sidebarIcon}>
+          <RiFunctionLine onClick= {props.toggleSidebar} />
+        </div> }
+
+        <div className={classes.logo}>
+          <i className="fas fa-laptop"></i>
+          <Link to="/">
+            <h3>{org ? org.name : "StockWise"}</h3>
+          </Link>
+        </div>
       </div>
 
       <div className={classes.middle}></div>

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Sidebar from "../components/Sidebar";
+// import Sidebar from "../components/Sidebar";
 import AddCategory from "../components/AddCategory";
 import UpdateCategory from "../components/UpdateCategory";
 import classes from "./CategoryPage.module.css";
 import { categoryActions } from "../store/categorySlice";
 import noItem from "../Images/noItem.jpg";
+import Layout from "../components/Layout";
 
 const CategoryPage = () => {
   const dispatch = useDispatch();
@@ -48,20 +49,17 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className={classes.main}>
-      <div className={classes.left}>
-        <Sidebar />
-      </div>
-
+    <Layout>
       {!showAddItem && !showUdateItem && (
-        <div className={classes.right}>
+        <div className={classes.category}>
+          
           <div className={classes.header}>
             <h3>Active Categories</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
           </div>
 
           <div className={classes.category_table_container}>
-            {categories && categories.length > 0  && (
+            {categories && categories.length > 0 && (
               <table className={classes.category_table}>
                 <thead>
                   <tr>
@@ -112,17 +110,17 @@ const CategoryPage = () => {
       )}
 
       {showAddItem && !showUdateItem && (
-        <div className={classes.right}>
+        <div className={classes.category}>
           <AddCategory onClose={toggleShowAddItem} />
         </div>
       )}
 
       {!showAddItem && showUdateItem && (
-        <div className={classes.right}>
+        <div className={classes.category}>
           <UpdateCategory Category={updateItem} onClose={toggleShowUdateItem} />
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

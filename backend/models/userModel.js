@@ -22,7 +22,8 @@ const userSchema = new Schema({
     type: String, 
     enum: ['admin', 'user', 'employee'], 
     default: 'admin' 
-  }
+  },
+
 }, { timestamps: true })
 
 

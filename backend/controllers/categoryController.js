@@ -26,8 +26,9 @@ const createCategory = async (req, res) => {
       throw Error(`Organization with orgId: ${orgId} does not exist`);
     }
 
+    console.log("Inside add category");
     const category = new Category({ name, identificationType, customFields, orgId });
-
+    console.log(category);
     await category.save();
 
     res.status(201).json(category);

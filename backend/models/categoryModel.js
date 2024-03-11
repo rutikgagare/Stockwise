@@ -8,19 +8,30 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
-
-    identificationType:{
+    identificationType: {
       type: String,
       required: true,
-      enum:['unique', 'non-unique']
+      enum: ["unique", "non-unique"],
     },
-    
     orgId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Organization",
     },
-    customFields:[],
+    customFields: [{
+      label: {
+        type: String,
+        required: true, 
+      },
+      type: {
+        type: String,
+        required: true, 
+      },
+      required: {
+        type: Boolean,
+        default: false, 
+      },
+    }],
   },
   { timestamps: true }
 );

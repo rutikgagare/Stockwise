@@ -5,20 +5,31 @@ import { inventoryActions } from "../store/inventorySlice";
 
 const UpdateItem = (props) => {
   const dispatch = useDispatch();
+
+  const [name, setName] = useState(props.item.name);
+  const [identificationType, setIdentificationType] = useState();
+  const [quantity, setQuantity] = useState(props.item.quantity);
+  const [serialNumber, setSerialNumber] = useState(props.item.serialNumber);
+
   const user = useSelector((state) => state.auth.user);
-  const org = useSelector((state) => state.org.organization);
-  const item = props?.item;
-  const {
-    _id,
-    orgId,
-    categoryId,
-    identificationType,
-    createdAt,
-    updatedAt,
-    __v,
-    assignedTo,
-    ...itemFields
-  } = item;
+  const categories = useSelector((state) => state.category.data);
+
+  const [customFieldsData, setcustomFieldsData] = useState(
+    props.item.customFieldsData
+  );
+  const [customFields, setCustomFields] = useState();
+
+  const handlerFormFields = () => {
+    const category = categories.find(
+      (category) => category._id === props?.item?.categoryId
+    );
+    setCustomFields(category.customFields);
+    setIdentificationType(category.identificationType);
+  };
+
+  useState(() => {
+    handlerFormFields();
+  }, [categories]);
 
   const [error, setError] = useState(null);
 
@@ -27,21 +38,25 @@ const UpdateItem = (props) => {
 
     try {
       const itemDetails = {
-        _id,
-        categoryId,
-        orgId,
+        itemId: props?.item?._id,
+        name,
       };
 
-      // Loop through the keys of itemFields to create input fields dynamically
-      for (let key in itemFields) {
-        if (
-          (key === "quantity" && identificationType === "unique") ||
-          (key === "serialNumber" && identificationType === "non-unique")
-        ) {
-          continue;
-        }
-        const fieldValue = document.getElementById(key).value;
-        itemDetails[key] = fieldValue;
+      if (identificationType === "unique") {
+        itemDetails.serialNumber = serialNumber;
+      } else if (identificationType === "non-unique") {
+        itemDetails.quantity = parseInt(quantity);
+      }
+
+      if (customFields) {
+        const updatedCustomFieldsData = {};
+      
+        customFields.forEach((field) => {
+          const fieldValue = document.getElementById(field.label).value;
+          updatedCustomFieldsData[field.label] = fieldValue; 
+        });
+      
+        itemDetails.customFieldsData = updatedCustomFieldsData; 
       }
 
       const response = await fetch("http://localhost:9999/inventory/update", {
@@ -61,7 +76,7 @@ const UpdateItem = (props) => {
 
       if (response.ok) {
         const json = await response.json();
-        dispatch(inventoryActions.addItem(json));
+        dispatch(inventoryActions.updateItem(json));
         props.onClose();
       }
     } catch (error) {
@@ -69,32 +84,12 @@ const UpdateItem = (props) => {
     }
   };
 
-  // Create an array of JSX elements for input fields
-  const inputFields = Object.keys(itemFields).map((key) => {
-    console.log(key);
-    if (
-      (key === "quantity" && identificationType === "unique") ||
-      (key === "serialNumber" && identificationType === "non-unique")
-    ) {
-      return null; // Skip rendering this input field
-    }
-
-    let inputType = "text"; // Default input type
-
-    // Determine input type based on value type
-    if (typeof itemFields[key] === "number") {
-      inputType = "number";
-    } else if (itemFields[key] instanceof Date) {
-      inputType = "date";
-    } // Add more conditions for other value types if needed
-
-    return (
-      <div className={classes.inputDiv} key={key}>
-        <label htmlFor={key}>{key}</label>
-        <input id={key} defaultValue={itemFields[key]} type={inputType} />
-      </div>
-    );
-  });
+  const handleCustomFieldChange = (label, value) => {
+    setcustomFieldsData((prevData) => ({
+      ...prevData,
+      [label]: value,
+    }));
+  };
 
   return (
     <div className={classes.main}>
@@ -108,8 +103,57 @@ const UpdateItem = (props) => {
           {error && <div className={classes.error}>{error}</div>}
 
           <form onSubmit={handleUpdateItem}>
-            {inputFields}
-            <button type="submit">Save Changes</button>
+            <div className={classes.inputDiv}>
+              <label htmlFor="name">Name</label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            {identificationType && identificationType === "unique" && (
+              <div className={classes.inputDiv}>
+                <label htmlFor="serialNumber">Serial Number</label>
+                <input
+                  id="serialNumber"
+                  value={serialNumber}
+                  type="text"
+                  onChange={(e) => setSerialNumber(e.target.value)}
+                />
+              </div>
+            )}
+
+            {identificationType && identificationType === "non-unique" && (
+              <div className={classes.inputDiv}>
+                <label htmlFor="qunatity">Quantity</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+              </div>
+            )}
+            {customFields &&
+              customFields.map((field) => {
+                return (
+                  <div className={classes.inputDiv} key={field.label}>
+                    <label htmlFor={field.label}>{field.label}</label>
+                    <input
+                      id={field.label}
+                      value={customFieldsData[field.label]}
+                      type={field.type}
+                      onChange={(e) =>
+                        handleCustomFieldChange(field.label, e.target.value)
+                      }
+                    />
+                  </div>
+                );
+              })}
+
+              <button type="submit">Save Changes</button>
           </form>
         </div>
       </div>

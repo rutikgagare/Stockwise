@@ -1,0 +1,44 @@
+/* // .checkout */
+
+.checkoutForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.checkoutForm .inputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputDiv input,
+select {
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: none;
+  border: 1px solid rgb(228, 227, 227);
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+input[type="checkbox"] {
+  padding: 2rem 1rem;
+}
+
+.inputDiv input:focus,
+select:focus {
+  border: 1px solid #0183ff;
+}
+
+.checkoutForm button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #0183ff;
+  color: white;
+  border-radius: 0.2rem;
+  margin-top: 1rem;
+}

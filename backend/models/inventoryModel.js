@@ -26,20 +26,41 @@ const inventorySchema = new Schema(
       required: true,
       ref: "Organization",
     },
-    assignedTo:{
-      type: Schema.Types.ObjectId,
-      ef: "User"
-    },
     quantity:{
-        type: Number,
-        default: 1
+      type: Number,
+      default: 1
     },
     serialNumber:{
-        type: String,
-        default: ""
+      type: String,
+    },
+    customFieldsData:{},
+    assignedTo:[
+      {
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true
+        },
+        userName: {
+          type: String,
+          required: true
+        },
+        quantity: {
+          type: Number,
+          required: true
+        }
+      }
+    ],
+    status:{
+      type: String,
+      default: "ready to deploy"
+    },
+    checkedOutQuantity:{
+      type: Number,
+      default: 0 
     }
   },
-  { timestamps: true ,strict: false }
+  { timestamps: true}
 );
 
 module.exports = mongoose.model("Inventory", inventorySchema);

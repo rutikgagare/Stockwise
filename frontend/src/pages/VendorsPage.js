@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import Sidebar from "../components/Sidebar";
 import AddVendor from "../components/AddVendor";
 import classes from "./VendorsPage.module.css";
 import noItem from "../Images/noItem.jpg";
+import Layout from "../components/Layout";
 
 const VendorPage = () => {
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
 
   const [showAddItem, setShowAddItem] = useState(false);
-  const [showUdateItem, setShowUPdateItem] = useState(false);
   const [updateItem, setUpdateItem] = useState(-1);
 
   const [vendors, setVendors] = useState([]);
 
   const toggleShowAddItem = () => {
     setShowAddItem((prevState) => !prevState);
-  };
-
-  const toggleShowUdateItem = () => {
-    setShowUPdateItem((prevState) => !prevState);
   };
 
   const updateVendor = async (vendorIdx) => {
@@ -77,7 +72,7 @@ const VendorPage = () => {
     }
 
     if (res.ok) {
-      const updatedVendors = vendors.filter((v, i) => i != idx);
+      const updatedVendors = vendors.filter((v, i) => i !== idx);
       console.log("updatedVendors", updatedVendors);
       setVendors(updatedVendors);
     }
@@ -110,16 +105,12 @@ const VendorPage = () => {
       }
     };
     fetchVendors();
-  }, []);
+  }, [org]);
 
   return (
-    <div className={classes.main}>
-      <div className={classes.left}>
-        <Sidebar />
-      </div>
-
-      {!showAddItem && !showUdateItem && (
-        <div className={classes.right}>
+    <Layout>
+      {!showAddItem && (
+        <div className={classes.vendor}>
           <div className={classes.header}>
             <h3>Active Vendors</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
@@ -143,7 +134,7 @@ const VendorPage = () => {
                       <td>
                         <input
                           style={{ outline: "none", border: "none" }}
-                          disabled={idx == updateItem ? false : true}
+                          disabled={idx === updateItem ? false : true}
                           value={vendor?.name}
                           onChange={(e) => {
                             const vendorsCopy = [...vendors];
@@ -155,7 +146,7 @@ const VendorPage = () => {
                       <td>
                         <input
                           style={{ outline: "none", border: "none" }}
-                          disabled={idx == updateItem ? false : true}
+                          disabled={idx === updateItem ? false : true}
                           value={vendor?.address}
                           onChange={(e) => {
                             const vendorsCopy = [...vendors];
@@ -167,7 +158,7 @@ const VendorPage = () => {
                       <td>
                         <input
                           style={{ outline: "none", border: "none" }}
-                          disabled={idx == updateItem ? false : true}
+                          disabled={idx === updateItem ? false : true}
                           value={vendor?.email}
                           onChange={(e) => {
                             const vendorsCopy = [...vendors];
@@ -179,7 +170,7 @@ const VendorPage = () => {
                       <td>
                         <input
                           style={{ outline: "none", border: "none" }}
-                          disabled={idx == updateItem ? false : true}
+                          disabled={idx === updateItem ? false : true}
                           value={vendor?.phone}
                           onChange={(e) => {
                             const vendorsCopy = [...vendors];
@@ -188,49 +179,51 @@ const VendorPage = () => {
                           }}
                         />
                       </td>
-                      <td className={classes.actions}>
-                        {idx == updateItem ? (
-                          <button
-                            className={classes.done}
-                            onClick={() => {
-                              updateVendor(updateItem);
-                              setUpdateItem(-1);
-                            }}
-                          >
-                            Done
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              if (updateItem !== -1) {
-                                alert("Hit the done button to continue");
-                                return;
-                              }
-                              setUpdateItem(idx);
-                            }}
-                            className={classes.update}
-                          >
-                            Update
-                          </button>
-                        )}
+                      <td>
+                        <div className={classes.actions}>
+                          {idx === updateItem ? (
+                            <button
+                              className={classes.done}
+                              onClick={() => {
+                                updateVendor(updateItem);
+                                setUpdateItem(-1);
+                              }}
+                            >
+                              Done
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                if (updateItem !== -1) {
+                                  alert("Hit the done button to continue");
+                                  return;
+                                }
+                                setUpdateItem(idx);
+                              }}
+                              className={classes.update}
+                            >
+                              Update
+                            </button>
+                          )}
 
-                        {updateItem == idx ? (
-                          <button
-                            onClick={() => setUpdateItem(-1)}
-                            className={classes.cancel}
-                          >
-                            Cancel
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              deleteVendor(idx);
-                            }}
-                            className={classes.delete}
-                          >
-                            Delete
-                          </button>
-                        )}
+                          {updateItem === idx ? (
+                            <button
+                              onClick={() => setUpdateItem(-1)}
+                              className={classes.cancel}
+                            >
+                              Cancel
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                deleteVendor(idx);
+                              }}
+                              className={classes.delete}
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -247,7 +240,7 @@ const VendorPage = () => {
         </div>
       )}
 
-      {showAddItem && !showUdateItem && (
+      {showAddItem && (
         <div className={classes.right}>
           <AddVendor
             onClose={toggleShowAddItem}
@@ -256,13 +249,7 @@ const VendorPage = () => {
           />
         </div>
       )}
-
-      {!showAddItem && showUdateItem && (
-        <div className={classes.right}>
-          {/* <UpdateProduct product = {updateItem} onClose={toggleShowUdateItem} /> */}
-        </div>
-      )}
-    </div>
+    </Layout>
   );
 };
 

@@ -19,10 +19,8 @@ const createVendor = async (req, res) => {
 const getVendors = async (req, res) => {
     const orgId = new ObjectId(req.body.orgId);
     
-    console.log("ordId: ", orgId);
     try {
         const vendors = await Vendor.find({ orgId });
-        console.log("vendors:", vendors);
         res.json(vendors);
     }
 

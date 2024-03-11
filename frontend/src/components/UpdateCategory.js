@@ -104,6 +104,11 @@ const UpdateCategory = (props) => {
               <input type="text" disabled placeholder="Fixed field" />
             </div>
 
+            <div className={classes.inputDiv}>
+              <label htmlFor="">Item Image</label>
+              <input type="text" disabled placeholder="Fixed field" />
+            </div>
+
             {identificationType && <h4>Fixed fields based on selection</h4>}
 
             {identificationType === "unique" && (
@@ -128,7 +133,7 @@ const UpdateCategory = (props) => {
               </div>
             )}
 
-            {customFields.length > 0 && <h4>Custom fields</h4>}
+            {customFields.length > 0 && <h4>Custom fields for this category</h4>}
 
             {customFields.map((field, index) => (
               <div className={classes.customField} key={index}>
@@ -136,9 +141,9 @@ const UpdateCategory = (props) => {
                   <label>Custom Field Name</label>
                   <input
                     type="text"
-                    value={field.name}
+                    value={field.label}
                     onChange={(e) =>
-                      handleCustomFieldChange(index, "name", e.target.value)
+                      handleCustomFieldChange(index, "label", e.target.value)
                     }
                   />
                 </div>

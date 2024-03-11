@@ -1,17 +1,11 @@
-.main{
-    width: 100%;
-    min-height: 91vh;
-    display: flex;
-}
-
-.main .right{
+.employees{
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.right .header{
-    padding: 1rem;
+.employees .header{
+    padding: 0.2rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -22,8 +16,7 @@
     font-weight: 500;
 }
 
-
-.right .noItem{
+.employees .noItem{
     display: flex;
     height: 100%;
     width: 100%;

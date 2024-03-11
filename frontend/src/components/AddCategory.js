@@ -19,6 +19,7 @@ const AddCategory = (props) => {
       if (!name || !identificationType) {
         throw Error("All field must be field");
       }
+      console.log(customFields);
 
       const response = await fetch("http://localhost:9999/category/create", {
         method: "POST",
@@ -52,11 +53,14 @@ const AddCategory = (props) => {
 
   const handleCustomFieldChange = (index, field, value) => {
     setCustomFields((prevCustomFields) => {
+
       const updatedCustomFields = [...prevCustomFields];
+
       updatedCustomFields[index] = {
         ...updatedCustomFields[index],
         [field]: value,
       };
+
       return updatedCustomFields;
     });
   };
@@ -106,9 +110,17 @@ const AddCategory = (props) => {
                 <option value="non-unique">non-unique</option>
               </select>
             </div>
+            
+            <h4>Fixed fields</h4>
+
 
             <div className={classes.inputDiv}>
               <label htmlFor="">Item Name</label>
+              <input type="text" disabled placeholder="Fixed field" />
+            </div>
+
+            <div className={classes.inputDiv}>
+              <label htmlFor="">Item Image</label>
               <input type="text" disabled placeholder="Fixed field" />
             </div>
 
@@ -136,7 +148,9 @@ const AddCategory = (props) => {
               </div>
             )}
 
-            {customFields.length > 0 && <h4>Custom fields</h4>}
+            {customFields.length > 0 && (
+              <h4>Custom fields for this category</h4>
+            )}
 
             {customFields.map((field, index) => (
               <div className={classes.customField} key={index}>
@@ -144,9 +158,9 @@ const AddCategory = (props) => {
                   <label>Custom Field Name</label>
                   <input
                     type="text"
-                    value={field.name}
+                    value={field.label}
                     onChange={(e) =>
-                      handleCustomFieldChange(index, "name", e.target.value)
+                      handleCustomFieldChange(index, "label", e.target.value)
                     }
                     required
                   />

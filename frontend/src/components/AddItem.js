@@ -10,6 +10,7 @@ const AddItem = (props) => {
   const categories = useSelector((state) => state.category.data);
 
   const [name, setName] = useState();
+  // const [file, setFile] = useState();
   const [quantity, setQuantity] = useState(1);
   const [serialNumber, setSerialNumber] = useState("");
 
@@ -19,6 +20,7 @@ const AddItem = (props) => {
 
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
+
     const selectedCategory = categories.find(
       (category) => category._id === categoryId
     );
@@ -54,23 +56,26 @@ const AddItem = (props) => {
         categoryId: selectedCategory._id,
         assignedTo: null,
         orgId: org._id,
-        identificationType: selectedCategory.identificationType
+        identificationType: selectedCategory.identificationType,
+        assignedTo: [] // Set assignedTo to an empty array
       };
 
       // Add identification type specific details
       if (selectedCategory.identificationType === "unique") {
         itemDetails.serialNumber = serialNumber;
-
       } else if (selectedCategory.identificationType === "non-unique") {
         itemDetails.quantity = parseInt(quantity);
       }
 
-      // Add custom fields to item details
       if (customFields) {
+        const customFieldsData = {};
+      
         customFields.forEach((field) => {
-          const fieldValue = document.getElementById(field.name).value;
-          itemDetails[field.name] = fieldValue;
+          const fieldValue = document.getElementById(field.label).value;
+          customFieldsData[field.label] = fieldValue; 
         });
+      
+        itemDetails.customFieldsData = customFieldsData; 
       }
 
       const response = await fetch("http://localhost:9999/inventory/create", {
@@ -90,7 +95,7 @@ const AddItem = (props) => {
 
       if (response.ok) {
         const json = await response.json();
-        dispatch(inventoryActions.addItem(json))
+        dispatch(inventoryActions.addItem(json));
         props.onClose();
       }
     } catch (error) {
@@ -132,6 +137,15 @@ const AddItem = (props) => {
               />
             </div>
 
+            {/* <div className={classes.inputDiv}>
+              <label htmlFor="image">Item Image</label>
+              <input
+                id="image"
+                type="file"
+                onChange={(e) => setFile(e.target.value)}
+              />
+            </div> */}
+
             {selectedCategory &&
               selectedCategory.identificationType === "unique" && (
                 <div className={classes.inputDiv}>
@@ -156,16 +170,14 @@ const AddItem = (props) => {
                 </div>
               )}
 
-            <div className={classes.inputDiv}></div>
-
             {/* Other input fields for item details */}
             {customFields &&
               customFields?.map((field) => {
                 return (
                   <div className={classes.inputDiv}>
-                    <label htmlFor={field.name}>{field.name}</label>
+                    <label htmlFor={field.label}>{field.label}</label>
                     <input
-                      id={field.name}
+                      id={field.label}
                       type={field.type}
                       required={field.required}
                     />

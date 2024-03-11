@@ -1,0 +1,54 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay .confirmation_modal {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 40%;
+}
+
+.confirmation_modal h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.confirmation_modal p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.confirmation_buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.confirmation_buttons button {
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.2rem;
+    margin: 0.5rem 0;
+}
+
+.delete_button {
+  background-color: red;
+  color: white;
+}
+
+.cancel_button {
+  background-color: rgb(213, 212, 212); 
+  color: black;
+  border: none;
+}

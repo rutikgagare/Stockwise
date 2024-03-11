@@ -1,17 +1,15 @@
 import React from 'react';
 import classes from './Dashboard.module.css';
-import Sidebar from '../components/Sidebar';
+// import Sidebar from '../components/Sidebar';
+import Layout from "../components/Layout";
 
 const Dashboard = () => {
   return (
-    <div className={classes.main}>
-      <div className='left'>
-        <Sidebar />
-      </div>
+    <Layout>
       <div className={classes.right}>
         Dashboard
       </div>
-    </div>
+    </Layout>
   )
 }
 

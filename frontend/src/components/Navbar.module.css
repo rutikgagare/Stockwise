@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100vw;
+    width: 100%;
     background-color: #0183ff;
     color: white;
     position: sticky;
@@ -11,11 +11,23 @@
     height: 4rem;
 }
 
-.navbar .logo{
+.navbar .left{
     padding: 0 1rem;
     display: flex;
     align-items: center;
-    width: 270px;
+}
+
+.left .sidebarIcon{
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.left .logo{
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    width: fit-content;
 }
 
 .logo h3{

@@ -5,7 +5,8 @@ import CreateEmployee from "../components/CreateEmployee";
 import Sidebar from "../components/Sidebar";
 import classes from "./EmployeeManagementPage.module.css";
 import axios from "axios";
-import noItem from '../Images/noItem.jpg'
+import noItem from "../Images/noItem.jpg";
+import Layout from "../components/Layout";
 
 const EmployeeManagementPage = () => {
   const user = useSelector((state) => state?.auth?.user);
@@ -24,10 +25,9 @@ const EmployeeManagementPage = () => {
             },
           }
         );
-        
+
         const employees = await res.data;
         setEmployees(employees);
-
       }
     } catch (error) {
       console.log(error);
@@ -54,26 +54,24 @@ const EmployeeManagementPage = () => {
   console.log("Employees ", employees);
 
   return (
-    <div className={classes.main}>
-      <div className={classes.left}>
-        <Sidebar />
-      </div>
-
-      <div className={classes.right}>
-
+    <Layout>
+      <div className={classes.employees}>
         <div className={classes.header}>
           <h3>Employees</h3>
 
           <CreateEmployee appendNewEmp={appendNewEmp} />
-
         </div>
 
-        {employees && employees.length > 0 && <EmployeeTable employees={employees} />}
-        {employees && employees.length === 0 &&  <div className={classes.noItem}>
-        <img src={noItem} alt="" /></div> }
-
+        {employees && employees.length > 0 && (
+          <EmployeeTable employees={employees} />
+        )}
+        {employees && employees.length === 0 && (
+          <div className={classes.noItem}>
+            <img src={noItem} alt="" />
+          </div>
+        )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

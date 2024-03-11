@@ -1,16 +1,17 @@
-.vendor {
-  width: 100%;
+.inventory {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.vendor .header {
-  padding: 1rem;
+.inventory .header {
+  padding: 0.2rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid #e4e4e4;
+  width: 100%;
+  background-color: white;
 }
 
 .header h3 {
@@ -28,8 +29,23 @@
   margin: 0.5rem 0;
 }
 
-/* EmployeeTable.css */
-.vendor .employee_table_container {
+.inventory .filter {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.2rem 1rem;
+}
+
+.filter select {
+  width: 20%;
+}
+
+.filter option::selection {
+  background-color: yellow;
+}
+
+/* categoryTable.css */
+.inventory .inventory_table_container {
   padding: 0.5rem 1rem;
   width: 90%;
   margin: 0rem auto;
@@ -37,67 +53,63 @@
   font-size: 1rem;
 }
 
-.employee_table {
+.inventory_table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.employee_table th,
-.employee_table td {
+.inventory_table th,
+.inventory_table td {
   border: 1px solid #ddd;
-  padding: 0.5rem;    
+  padding: 0.8rem;
   text-align: left;
+  font-size: 1rem;
 }
 
-td input {
-    color: black;
-    opacity: 1; 
-    font-size: 1rem;
-}
-
-.employee_table th {
+.inventory_table th {
+  padding: 1rem;
   background-color: #f2f2f2;
 }
 
-.employee_table tbody tr:hover {
+.inventory_table tbody tr:hover {
   background-color: #f5f5f5;
 }
 
 .actions {
+  height: 100%;
   display: flex;
   gap: 0.5rem;
 }
 
 .actions button {
-  padding: 0.3rem 1rem;
-  height: 30px;
+  padding: 0.5rem 1rem;
   outline: none;
   border: none;
   border-radius: 0.2rem;
   color: white;
+  font-size: 0.9rem;
+}
+
+.actions button:disabled {
+  background-color: gray;
+  color: white; 
+  cursor: not-allowed; 
+  opacity: 0.6; 
 }
 
 .actions .update {
-  background-color: #0183ff;
-  width: 75px;
-}
-
-.actions .done {
   background-color: green;
-  width: 75px;
-}
-
-.actions .cancel {
-  background-color: #ffbf00;
-  width: 75px;
 }
 
 .actions .delete {
   background-color: red;
-  width: 75px;
 }
 
-.vendor .noItem {
+.actions .checkout {
+  background-color: purple;
+}
+
+.inventory .noItem {
   display: flex;
   height: 100%;
   width: 100%;
@@ -109,3 +121,5 @@ td input {
   height: 30rem;
   width: 30rem;
 }
+
+

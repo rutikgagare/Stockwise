@@ -5,15 +5,14 @@ import { authActions } from "./store/authSlice";
 import { organizationActions } from "./store/organizationSlice";
 import { useEffect, useState } from "react";
 
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import EmployeeManagementPage from "./pages/EmployeeManagementPage";
 import Dashboard from "./pages/Dashboard";
 import SetOrganization from "./pages/SetOrganization";
 import Login from "./pages/Login";
-import PlaceOrderPage from "./pages/PlaceOrderPage";
 
+import PlaceOrderPage from "./pages/PlaceOrderPage";
 import InventoryPage from "./pages/InventoryPage";
 import CategoryPage from "./pages/CategoryPage";
 import VendorsPage from "./pages/VendorsPage";
@@ -21,11 +20,12 @@ import VendorsPage from "./pages/VendorsPage";
 import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
+import Confirm from "./components/Confirm";
+
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.user);
   const org = useSelector((state) => state?.org?.organization);
-  const inventory = useSelector((state) => state?.inventory?.data);
   const [loading, setIsloading] = useState(true);
 
   useEffect(() => {
@@ -115,11 +115,11 @@ function App() {
     fetchInventory();
     setIsloading(false);
 
-  }, [inventory]);
+  }, [org]);
 
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
 
       {!loading && (
         <Routes>
@@ -179,8 +179,9 @@ function App() {
           <Route
             path="/category"
             element={user ? <CategoryPage /> : <Navigate to="/login" />}
-          />
-         
+          /> 
+
+          <Route path="/confirm" element={<Confirm/>} /> 
         </Routes>
       )}
     </BrowserRouter>
