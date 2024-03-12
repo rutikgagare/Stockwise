@@ -6,7 +6,7 @@ const Assignment = require('../models/assignmentModel.js');
 
 const assignUser = async (req, res) =>{
 
-    console.log(req.body);
+    console.log("assign user req.body:", req.body);
     const {userId, itemId, quantity} = req.body;
     
     try{

@@ -81,6 +81,7 @@ const updateItem = async (req, res) => {
 const checkoutItem = async (req, res) => {
   const { itemId, assignedTo } = req.body;
 
+  console.log("checkout item req.body: ", req.body)
   try {
     const item = await Inventory.findById(new ObjectId(itemId));
 

@@ -27,6 +27,8 @@ const CategoryPage = () => {
   };
 
   const deleCategoryHandler = async (id) => {
+    const c = window.confirm("Are you sure want to delete the category?\nThe Change is irreversible")
+    if (!c) return;
     try {
       const resposnse = await fetch("http://localhost:9999/Category/delete", {
         method: "DELETE",

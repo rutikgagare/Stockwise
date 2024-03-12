@@ -2,15 +2,13 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const orderSchema = new Schema({
-    orgId: {
-        type: Schema.Types.ObjectId,
+    org: {
+        type: Object,
         required: true,
-        ref: "Organization",
     },
-    adminId: {
-        type: Schema.Types.ObjectId,
+    admin: {
+        type: Object,
         required: true,
-        ref: "User",
     },
     cart: {
         type: Array,
