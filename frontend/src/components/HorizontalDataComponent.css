@@ -1,0 +1,42 @@
+/* HorizontalDataComponent.css */
+
+.horizontal-data-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .org-details,
+  .admin-details,
+  .cart-details,
+  .order-status {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+  
+  li {
+    margin-bottom: 8px;
+  }
+  
+  /* Add any additional styling to enhance the aesthetics */
+  

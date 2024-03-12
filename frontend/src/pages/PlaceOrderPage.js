@@ -43,7 +43,7 @@ const PlaceOrderPage = () => {
         if (user) console.log('user: ', user)
         try {
             const res = await axios.post("http://localhost:9999/order/create", {
-                org, 
+                org,
                 admin: user,
                 cart: orders
             })
@@ -61,6 +61,7 @@ const PlaceOrderPage = () => {
     }
 
     const handleSetVendors = (itemIdx, arrIdx) => {
+        if (itemIdx === 0) setRespVendors([]);
         if (!(itemIdx > 0 && itemIdx < products.length + 1)) return;
 
         const productCategoryId = products[itemIdx - 1].categoryId;
@@ -163,23 +164,21 @@ const PlaceOrderPage = () => {
     }, [])
 
     const getProductFromId = (productId) => {
-        const product = products.filter((prod) => prod._id == productId)[0];
+        const product = products.filter((prod) => prod._id === productId)[0];
         return product ?? null;
     }
 
     const getVendorFromId = (vendorId) => {
-        const vendor = vendors.filter((prod) => prod._id == vendorId)[0];
+        const vendor = vendors.filter((prod) => prod._id === vendorId)[0];
         return vendor ?? null;
     }
     return (
         <Layout>
-            <div className={classes.main}>
-                <div className={classes.left}>
-                    <Sidebar />
+            <div className={classes.place_order}>
+                <div className={classes.header}>
+                    <h3>Place Order</h3>
                 </div>
-
                 <div className={classes.right}>
-                    <h1>Place Order</h1>
                     <div className={classes.orders}>
                         {orders.map((order, idx) => (
                             <div className={classes.order_form} key={idx}>

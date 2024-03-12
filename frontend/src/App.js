@@ -21,6 +21,7 @@ import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
 import Confirm from "./components/Confirm";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -156,7 +157,7 @@ function App() {
             path="/inventory"
             element={user ? <InventoryPage /> : <Navigate to="/" />}
           />
-           <Route
+          <Route
             path="/vendors"
             element={user ? <VendorsPage /> : <Navigate to="/" />}
           />
@@ -179,9 +180,14 @@ function App() {
           <Route
             path="/category"
             element={user ? <CategoryPage /> : <Navigate to="/login" />}
-          /> 
+          />
 
-          <Route path="/confirm" element={<Confirm/>} /> 
+          <Route
+            path="/history"
+            element={user ? <OrderHistoryPage /> : <Navigate to="/login" />}
+          />
+
+          <Route path="/confirm" element={<Confirm />} />
         </Routes>
       )}
     </BrowserRouter>
