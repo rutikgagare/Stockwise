@@ -5,4 +5,3 @@ gnome-terminal --tab --title="Frontend" -- bash -c "cd frontend; npm i; npm star
 
 # Open second terminal and run backend commands
 gnome-terminal --tab --title="Backend" -- bash -c "cd backend; npm i; npm start"
-
