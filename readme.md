@@ -72,3 +72,25 @@ Welcome to Stockwise, your comprehensive inventory management solution. Stockwis
 - Redux: State management library for React.
 - JWT: JSON Web Tokens for user authentication.
 - Chart.js: Library for creating charts and graphs.
+
+---
+# Quick Start
+```console
+git clone https://github.com/rutikgagare/Stockwise
+```
+```console
+cd Stockwise
+```
+---
+### For Mac and Linux
+```console
+chmod +x ./run.sh
+```
+```console
+./run.sh
+```
+
+### For Windows
+```console
+./run.bat
+```
