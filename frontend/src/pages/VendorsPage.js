@@ -186,13 +186,10 @@ const VendorPage = () => {
                         <div className={classes.actions}>
                           {idx === updateItem ? (
                             <button
-                              className={classes.done}
-                              onClick={() => {
-                                updateVendor(updateItem);
-                                setUpdateItem(-1);
-                              }}
+                              onClick={() => setUpdateItem(-1)}
+                              className={classes.cancel}
                             >
-                              Done
+                              Cancel
                             </button>
                           ) : (
                             <button
@@ -210,11 +207,15 @@ const VendorPage = () => {
                           )}
 
                           {updateItem === idx ? (
+
                             <button
-                              onClick={() => setUpdateItem(-1)}
-                              className={classes.cancel}
+                              className={classes.done}
+                              onClick={() => {
+                                updateVendor(updateItem);
+                                setUpdateItem(-1);
+                              }}
                             >
-                              Cancel
+                              Done
                             </button>
                           ) : (
                             <button
