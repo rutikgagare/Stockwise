@@ -13,13 +13,12 @@ const CreateEmployee = ({appendNewEmp}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('employee');
-  const [password, setPassword] = useState('');
 
   const [isCreatingUser, setIsCreatingUser] = useState(false)
 
   const addEmpToOrg = async (emp) => {
 
-    const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data.id, orgId: org._id },{
+    const res = await axios.post("http://localhost:9999/org/add", { employeeId: emp.data._id, orgId: org._id },{
       headers: {
         "Authorization": `Bearer ${user?.token}`
       }
@@ -33,12 +32,12 @@ const CreateEmployee = ({appendNewEmp}) => {
 
   const handleAddEmployee = async () => {
     // Validate input if needed before adding
-    if (email && password) {
+    if (email) {
       // Clear input fields after adding
       setIsCreatingUser(true);
       // let newEmp;
       try {
-        const newEmp = await axios.post("http://localhost:9999/auth/signup/", { name, email, password, role },{
+        const newEmp = await axios.post("http://localhost:9999/user/createUser/", { name, email, role },{
           headers: {
             "Authorization": `Bearer ${user?.token}`
           }
@@ -55,7 +54,6 @@ const CreateEmployee = ({appendNewEmp}) => {
 
       setName('');
       setEmail('');
-      setPassword('');
     }
   };
 
@@ -86,12 +84,6 @@ const CreateEmployee = ({appendNewEmp}) => {
             <option>employee</option>
             <option>admin</option>
           </select>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
           <button className="create-employee-button" onClick={handleAddEmployee}>
             Create Employee
           </button>
