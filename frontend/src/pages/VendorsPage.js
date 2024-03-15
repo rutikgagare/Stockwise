@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 
 import AddVendor from "../components/AddVendor";
 import classes from "./VendorsPage.module.css";
-import noItem from "../Images/noItem.jpg";
 import Layout from "../components/Layout";
+import NoItem from "../components/NoItem";
 
 const VendorPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -236,9 +236,7 @@ const VendorPage = () => {
             )}
 
             {vendors && vendors.length === 0 && (
-              <div className={classes.noItem}>
-                <img src={noItem} alt="" />
-              </div>
+             <NoItem></NoItem>
             )}
           </div>
         </div>

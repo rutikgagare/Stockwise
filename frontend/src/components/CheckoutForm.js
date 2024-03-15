@@ -14,6 +14,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
   const [employees, setEmployees] = useState(null);
   const [selectedUser, setSelectedUser] = useState();
   const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState();
 
   const fetchEmployees = async () => {
     try {
@@ -30,9 +31,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
         const employees = await res.data;
         setEmployees(employees);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -43,12 +42,14 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
     e.preventDefault();
 
     try {
+      setError(null); // Reset error state at the beginning of the submitHandler
+
       if (!selectedUser) {
-        throw Error("PLease select the user");
+        throw new Error("Please select the user");
       }
 
       if (quantity > checkoutItem?.quantity) {
-        throw Error("Selected quantity exceeds available quantity");
+        throw new Error("Selected quantity exceeds available quantity");
       }
 
       const res = await fetch("http://localhost:9999/inventory/checkout", {
@@ -68,26 +69,42 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
       });
 
       if (!res.ok) {
-        const error = await res.json();
-        console.log("Inside checkoutForm", error);
-        return;
+        throw new Error("Failed to checkout item");
       }
 
-      if (res.ok) {
-        const json = await res.json();
-        dispatch(inventoryActions.updateItem(json));
-      }
+      const json = await res.json();
+      
+      const messageContent = `You've been assigned a new asset: ${checkoutItem?.name}. Please visit your profile to view the details of the new asset.`;
 
+      dispatch(inventoryActions.updateItem(json));
       closeCheckout();
+
+      // sending mail to user regarding device is assigned to you
+      await fetch("http://localhost:9999/service/sendMail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+
+        body: JSON.stringify({
+          userEmail: selectedUser?.email,
+          messageContent,
+          itemImage: checkoutItem?.itemImage,
+          subject: "Asset Checkout Completed",
+        }),
+      });
+
+
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   };
 
-  console.log("selecteduser", selectedUser);
-
   return (
     <div>
+      <div className={classes.error}>{error}</div>
+
       <form onSubmit={submitHandler} className={classes.checkoutForm}>
         <div className={classes.inputDiv}>
           <label htmlFor="">Asset Name</label>
@@ -107,7 +124,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
             {employees?.map((employee) => {
               return (
                 <option value={JSON.stringify(employee)} key={employee?._id}>
-                  {employee?.name}
+                  {`${employee?.name} - ${employee?.email}`}
                 </option>
               );
             })}
@@ -124,7 +141,8 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
         {checkoutItem?.identificationType === "non-unique" && (
           <div className={classes.inputDiv}>
             <label htmlFor="">
-              Quantity Available: {checkoutItem.quantity - checkoutItem.checkedOutQuantity}
+              Quantity Available:{" "}
+              {checkoutItem.quantity - checkoutItem.checkedOutQuantity}
             </label>
             <input
               max={checkoutItem.quantity - checkoutItem.checkedOutQuantity}

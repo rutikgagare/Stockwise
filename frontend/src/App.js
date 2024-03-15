@@ -16,11 +16,12 @@ import PlaceOrderPage from "./pages/PlaceOrderPage";
 import InventoryPage from "./pages/InventoryPage";
 import CategoryPage from "./pages/CategoryPage";
 import VendorsPage from "./pages/VendorsPage";
+import ProfilePage from "./pages/ProfilePage";
+import HelpDesk from "./pages/HelpDesk";
 
 import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
-import Confirm from "./components/Confirm";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 
 function App() {
@@ -59,11 +60,14 @@ function App() {
     const fetchCategorys = async () => {
       try {
         if (org) {
-          const res = await fetch(`http://localhost:9999/Category/${org?._id}`, {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          });
+          const res = await fetch(
+            `http://localhost:9999/Category/${org?._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.token}`,
+              },
+            }
+          );
 
           if (!res.ok) {
             throw new Error("Network response was not ok");
@@ -90,11 +94,14 @@ function App() {
     const fetchInventory = async () => {
       try {
         if (org) {
-          const res = await fetch(`http://localhost:9999/inventory/${org?._id}`, {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          });
+          const res = await fetch(
+            `http://localhost:9999/inventory/${org?._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.token}`,
+              },
+            }
+          );
 
           if (!res.ok) {
             throw new Error("Network response was not ok");
@@ -115,7 +122,6 @@ function App() {
 
     fetchInventory();
     setIsloading(false);
-
   }, [org]);
 
   return (
@@ -155,11 +161,24 @@ function App() {
 
           <Route
             path="/inventory"
-            element={user ? <InventoryPage /> : <Navigate to="/" />}
+            element={
+              user && user?.role === "admin" ? (
+                <InventoryPage />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
+
           <Route
             path="/vendors"
-            element={user ? <VendorsPage /> : <Navigate to="/" />}
+            element={
+              user && user?.role === "admin" ? (
+                <VendorsPage />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
           <Route
             path="/employees"
@@ -175,19 +194,35 @@ function App() {
           />
           <Route
             path="/order"
-            element={user ? <PlaceOrderPage /> : <Navigate to="/login" />}
+            element={
+              user && user?.role === "admin" ? (
+                <PlaceOrderPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/category"
-            element={user ? <CategoryPage /> : <Navigate to="/login" />}
+            element={
+              user && user?.role === "admin" ? (
+                <CategoryPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
-            path="/history"
-            element={user ? <OrderHistoryPage /> : <Navigate to="/login" />}
+            path="/profile"
+            element={user ? <ProfilePage /> : <Navigate to="/login" />}
           />
 
-          <Route path="/confirm" element={<Confirm />} />
+          <Route
+            path="/helpdesk"
+            element={user ? <HelpDesk /> : <Navigate to="/login" />}
+          />
+
         </Routes>
       )}
     </BrowserRouter>

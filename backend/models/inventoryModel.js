@@ -4,6 +4,25 @@ const Category = require("./categoryModel.js");
 const Organization = require("./organizationModel.js");
 const User = require("./userModel.js");
 
+const lifecycleEventSchema = new Schema({
+  userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+  },
+  userName: {
+      type: String,
+      required: true
+  },
+  checkoutDate: {
+      type: Date,
+      default: Date.now
+  },
+  checkinDate: {
+      type: Date
+  }
+});
+
 
 const inventorySchema = new Schema(
   {
@@ -58,9 +77,28 @@ const inventorySchema = new Schema(
     checkedOutQuantity:{
       type: Number,
       default: 0 
-    }
+    },
+    itemImage:{
+      type: String
+    },
+    lifecycle:[lifecycleEventSchema]
   },
   { timestamps: true}
 );
+
+inventorySchema.pre("save", async function(next) {
+  if (this.identificationType === "unique" && this.isModified("serialNumber")) {
+    const existingInventory = await this.constructor.findOne({
+      categoryId: this.categoryId,
+      serialNumber: this.serialNumber
+    });
+
+    if (existingInventory) {
+      const error = new Error("Serial number must be unique within the category.");
+      next(error); 
+    }
+  }
+  next(); 
+});
 
 module.exports = mongoose.model("Inventory", inventorySchema);

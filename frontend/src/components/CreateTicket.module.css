@@ -1,0 +1,59 @@
+.createTicketForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.createTicketForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+form .inputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputDiv input, select, textarea {
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: none;
+  border: 1px solid rgb(228, 227, 227);
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+.inputDiv input:focus, select:focus, textarea:focus {
+  border: 1px solid #0183ff;
+}
+
+form button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #0183ff;
+  color: white;
+  border-radius: 0.2rem;
+  margin-top: 1rem;
+}
+
+::placeholder {
+  color: grey;
+  opacity: 1;
+  font-size: 1rem;
+}
+
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 5px;
+}
+
+.error{
+    padding: 1rem 0; 
+    width: 100%;
+    color: red;
+}

@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import Select from "react-select";
-import CheckoutForm from "../components/CheckoutForm";
 
+import CheckoutForm from "../components/CheckoutForm";
+import CheckinForm from "../components/CheckinForm";
 import Modal from "../components/Modal";
 import AddItem from "../components/AddItem";
 import UpdateItem from "../components/UpdateItem";
 import { inventoryActions } from "../store/inventorySlice";
-import noItem from "../Images/noItem.jpg";
+import { categoryActions } from "../store/categorySlice";
 import Layout from "../components/Layout";
 import Confirm from "../components/Confirm";
+import ItemDetailedView from "../components/ItemDetailedView";
 import classes from "./InventoryPage.module.css";
+import NoItem from "../components/NoItem";
+import Lifecycle from "../components/Lifecycle";
+
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import { BsInfoLg } from "react-icons/bs";
+import { GrPowerCycle } from "react-icons/gr";
 
 const InventoryPage = () => {
   const dispatch = useDispatch();
@@ -21,14 +30,14 @@ const InventoryPage = () => {
 
   const [showAddItem, setShowAddItem] = useState(false);
   const [showUdateItem, setShowUPdateItem] = useState(false);
-  const [updateItem, setUpdateItem] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
   const [filteredInventory, setFilteredInventory] = useState();
   const [showCheckout, setShowCheckout] = useState(false);
-  const [checkoutItem, setCheckoutItem] = useState();
-
+  const [showCheckin, setShowCheckin] = useState(false);
+  const [showDetailedView, setShowDetailedView] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [deleteItemId, setDeleteItemId] = useState();
+  const [showLifecycle, setShowLifecycle] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
 
   const deleteItemHandler = async () => {
     setShowConfirm(false);
@@ -40,18 +49,18 @@ const InventoryPage = () => {
           Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
-          itemId: deleteItemId,
+          itemId: selectedItem?._id,
         }),
       });
 
       if (resposnse.ok) {
         const json = await resposnse.json();
         dispatch(inventoryActions.deleteItem({ id: json?._id }));
+        dispatch(categoryActions.decrementItemCount(json?.categoryId));
       }
     } catch (err) {
       console.log(err);
     }
-    setDeleteItemId("");
   };
 
   const toggleShowAddItem = () => {
@@ -82,7 +91,7 @@ const InventoryPage = () => {
             <button onClick={() => setShowAddItem(true)}>+ Add Item</button>
           </div>
 
-          <div className={classes.filter}>
+          {categories && categories.length > 0 &&<div className={classes.filter}>
             <select
               onChange={(e) => {
                 const selectedValue = JSON.parse(e.target.value);
@@ -98,7 +107,7 @@ const InventoryPage = () => {
                 );
               })}
             </select>
-          </div>
+          </div>}
 
           <div className={classes.inventory_table_container}>
             {filteredInventory &&
@@ -121,43 +130,85 @@ const InventoryPage = () => {
                         <td>{item?.serialNumber}</td>
                         <td>{item?.status}</td>
                         <td>
-                          {item?.assignedTo?.length > 0
+                          {item?.assignedTo && item?.assignedTo.length > 0
                             ? item?.assignedTo[0]?.userName
                             : "Not Assigned"}
                         </td>
 
-                        <td className={classes.actions}>
-                          <button
-                            className={classes.checkout}
-                            onClick={() => {
-                              setCheckoutItem(item);
-                              setShowCheckout(true);
-                            }}
-                            disabled={item?.assignedTo?.length > 0}
-                          >
-                            CheckOut
-                          </button>
+                        <td>
+                          <div className={classes.actions}>
+                            {item?.assignedTo &&
+                              item?.assignedTo?.length === 0 && (
+                                <button
+                                  className={classes.checkout}
+                                  onClick={() => {
+                                    setSelectedItem(item);
+                                    setShowCheckout(true);
+                                  }}
+                                >
+                                  CheckOut
+                                </button>
+                              )}
 
-                          <button
-                            className={classes.update}
-                            onClick={() => {
-                              setUpdateItem(item);
-                              toggleShowUdateItem();
-                            }}
-                          >
-                            Update
-                          </button>
+                            {item?.assignedTo &&
+                              item?.assignedTo?.length > 0 && (
+                                <button
+                                  className={classes.checkin}
+                                  onClick={() => {
+                                    setSelectedItem(item);
+                                    setShowCheckin(true);
+                                  }}
+                                  disabled={
+                                    !item?.assignedTo ||
+                                    (item?.assignedTo &&
+                                      item?.assignedTo.length === 0)
+                                  }
+                                >
+                                  CheckIn
+                                </button>
+                              )}
 
-                          <button
-                            className={classes.delete}
-                            onClick={() => {
-                              setDeleteItemId(item?._id);
-                              setShowConfirm(true);
-                            }}
-                            disabled={item?.assignedTo?.length > 0}
-                          >
-                            Delete
-                          </button>
+                            <button
+                              onClick={() => {
+                                setSelectedItem(item);
+                                setShowDetailedView(true);
+                              }}
+                            >
+                              <BsInfoLg className={classes.icon} />
+                            </button>
+
+                            {item?.lifecycle && item?.lifecycle.length > 0 && (
+                              <button
+                                onClick={() => {
+                                  setSelectedItem(item);
+                                  setShowLifecycle(true);
+                                }}
+                              >
+                                <GrPowerCycle className={classes.icon} />
+                              </button>
+                            )}
+
+                            <button
+                              className={classes.update}
+                              onClick={() => {
+                                setSelectedItem(item);
+                                toggleShowUdateItem();
+                              }}
+                            >
+                              <MdEdit className={classes.icon} />
+                            </button>
+
+                            <button
+                              className={classes.delete}
+                              onClick={() => {
+                                setSelectedItem(item);
+                                setShowConfirm(true);
+                              }}
+                              disabled={item?.assignedTo?.length > 0}
+                            >
+                              <MdDelete className={classes.icon} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -185,11 +236,24 @@ const InventoryPage = () => {
                         <td>{item?.quantity}</td>
                         <td>{item?.checkedOutQuantity}</td>
                         <td>
-                          {item?.assignedTo?.map((item) => {
-                            return (
-                              <li>{`${item?.userName} quantity: ${item?.quantity}`}</li>
-                            );
-                          })}
+                          <div className={classes.userList}>
+                            {item?.assignedTo &&
+                              item?.assignedTo?.map((item) => {
+                                if (!item) {
+                                  return;
+                                }
+                                return (
+                                  <div>
+                                    {" "}
+                                    {`${item.userName} | `}
+                                    <span className={classes.quantity}>
+                                      Quantity:
+                                    </span>{" "}
+                                    {item.quantity}
+                                  </div>
+                                );
+                              })}
+                          </div>
                         </td>
 
                         <td>
@@ -197,34 +261,55 @@ const InventoryPage = () => {
                             <button
                               className={classes.checkout}
                               onClick={() => {
-                                setCheckoutItem(item);
+                                setSelectedItem(item);
                                 setShowCheckout(true);
                               }}
-                              disabled={item?.checkedOutQuantity === item.quantity}
-
+                              disabled={
+                                item?.checkedOutQuantity === item.quantity
+                              }
                             >
                               CheckOut
                             </button>
 
                             <button
+                              className={classes.checkin}
+                              onClick={() => {
+                                setSelectedItem(item);
+                                setShowCheckin(true);
+                              }}
+                              disabled={item?.checkedOutQuantity === 0}
+                            >
+                              CheckIn
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setSelectedItem(item);
+                                setShowDetailedView(true);
+                              }}
+                            >
+                              <BsInfoLg className={classes.icon} />
+                            </button>
+
+                            <button
                               className={classes.update}
                               onClick={() => {
-                                setUpdateItem(item);
+                                setSelectedItem(item);
                                 toggleShowUdateItem();
                               }}
                             >
-                              Update
+                              <MdEdit className={classes.icon} />
                             </button>
 
                             <button
                               className={classes.delete}
                               onClick={() => {
-                                setDeleteItemId(item?._id);
+                                setSelectedItem(item);
                                 setShowConfirm(true);
                               }}
                               disabled={item?.assignedTo?.length > 0}
                             >
-                              Delete
+                              <MdDelete className={classes.icon} />
                             </button>
                           </div>
                         </td>
@@ -235,18 +320,38 @@ const InventoryPage = () => {
               )}
           </div>
 
-          {filteredInventory && filteredInventory?.length === 0 && (
-            <div className={classes.noItem}>
-              <img src={noItem} alt="image not found" />
-            </div>
-          )}
+          {filteredInventory && filteredInventory.length === 0 && <NoItem />}
 
           {showCheckout && (
             <Modal onClose={() => setShowCheckout(false)}>
               <CheckoutForm
-                checkoutItem={checkoutItem}
+                checkoutItem={selectedItem}
                 closeCheckout={() => setShowCheckout(false)}
               />
+            </Modal>
+          )}
+
+          {showCheckin && (
+            <Modal onClose={() => setShowCheckin(false)}>
+              <CheckinForm
+                checkinItem={selectedItem}
+                closeCheckin={() => setShowCheckin(false)}
+              />
+            </Modal>
+          )}
+
+          {showDetailedView && (
+            <Modal onClose={() => setShowDetailedView(false)} width="50%">
+              <ItemDetailedView item={selectedItem}></ItemDetailedView>
+            </Modal>
+          )}
+
+          {showLifecycle && (
+            <Modal onClose={() => setShowLifecycle(false)} width="50%">
+              <Lifecycle
+                lifecycle={selectedItem?.lifecycle}
+                itemName={selectedItem?.name}
+              ></Lifecycle>
             </Modal>
           )}
         </div>
@@ -254,20 +359,13 @@ const InventoryPage = () => {
 
       {showAddItem && !showUdateItem && (
         <div className={classes.inventory}>
-          <AddItem
-            // resetCategory={() => setCategoryId("")}
-            onClose={toggleShowAddItem}
-          />
+          <AddItem onClose={toggleShowAddItem} />
         </div>
       )}
 
       {!showAddItem && showUdateItem && (
         <div className={classes.inventory}>
-          <UpdateItem
-            // resetCategory={() => setCategoryId("")}
-            item={updateItem}
-            onClose={toggleShowUdateItem}
-          />
+          <UpdateItem item={selectedItem} onClose={toggleShowUdateItem} />
         </div>
       )}
 
@@ -275,6 +373,7 @@ const InventoryPage = () => {
         <Confirm
           onCancel={() => setShowConfirm(false)}
           onDelete={deleteItemHandler}
+          message="Deleting this item will also permanently remove its associated lifecycle data. This action cannot be undone."
         ></Confirm>
       )}
     </Layout>

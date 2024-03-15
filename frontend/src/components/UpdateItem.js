@@ -37,6 +37,24 @@ const UpdateItem = (props) => {
     e.preventDefault();
 
     try {
+      if (!name) {
+        throw Error("Required fields must be filled");
+      }
+
+      if (
+        props.item.identificationType === "unique" &&
+        !serialNumber.trim()
+      ) {
+        throw Error("Serial Number must be filled");
+      }
+
+      if (
+        props.item.identificationType === "non-unique" &&
+        !quantity.trim()
+      ) {
+        throw Error("Quantity must be filled");
+      }
+
       const itemDetails = {
         itemId: props?.item?._id,
         name,
@@ -50,13 +68,13 @@ const UpdateItem = (props) => {
 
       if (customFields) {
         const updatedCustomFieldsData = {};
-      
+
         customFields.forEach((field) => {
           const fieldValue = document.getElementById(field.label).value;
-          updatedCustomFieldsData[field.label] = fieldValue; 
+          updatedCustomFieldsData[field.label] = fieldValue;
         });
-      
-        itemDetails.customFieldsData = updatedCustomFieldsData; 
+
+        itemDetails.customFieldsData = updatedCustomFieldsData;
       }
 
       const response = await fetch("http://localhost:9999/inventory/update", {
@@ -104,7 +122,9 @@ const UpdateItem = (props) => {
 
           <form onSubmit={handleUpdateItem}>
             <div className={classes.inputDiv}>
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name" className={classes.required}>
+                Name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -115,7 +135,9 @@ const UpdateItem = (props) => {
 
             {identificationType && identificationType === "unique" && (
               <div className={classes.inputDiv}>
-                <label htmlFor="serialNumber">Serial Number</label>
+                <label htmlFor="serialNumber" className={classes.required}>
+                  Serial Number
+                </label>
                 <input
                   id="serialNumber"
                   value={serialNumber}
@@ -127,7 +149,9 @@ const UpdateItem = (props) => {
 
             {identificationType && identificationType === "non-unique" && (
               <div className={classes.inputDiv}>
-                <label htmlFor="qunatity">Quantity</label>
+                <label htmlFor="qunatity" className={classes.required}>
+                  Quantity
+                </label>
                 <input
                   id="quantity"
                   type="number"
@@ -140,7 +164,12 @@ const UpdateItem = (props) => {
               customFields.map((field) => {
                 return (
                   <div className={classes.inputDiv} key={field.label}>
-                    <label htmlFor={field.label}>{field.label}</label>
+                    <label
+                      htmlFor={field.label}
+                      className={`${field?.required ? classes.required : ""}`}
+                    >
+                      {field.label}
+                    </label>
                     <input
                       id={field.label}
                       value={customFieldsData && customFieldsData[field?.label]}
@@ -148,12 +177,13 @@ const UpdateItem = (props) => {
                       onChange={(e) =>
                         handleCustomFieldChange(field.label, e.target.value)
                       }
+                      required={field.required}
                     />
                   </div>
                 );
               })}
 
-              <button type="submit">Save Changes</button>
+            <button type="submit">Save Changes</button>
           </form>
         </div>
       </div>

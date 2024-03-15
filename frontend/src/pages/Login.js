@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import classes from "./Signup.module.css";
 import Layout from "../components/Layout";
+import ForgotPassword from "../components/ForgotPassword";
+import Modal from "../components/Modal";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+
   const { login, isLoading, error } = useLogin();
 
   const handleSubmit = async (e) => {
@@ -16,10 +20,11 @@ const Login = () => {
   return (
     <Layout>
       <div className={classes.main}>
+        
         <form className={classes.signupForm} onSubmit={handleSubmit}>
           <div className={classes.heading}>
             <h2>Sign in</h2>
-            <span>to access Inventory</span>
+            {/* <span>to access Inventory</span> */}
           </div>
 
           <input
@@ -46,8 +51,12 @@ const Login = () => {
             Sign in
           </button>
 
-          {error && <div className="error">{error}</div>}
+          <span className={classes.forgot} onClick={()=>setShowForgotPassword(prev => !prev)}>Forgot password?</span>
+
+          {error && <div className={classes.error}>{error}</div>}
         </form>
+
+        {showForgotPassword && <Modal onClose={() => setShowForgotPassword(false)} width = "30%"><ForgotPassword onClose={()=>setShowForgotPassword(false)}></ForgotPassword></Modal>}
       </div>
     </Layout>
   );

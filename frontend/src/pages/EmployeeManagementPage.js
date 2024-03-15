@@ -58,7 +58,6 @@ const EmployeeManagementPage = () => {
       <div className={classes.employees}>
         <div className={classes.header}>
           <h3>Employees</h3>
-
           <CreateEmployee appendNewEmp={appendNewEmp} />
         </div>
 

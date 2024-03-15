@@ -31,24 +31,14 @@ const getOrganization = async (req, res)=>{
     const userId = req.user._id;
     
     try {
-        // const userRole = req.user.role;
-        // const organizations = await Organization.find()
-
+    
         const org = await Organization.find({$or:[
             {"admins":new ObjectId(userId)},
             {"employees":new ObjectId(userId)},
         ]})
 
         if(org){
-            // organizations.forEach(org => {
-            //     if (userRole === 'admin' && org.admins.includes(userId)) {
-            //         return res.json(org)
-            //     } else if (userRole === 'user' && org.users.includes(userId)) {
-            //         return res.satus(200).json(org);
-            //     }
-            // });
            return res.status(200).json(org[0]);
-
         }
         else{
             throw Error("Internal server error");
@@ -167,7 +157,7 @@ const getEmployees = async (req, res) => {
             return;
         }
 
-        const employeeIds = org.employees;
+        const employeeIds = [...org?.employees, ...org?.admins];
 
         const query = {
             _id: {
@@ -175,7 +165,8 @@ const getEmployees = async (req, res) => {
             }
         };
 
-        const user = await User.find(query);
+        // const user = await User.find(query).select('-password');
+        const user = await User.find(query,{password:0});
 
         const employeeDetails = user.map(user =>{
             return{

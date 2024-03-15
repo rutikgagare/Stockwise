@@ -81,8 +81,9 @@ const CreateEmployee = ({appendNewEmp}) => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <select onChange={(e) => { setRole(e.target.value )}}>
-            <option>employee</option>
-            <option>admin</option>
+            <option value="">Select Role</option>
+            <option value ="employee">employee</option>
+            <option value="admin">admin</option>
           </select>
           <button className="create-employee-button" onClick={handleAddEmployee}>
             Create Employee
