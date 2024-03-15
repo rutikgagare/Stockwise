@@ -29,7 +29,6 @@
 }
 
 .addCategory .addCategoryForm {
-  height: 80vh;
   padding: 0.5rem 1rem;
   width: 100%;
   display: flex;
@@ -50,7 +49,7 @@
 }
 
 .addCategoryForm form {
-  width: 60%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -103,6 +102,12 @@ form button {
   font-size: 1rem;
 }
 
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 5px;
+}
+
 .customField{
   display: flex;
   justify-content: space-between;
@@ -139,18 +144,41 @@ input[type="checkbox"]:checked {
 
 
 .vendors_div {
-  /* position: absolute; */
-  border: 1px solid #ccc;
   background-color: rgba(255, 255, 255, 0.75);
-  padding: 10px;
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: end;
+  gap: 1rem;
 }
 
 .vendorDiv {
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.75);
-  padding: 3px;
-  border-bottom: 1px solid #bbb;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border: 1px solid rgb(239, 239, 239);
+  border-radius: 0.2rem;
+}
+
+.vendorDivSelected{
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border: 1px solid #0183ff;
+  border-radius: 0.2rem;
+}
+
+@media screen and (max-width: 900px) {
+  .addCategoryForm form {
+    width: 95%;
+  }
+
+  .customField{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .customField .inputDiv{
+    width: 100%;
+  }
 }

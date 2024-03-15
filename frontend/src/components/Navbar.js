@@ -2,20 +2,12 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import classes from "./Navbar.module.css";
 import { useSelector } from "react-redux";
-import { useLogout } from "../hooks/useLogout";
-import Sidebar from "./Sidebar";
-
+import { CgProfile } from "react-icons/cg";
 import { RiFunctionLine } from "react-icons/ri";
 
 const Navbar = (props) => {
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
-
-  const { logout } = useLogout();
-
-  const logoutHandler = () => {
-    logout();
-  };
 
   return (
     <div className={classes.navbar}>
@@ -46,8 +38,9 @@ const Navbar = (props) => {
 
       {user && (
         <div className={classes.nav}>
-          <h4>{user?.name}</h4>
-          <button onClick={logoutHandler}>Logout</button>
+          <ul>
+            <Link to = "/profile"> < CgProfile className={classes.profileIcon} /></Link>
+          </ul>
         </div>
       )}
     </div>

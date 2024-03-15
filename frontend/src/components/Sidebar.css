@@ -1,7 +1,6 @@
 .sidebar-container {
-  width: 200px;
-  min-height: 92vh;
-  height: 100%;
+  min-width: 200px;
+  min-height: 100%;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -35,3 +34,10 @@
   color: white;
   transition: 0.1s ease-in;
 }
+
+@media screen and (max-width: 900px) {
+  .sidebar-container{
+    position: fixed;
+  }
+}
+

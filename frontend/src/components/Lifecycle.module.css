@@ -1,0 +1,39 @@
+
+.lifecycle{
+    height: 100%;
+    padding: 1rem;
+}
+
+.lifecycle h3{
+    color: #0183ff;
+    margin-bottom: 2rem;
+}
+
+.category .category_table_container {
+    padding: 0.5rem 1rem;
+    width: 90%;
+    margin: 0rem auto;
+    margin-bottom: 2rem;
+}
+
+.category_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.category_table th,
+.category_table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;    
+    text-align: left;
+    font-size: 1rem;
+}
+
+.category_table th {
+    padding: 1rem;
+    background-color: #f2f2f2;
+}
+
+.category_table tbody tr:hover {
+    background-color: #f5f5f5;
+}

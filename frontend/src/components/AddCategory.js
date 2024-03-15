@@ -60,7 +60,6 @@ const AddCategory = (props) => {
 
   const handleCustomFieldChange = (index, field, value) => {
     setCustomFields((prevCustomFields) => {
-
       const updatedCustomFields = [...prevCustomFields];
 
       updatedCustomFields[index] = {
@@ -85,14 +84,13 @@ const AddCategory = (props) => {
     setSelectedVendors([...selectedVendors, vendors[idx]]);
     const newVendors = vendors.filter((v, i, a) => i != idx);
     setVendors(newVendors);
-  }
-  
+  };
+
   const handleRemoveVendor = (idx) => {
     setVendors([...vendors, selectedVendors[idx]]);
     const newSelectedVendors = selectedVendors.filter((v, i, a) => i != idx);
     setSelectedVendors(newSelectedVendors);
-    
-  }
+  };
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -106,25 +104,24 @@ const AddCategory = (props) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
-          orgId: org?._id
+          orgId: org?._id,
         }),
       });
 
-      const resJson = await res.json()
-      
-      if (!res.ok) { }
+      const resJson = await res.json();
 
-      if (res.ok) {
-
-        setVendors(resJson);
+      if (!res.ok) {
       }
 
-    }
+      if (res.ok) {
+        setVendors(resJson);
+      }
+    };
     fetchVendors();
-  }, [])
+  }, []);
 
   return (
     <div className={classes.main}>
@@ -162,45 +159,9 @@ const AddCategory = (props) => {
                 <option value="non-unique">non-unique</option>
               </select>
             </div>
-            
+
             <h4>Fixed fields</h4>
 
-
-            <div className={classes.inputDiv}>
-              <label htmlFor="Vendors">Vendors</label>
-              <div className={classes.vendors_div}>
-                  {selectedVendors?.map((vendor, idx) => (
-                    <div className={classes.vendorDiv}
-                    disabled={true} 
-                    onClick={() => {
-                      handleRemoveVendor(idx);
-                    }}
-                    >
-                      {vendor.name}
-
-                  </div>
-                  ))}
-                </div>
-              <div onClick={toggleDropdown} style={{ cursor: 'pointer', padding: '10px', border: '1px solid #ccc' }}>
-                Select Vendors
-              </div>
-              {isOpen && (
-                <div className={`${classes.vendors_div}`}>
-                  {vendors?.map((vendor, idx) => (
-                    <div 
-                    className={classes.vendorDiv}
-                      disabled={true} 
-                      onClick={() => {
-                        handleAddVendor(idx);
-                      }}
-                      >
-                        {vendor.name}
-
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
             <div className={classes.inputDiv}>
               <label htmlFor="">Item Name</label>
               <input type="text" disabled placeholder="Fixed field" />
@@ -234,6 +195,49 @@ const AddCategory = (props) => {
                 />
               </div>
             )}
+
+            <h4>Select vendors for category</h4>
+            <div className={classes.inputDiv}>
+              {selectedVendors && selectedVendors.length > 0 && <div className={classes.vendors_div}>
+                {selectedVendors?.map((vendor, idx) => (
+                  <div
+                    className={classes.vendorDivSelected}
+                    disabled={true}
+                    onClick={() => {
+                      handleRemoveVendor(idx);
+                    }}
+                  >
+                    {vendor.name}
+                  </div>
+                ))}
+              </div>}
+
+              <div
+                onClick={toggleDropdown}
+                style={{
+                  cursor: "pointer",
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <span>Select Vendors {vendors.length === 0 ? " - No vendors/ All Selected" : "" } </span>
+              </div>
+              {isOpen && (
+                vendors && vendors.length > 0 && <div className={`${classes.vendors_div}`}>
+                  {vendors?.map((vendor, idx) => (
+                    <div
+                      className={classes.vendorDiv}
+                      disabled={true}
+                      onClick={() => {
+                        handleAddVendor(idx);
+                      }}
+                    >
+                      {vendor.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {customFields.length > 0 && (
               <h4>Custom fields for this category</h4>

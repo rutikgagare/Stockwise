@@ -41,13 +41,13 @@ const UpdateCategory = (props) => {
 
   const handleAddVendor = (idx) => {
     setSelectedVendors([...selectedVendors, vendors[idx]]);
-    const newVendors = vendors.filter((v, i, a) => i != idx);
+    const newVendors = vendors.filter((v, i, a) => i !== idx);
     setVendors(newVendors);
   }
 
   const handleRemoveVendor = (idx) => {
     setVendors([...vendors, selectedVendors[idx]]);
-    const newSelectedVendors = selectedVendors.filter((v, i, a) => i != idx);
+    const newSelectedVendors = selectedVendors.filter((v, i, a) => i !== idx);
     setSelectedVendors(newSelectedVendors);
 
   }
@@ -137,7 +137,7 @@ const UpdateCategory = (props) => {
     <div className={classes.main}>
       <div className={classes.addCategory}>
         <div className={classes.header}>
-          <h3>New Category</h3>
+          <h3>Update Category</h3>
           <button onClick={() => props.onClose()}>Cancel</button>
         </div>
 
@@ -253,6 +253,7 @@ const UpdateCategory = (props) => {
                     onChange={(e) =>
                       handleCustomFieldChange(index, "label", e.target.value)
                     }
+                    required
                   />
                 </div>
 
@@ -263,6 +264,7 @@ const UpdateCategory = (props) => {
                     onChange={(e) =>
                       handleCustomFieldChange(index, "type", e.target.value)
                     }
+                    required
                   >
                     <option value="">Select type</option>
                     <option value="text">Text</option>

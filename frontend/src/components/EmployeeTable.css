@@ -1,6 +1,6 @@
 /* EmployeeTable.css */
 .employee-table-container {
-    width: 90%;
+    width: 80%;
     margin: 20px auto;
 }
 
@@ -24,3 +24,4 @@
 .employee-table tbody tr:hover {
     background-color: #f5f5f5;
 }
+

@@ -11,7 +11,6 @@ const EmployeeTable = ({ employees }) => {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Password</th>
           </tr>
         </thead>
         <tbody>
@@ -20,7 +19,6 @@ const EmployeeTable = ({ employees }) => {
               <td>{employee.name}</td>
               <td>{employee.email}</td>
               <td>{employee.role}</td>
-              <td>{employee.password}</td>
             </tr>
           ))}
         </tbody>

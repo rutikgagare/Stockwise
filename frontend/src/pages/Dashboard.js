@@ -6,8 +6,8 @@ import Layout from "../components/Layout";
 const Dashboard = () => {
   return (
     <Layout>
-      <div className={classes.right}>
-        Dashboard
+      <div className={classes.dashboard}>
+        <h1>Welcome to Dashboard</h1>
       </div>
     </Layout>
   )

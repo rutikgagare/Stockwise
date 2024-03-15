@@ -71,6 +71,13 @@
     font-size: 0.9rem;
 }
 
+.actions button:disabled {
+    background-color: gray;
+    color: white; 
+    cursor: not-allowed; 
+    opacity: 0.6; 
+  }
+
 .actions .update{
     background-color: green;
 }
@@ -83,16 +90,4 @@
     background-color: purple;
 }
 
-.category .noItem{
-    display: flex;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-.noItem img{
-    height: 30rem;
-    width: 30rem;
-}
 

@@ -89,25 +89,25 @@ const checkoutItem = async (req, res) => {
     }
 
     let updatedItem;
+
     if (item?.identificationType === "unique") {
-      if (item.assignedTo.length > 0) {
+
+      if (item?.assignedTo && item?.assignedTo.length > 0) {
         throw Error(`Item already assigned, cannot reassign`);
       }
 
-      if (item.assignedTo) {
-        updatedItem = await Inventory.findByIdAndUpdate(
-          new ObjectId(itemId),
-          { $push: { assignedTo: assignedTo }, status: "deployed" },
-          { new: true }
-        );
+      const lifecycleEvent = {
+        userId: assignedTo.userId,
+        userName: assignedTo.userName,
+        checkoutDate: new Date(),
+      };
 
-      } else {
-        updatedItem = await Inventory.findByIdAndUpdate(
-          new ObjectId(itemId),
-          { assignedTo: [assignedTo], status: "deployed" },
-          { new: true }
-        );
-      }
+
+      updatedItem = await Inventory.findByIdAndUpdate(
+        new ObjectId(itemId),
+        { $push: { assignedTo: assignedTo, lifecycle: lifecycleEvent}, status: "deployed"},
+        { new: true }
+      );
     }
 
     if (item.identificationType === "non-unique") {
@@ -115,55 +115,41 @@ const checkoutItem = async (req, res) => {
         throw Error(`Not enough quantity available in inventory`);
       }
 
-      if (item.assignedTo) {
+      const userId = new ObjectId(assignedTo.userId);
 
-        const userId = new ObjectId(assignedTo.userId);
+      const existingAssignment = item.assignedTo.find((assignment) =>
+        assignment.userId.equals(userId)
+      );
 
-        const existingAssignment = item.assignedTo.find((assignment) =>
-          assignment.userId.equals(userId)
-        );
+      if (existingAssignment) {
+        const updatedAssignedTo = item.assignedTo.map((assignment) => {
+          if (assignment.userId.equals(userId)) {
+            return {
+              userId: assignment.userId,
+              userName: assignment.userName,
+              quantity: assignment.quantity + parseInt(assignedTo.quantity),
+            };
+          }
+          return assignment;
+        });
 
-        if (existingAssignment) {
-
-          const updatedAssignedTo = item.assignedTo.map((assignment) => {
-
-            if (assignment.userId.equals(userId)){
-              return {
-                userId: assignment.userId,
-                userName: assignment.userName,
-                quantity: assignment.quantity + parseInt(assignedTo.quantity),
-              };
-            }
-            return assignment;
-          });
-
-          updatedItem = await Inventory.findByIdAndUpdate(
-            new ObjectId(itemId),
-            {$set : {
+        updatedItem = await Inventory.findByIdAndUpdate(
+          new ObjectId(itemId),
+          {
+            $set: {
               assignedTo: updatedAssignedTo,
               status: "deployed",
               checkedOutQuantity:
                 item.checkedOutQuantity + parseInt(assignedTo.quantity),
-            }},
-            { new: true }
-          );
-        } else {
-          updatedItem = await Inventory.findByIdAndUpdate(
-            new ObjectId(itemId),
-            {
-              $push: { assignedTo: assignedTo },
-              status: "deployed",
-              checkedOutQuantity:
-                item.checkedOutQuantity + parseInt(assignedTo.quantity),
             },
-            { new: true }
-          );
-        }
+          },
+          { new: true }
+        );
       } else {
         updatedItem = await Inventory.findByIdAndUpdate(
           new ObjectId(itemId),
           {
-            assignedTo: [assignedTo],
+            $push: { assignedTo: assignedTo },
             status: "deployed",
             checkedOutQuantity:
               item.checkedOutQuantity + parseInt(assignedTo.quantity),
@@ -172,11 +158,133 @@ const checkoutItem = async (req, res) => {
         );
       }
     }
-
     res.status(200).json(updatedItem);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-module.exports = { createItem, getItems, deleteItem, updateItem, checkoutItem };
+const checkinItem = async (req, res) => {
+  const { itemId, quantity } = req.body;
+
+  try {
+    const item = await Inventory.findById(new ObjectId(itemId));
+
+    if (!item) {
+      throw Error(`Item with itemId: ${itemId} does not exist`);
+    }
+
+    let updatedItem;
+
+    if (item?.identificationType === "unique") {
+      if (
+        !item?.assignedTo ||
+        (item?.assignedTo && item?.assignedTo.length === 0)
+      ) {
+        throw Error(`Item is not assigned you can't checkin`);
+      }
+
+      const updatedLifecycle = item.lifecycle;
+      updatedLifecycle[updatedLifecycle.length - 1].checkinDate = new Date();;
+  
+
+      updatedItem = await Inventory.findByIdAndUpdate(
+        new ObjectId(itemId),
+        { assignedTo: [], status: "ready to deploy", lifecycle: updatedLifecycle},
+        { new: true }
+      );
+    }
+
+    if (item.identificationType === "non-unique") {
+      const userId = new ObjectId(req.body.userId);
+
+      const existingAssignment = item.assignedTo.find((assignment) =>
+        assignment.userId.equals(userId)
+      );
+
+      if (existingAssignment) {
+        const existingQuantity = existingAssignment.quantity;
+
+        if (existingQuantity < parseInt(quantity)) {
+          throw Error(
+            `User has not checked out ${assignedQuantity} quantity of this item`
+          );
+        }
+
+        if (existingAssignment) {
+          const updatedAssignedTo = item.assignedTo
+            .map((assignment) => {
+              if (assignment.userId.equals(userId)) {
+                const newQuantity = assignment.quantity - parseInt(quantity);
+                return {
+                  userId: assignment.userId,
+                  userName: assignment.userName,
+                  quantity: newQuantity <= 0 ? null : newQuantity,
+                };
+              }
+              return assignment;
+            })
+            .filter((assignment) => assignment && assignment.quantity !== null);
+
+          const newCheckedOutQuantity =
+            item.checkedOutQuantity - parseInt(quantity);
+
+          updatedItem = await Inventory.findByIdAndUpdate(
+            new ObjectId(itemId),
+            {
+              $set: {
+                assignedTo: updatedAssignedTo,
+                checkedOutQuantity: newCheckedOutQuantity,
+              },
+            },
+            { new: true }
+          );
+        } else {
+          throw Error(
+            `User ${assignedTo.userName} has not checked out this item`
+          );
+        }
+      }
+    }
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUserAssets = async (req, res) => {
+  const userId = new ObjectId(req.user._id);
+
+  try {
+    const userAssets = await Inventory.aggregate([
+      { $match: { "assignedTo.userId": userId } },
+      { $unwind: "$assignedTo" },
+      { $match: { "assignedTo.userId": userId } },
+
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          itemImage: 1,
+          serialNumber: 1,
+          customFieldsData:1,
+          quantity: "$assignedTo.quantity",
+        },
+      },
+    ]);
+
+    res.json(userAssets);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  createItem,
+  getItems,
+  deleteItem,
+  updateItem,
+  checkoutItem,
+  checkinItem,
+  getUserAssets,
+};

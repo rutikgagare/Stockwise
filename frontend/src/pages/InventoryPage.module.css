@@ -81,13 +81,19 @@
   gap: 0.5rem;
 }
 
+.actions button .icon{
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
 .actions button {
   padding: 0.5rem 1rem;
   outline: none;
   border: none;
   border-radius: 0.2rem;
   color: white;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  background-color: #0183ff;
 }
 
 .actions button:disabled {
@@ -98,7 +104,7 @@
 }
 
 .actions .update {
-  background-color: green;
+  background-color: #e58d11;
 }
 
 .actions .delete {
@@ -106,20 +112,33 @@
 }
 
 .actions .checkout {
+  background-color: #d81b60;
+}
+
+.actions .checkin {
   background-color: purple;
 }
 
-.inventory .noItem {
+.userList{
   display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.noItem img {
-  height: 30rem;
-  width: 30rem;
+.userList li{
+  list-style-type: none;
 }
+
+li span{
+  font-weight: bold;
+}
+
+.itemImage{
+  height: 8rem;
+  width: 8rem;
+  padding: 1rem;
+}
+
+
 
 

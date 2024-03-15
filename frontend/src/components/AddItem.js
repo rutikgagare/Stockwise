@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
+import { categoryActions } from "../store/categorySlice";
 
 const AddItem = (props) => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const AddItem = (props) => {
   const categories = useSelector((state) => state.category.data);
 
   const [name, setName] = useState();
-  // const [file, setFile] = useState();
+  const [file, setFile] = useState();
   const [quantity, setQuantity] = useState(1);
   const [serialNumber, setSerialNumber] = useState("");
 
@@ -36,6 +37,10 @@ const AddItem = (props) => {
         throw Error("All fields must be filled");
       }
 
+      if (!file) {
+        throw Error("file must be selected");
+      }
+
       if (
         selectedCategory.identificationType === "unique" &&
         !serialNumber.trim()
@@ -50,6 +55,20 @@ const AddItem = (props) => {
         throw Error("Quantity must be filled");
       }
 
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("http://localhost:9999/service/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: formData,
+      });
+
+      const { link } = await res.json();
+      console.log(link);
+
       // Create an object to hold all item details including custom fields
       const itemDetails = {
         name,
@@ -57,7 +76,8 @@ const AddItem = (props) => {
         assignedTo: null,
         orgId: org._id,
         identificationType: selectedCategory.identificationType,
-        assignedTo: [] // Set assignedTo to an empty array
+        assignedTo: [], // Set assignedTo to an empty array
+        itemImage: link,
       };
 
       // Add identification type specific details
@@ -69,13 +89,13 @@ const AddItem = (props) => {
 
       if (customFields) {
         const customFieldsData = {};
-      
+
         customFields.forEach((field) => {
           const fieldValue = document.getElementById(field.label).value;
-          customFieldsData[field.label] = fieldValue; 
+          customFieldsData[field.label] = fieldValue;
         });
-      
-        itemDetails.customFieldsData = customFieldsData; 
+
+        itemDetails.customFieldsData = customFieldsData;
       }
 
       const response = await fetch("http://localhost:9999/inventory/create", {
@@ -96,6 +116,12 @@ const AddItem = (props) => {
       if (response.ok) {
         const json = await response.json();
         dispatch(inventoryActions.addItem(json));
+        dispatch(
+          categoryActions.incrementItemCount({
+            categoryId: json?.categoryId,
+            quantity,
+          })
+        );
         props.onClose();
       }
     } catch (error) {
@@ -116,9 +142,11 @@ const AddItem = (props) => {
 
           <form onSubmit={handleAddItem}>
             <div className={classes.inputDiv}>
-              <label htmlFor="category">Category Name</label>
+              <label htmlFor="category" className={classes.required}>
+                Category Name
+              </label>
 
-              <select id="category" required onChange={handleCategoryChange}>
+              <select id="category" onChange={handleCategoryChange}>
                 <option value="">Select category</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
@@ -129,7 +157,9 @@ const AddItem = (props) => {
             </div>
 
             <div className={classes.inputDiv}>
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name" className={classes.required}>
+                Name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -137,19 +167,23 @@ const AddItem = (props) => {
               />
             </div>
 
-            {/* <div className={classes.inputDiv}>
-              <label htmlFor="image">Item Image</label>
+            <div className={classes.inputDiv}>
+              <label htmlFor="image" className={classes.required}>
+                Item Image
+              </label>
               <input
                 id="image"
                 type="file"
-                onChange={(e) => setFile(e.target.value)}
+                onChange={(e) => setFile(e.target.files[0])}
               />
-            </div> */}
+            </div>
 
             {selectedCategory &&
               selectedCategory.identificationType === "unique" && (
                 <div className={classes.inputDiv}>
-                  <label htmlFor="serialNumber">Serial Number</label>
+                  <label htmlFor="serialNumber" className={classes.required}>
+                    Serial Number
+                  </label>
                   <input
                     id="serialNumber"
                     type="text"
@@ -161,7 +195,9 @@ const AddItem = (props) => {
             {selectedCategory &&
               selectedCategory.identificationType === "non-unique" && (
                 <div className={classes.inputDiv}>
-                  <label htmlFor="qunatity">Quantity</label>
+                  <label htmlFor="qunatity" className={classes.required}>
+                    Quantity
+                  </label>
                   <input
                     id="quantity"
                     type="number"
@@ -175,7 +211,12 @@ const AddItem = (props) => {
               customFields?.map((field) => {
                 return (
                   <div className={classes.inputDiv}>
-                    <label htmlFor={field.label}>{field.label}</label>
+                    <label
+                      htmlFor={field.label}
+                      className={`${field?.required ? classes.required : ""}`}
+                    >
+                      {field.label}
+                    </label>
                     <input
                       id={field.label}
                       type={field.type}

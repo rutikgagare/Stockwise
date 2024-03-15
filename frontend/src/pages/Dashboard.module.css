@@ -1,11 +1,7 @@
-.main{
+.dashboard{
+    min-height: 90vh;
     width: 100%;
-    min-height: 91vh;
-    display: flex;
-}
-
-.main .right{
     display: flex;
     justify-content: center;
-    padding: 1rem;
+    align-items: center;
 }

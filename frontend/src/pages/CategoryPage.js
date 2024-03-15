@@ -6,8 +6,9 @@ import AddCategory from "../components/AddCategory";
 import UpdateCategory from "../components/UpdateCategory";
 import classes from "./CategoryPage.module.css";
 import { categoryActions } from "../store/categorySlice";
-import noItem from "../Images/noItem.jpg";
 import Layout from "../components/Layout";
+import NoItem from "../components/NoItem";
+import Confirm from "../components/Confirm";
 
 const CategoryPage = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,8 @@ const CategoryPage = () => {
 
   const [showAddItem, setShowAddItem] = useState(false);
   const [showUdateItem, setShowUPdateItem] = useState(false);
-  const [updateItem, setUpdateItem] = useState();
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const toggleShowAddItem = () => {
     setShowAddItem((prevState) => !prevState);
@@ -26,7 +28,10 @@ const CategoryPage = () => {
     setShowUPdateItem((prevState) => !prevState);
   };
 
-  const deleCategoryHandler = async (id) => {
+  const deleCategoryHandler = async () => {
+    setShowConfirm(false);
+
+    console.log("Iside delete category handler");
     try {
       const resposnse = await fetch("http://localhost:9999/Category/delete", {
         method: "DELETE",
@@ -35,7 +40,7 @@ const CategoryPage = () => {
           Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
-          categoryId: id,
+          categoryId: selectedCategory?._id,
         }),
       });
 
@@ -48,11 +53,12 @@ const CategoryPage = () => {
     }
   };
 
+  console.log(categories);
+
   return (
     <Layout>
       {!showAddItem && !showUdateItem && (
         <div className={classes.category}>
-          
           <div className={classes.header}>
             <h3>Active Categories</h3>
             <button onClick={() => setShowAddItem(true)}>+ New</button>
@@ -65,6 +71,7 @@ const CategoryPage = () => {
                   <tr>
                     <th>Category Name</th>
                     <th>Identification Type</th>
+                    <th>Asset Count</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -73,13 +80,15 @@ const CategoryPage = () => {
                     <tr key={category?._id}>
                       <td>{category?.name}</td>
                       <td>{category?.identificationType}</td>
+                      <td>{category?.numberOfAssets ? category?.numberOfAssets : 0}</td>
 
                       <td className={classes.actions}>
                         <button
                           onClick={() => {
-                            setUpdateItem(category);
+                            setSelectedCategory(category);
                             toggleShowUdateItem();
                           }}
+                          disabled={category.numberOfAssets > 0}
                           className={classes.update}
                         >
                           Update
@@ -87,9 +96,11 @@ const CategoryPage = () => {
 
                         <button
                           onClick={() => {
-                            deleCategoryHandler(category._id);
+                            setSelectedCategory(category);
+                            setShowConfirm(true);
                           }}
                           className={classes.delete}
+                          // disabled = {category.numberOfAssets > 0}
                         >
                           Delete
                         </button>
@@ -100,11 +111,7 @@ const CategoryPage = () => {
               </table>
             )}
 
-            {categories && categories.length === 0 && (
-              <div className={classes.noItem}>
-                <img src={noItem} alt="" />
-              </div>
-            )}
+            {categories && categories.length === 0 && <NoItem></NoItem>}
           </div>
         </div>
       )}
@@ -117,8 +124,16 @@ const CategoryPage = () => {
 
       {!showAddItem && showUdateItem && (
         <div className={classes.category}>
-          <UpdateCategory Category={updateItem} onClose={toggleShowUdateItem} />
+          <UpdateCategory Category={selectedCategory} onClose={toggleShowUdateItem} />
         </div>
+      )}
+
+      {showConfirm && (
+        <Confirm
+          onCancel={() => setShowConfirm(false)}
+          onDelete={deleCategoryHandler}
+          message="All the items under category will get deleted"
+        ></Confirm>
       )}
     </Layout>
   );

@@ -11,12 +11,12 @@ const AddVendor = (props) => {
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState(-1);
-  
+
   const [error, setError] = useState(null);
 
   const createProductHandler = async (e) => {
     e.preventDefault();
-    
+
     if (!org) {
       alert("Can't Add Vendor right now! Try again later");
       return;
@@ -31,14 +31,14 @@ const AddVendor = (props) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
           name,
           address,
           email,
           phone,
-          orgId: org?._id
+          orgId: org?._id,
         }),
       });
 
@@ -50,9 +50,8 @@ const AddVendor = (props) => {
 
       if (response.ok) {
         const json = await response.json();
-        props.updateVendors([...props.vendors, json])
-        console.log("json", json)
-        // dispatch(productActions.addProduct(json));
+        props.updateVendors([...props.vendors, json]);
+        console.log("json", json);
         props.onClose();
       }
     } catch (error) {

@@ -1,91 +1,78 @@
 const nodemailer = require("nodemailer");
-const Mailgen = require("mailgen");
-
-// const sendMail = async (req, res) => {
-
-//   let testAccount = await nodemailer.createTestAccount();
-
-//   const transporter = nodemailer.createTransport({
-//     host: "smtp.ethereal.email",
-//     port: 587,
-//     secure: false, // Use `true` for port 465, `false` for all other ports
-//     auth: {
-//       user: "maddison53@ethereal.email",
-//       pass: "jn7jnAPss4f63QBp6D",
-//     },
-//   });
-
-//   let info = await transporter.sendMail({
-//     from: '"Rutik Gagare" <rutik@gmail.com>', // sender address
-//     to: "rutikgagare4328@gmail.com", // list of receivers
-//     subject: "Hello", // Subject line
-//     text: "Hello", // plain text body
-//     html: "<b>Hello</b>", // html body
-//   });
-
-//   console.log("Message sent: %s", info.messageId);
-//   res.json({
-//     msg:"You should recieve mail",
-//     info:info,
-//     preview: nodemailer.getTestMessageUrl(info)
-//   });
-// };
 
 const sendMail = async (req, res) => {
-  let config = {
-    service: "gmail",
-    auth: {
-      user: "stockwise0@gmail.com",
-      password: "jlmjbcqeccvvllyd",
-    },
-  };
+  const { userEmail, messageContent, itemImage, subject } = req.body;
 
-  const transporter = nodemailer.createTransport(config);
-
-  let MailGenerator = new Mailgen({
-    theme: "default",
-    product: {
-      name: "Mailgen",
-      link: "https://mailgen.js/",
-    },
-  });
-
-  let response = {
-    body: {
-      name: "Daily Tuition",
-      intro: "Your bill has arrived!",
-      table: {
-        data: [
-          {
-            item: "Nodemailer Stack Book",
-            description: "A Backend application",
-            price: "$10.99",
-          },
-        ],
+  try {
+    let config = {
+      service: "gmail",
+      auth: {
+        user: process.env.ID,
+        pass: process.env.PASSWORD,
       },
-      outro: "Looking forward to do more business",
-    },
-  };
+    };
 
-  let mail = MailGenerator.generate(response);
+    const transporter = nodemailer.createTransport(config);
 
-  let message = {
-    from: "stockwise0@gmail.com",
-    to: 'rutikgagare091971@gmail.com',
-    subject: "Place Order",
-    html: mail,
-  };
+    //   const htmlContent = `
+    //   <!DOCTYPE html>
+    //   <html lang="en">
+    //   <head>
+    //     <meta charset="UTF-8">
+    //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //     <title>Welcome to Our Organization</title>
+    //   </head>
+    //   <body>
+    //     <div style="background-color: #f0f0f0; padding: 20px;">
+    //       <h2 style="color: #333;">Welcome to Our Organization!</h2>
+    //       <p style="color: #666;">Below are your account details:</p>
+    //       <p style="color: #666;"><strong>Email:</strong> ${userEmail}</p>
+    //       <p style="color: #666;"><strong>Password:</strong> ${password}</p>
+    //       <p style="color: #666;">You can log in to our site using the following link:</p>
+    //       <a href="http://localhost:3000/login">Log in</a>
+    //       <p style="color: #666;">Once logged in, you can reset your password.</p>
+    //       <p style="color: #666;">Best regards,<br>Your Organization Team</p>
+    //     </div>
+    //   </body>
+    //   </html>
+    // `;
 
-  transporter
-    .sendMail(message)
-    .then(() => {
-      return res.status(201).json({
-        msg: "you should receive an email",
-      });
-    })
-    .catch((error) => {
-      return res.status(500).json({ error });
-    });
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>StockWise Notification</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          <h1 style="color: #333;">StockWise Notification</h1>
+          <p style="color: #555;">Hello,</p>
+          <p style="color: #555;">This is a notification from StockWise. You have received a new update or alert.</p>
+          <p style="color: #555;">${messageContent}</p>
+          <img src=${itemImage} alt="Asset Image" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+          <p style="color: #555;">For more details, please visit StockWise.</p>
+          <p style="color: #555;">Thank you,</p>
+          <p style="color: #555;">The StockWise Team</p>
+      </div>
+    </body>
+    </html>`;
+
+    let message = {
+      // from: "stockwise0@gmail.com",
+      from: process.env.ID,
+      to: userEmail,
+      subject: subject || "Stockwise Notification",
+      html: htmlContent,
+    };
+
+    const info = await transporter.sendMail(message);
+    
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).send("Error sending email");
+  }
 };
 
 module.exports = sendMail;

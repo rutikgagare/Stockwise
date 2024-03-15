@@ -1,74 +1,88 @@
-.main{
-    width: 100%;
-    min-height: 91vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.main {
+  width: 100%;
+  min-height: 91vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.signupForm{
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    gap: 1rem;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    border-radius: 0.5rem;
+.signupForm {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1rem;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  border-radius: 0.5rem;
 }
 
-.signup.signupForm .heading{
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin-bottom: 1rem;
+.signup.signupForm .heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
 }
 
-.signupForm .inputDiv{
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.signupForm .inputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.signupForm input{
-    padding: 0.7rem 1rem;
-    outline: none;
-    border: none;
-    border: 1px solid rgb(228, 227, 227);
-    border-radius: 0.2rem;
-    font-size: 1rem;
+.signupForm input {
+  padding: 0.7rem 1rem;
+  outline: none;
+  border: none;
+  border: 1px solid rgb(228, 227, 227);
+  border-radius: 0.2rem;
+  font-size: 1rem;
 }
 
-input:focus{
-    border: 1px solid #0183ff;
+input:focus {
+  border: 1px solid #0183ff;
 }
 
-.signupForm button{
-    border: none;
-    outline: none;
-    padding: 0.5rem 1rem;
-    background-color: #0183ff;
-    color: white;
-    font-size: 1.1rem;
-    border-radius: 0.2rem;
-    margin: 0.5rem 0;
+.signupForm button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  background-color: #0183ff;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 0.2rem;
+  margin: 0.5rem 0;
 }
 
 ::placeholder {
-    color: grey;
-    opacity: 1; 
-    font-size: 1rem;
+  color: grey;
+  opacity: 1;
+  font-size: 1rem;
+}
+
+.error {
+  color: red;
+}
+
+.forgot {
+  color: #0183ff;
+}
+
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 5px;
 }
 
 @media screen and (max-width: 1000px) {
-   .signupForm{
+  .signupForm {
     width: 50%;
-   }
+  }
 }
 
 @media screen and (max-width: 600px) {
-   .signupForm{
+  .signupForm {
     width: 90%;
     margin: 2rem;
-   }
+  }
 }

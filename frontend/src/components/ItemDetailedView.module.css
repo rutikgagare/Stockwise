@@ -1,0 +1,60 @@
+/* ItemDetailedView.module.css */
+
+.itemContainer {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .imageContainer {
+    display: flex;
+    flex: 1;
+    position: relative; /* Positioning context for the vertical line */
+  }
+  
+  .imageContainer img {
+    width: 9rem;
+    height: 8rem;
+  }
+  
+  .imageContainer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px; 
+    background-color: #999; 
+  }
+  
+  .detailsContainer {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .detailsContainer h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #0183ff;
+  }
+  
+  .detailsContainer p {
+    font-weight: 400;
+    font-size: 1rem;
+  }
+  
+  .detailsContainer strong {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  
+  .customFields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
