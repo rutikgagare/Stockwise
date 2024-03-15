@@ -10,6 +10,7 @@ const vendorRoutes = require("./routes/vendorRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const serviceRoutes = require("./routes/serviceRoutes.js");
 const ticketRoutes = require("./routes/ticketRoutes.js");
+const userRoutes = require("./routes/userRoutes.js")
 
 require("dotenv").config();
 

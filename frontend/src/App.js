@@ -223,6 +223,11 @@ function App() {
             element={user ? <HelpDesk /> : <Navigate to="/login" />}
           />
 
+          <Route
+            path="/history"
+            element={user ? <OrderHistoryPage /> : <Navigate to="/login" />}
+          />
+
         </Routes>
       )}
     </BrowserRouter>

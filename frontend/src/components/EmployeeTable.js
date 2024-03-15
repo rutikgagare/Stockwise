@@ -78,6 +78,7 @@ const EmployeeTable = ({ employees }) => {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
