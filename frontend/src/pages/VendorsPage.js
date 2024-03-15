@@ -53,6 +53,9 @@ const VendorPage = () => {
   };
 
   const deleteVendor = async (idx) => {
+    const c = window.confirm("Are sure want to delete the vendor?");
+    if (!c) return;
+
     const res = await fetch("http://localhost:9999/vendor/delete", {
       method: "DELETE",
       headers: {
@@ -113,7 +116,7 @@ const VendorPage = () => {
         <div className={classes.vendor}>
           <div className={classes.header}>
             <h3>Active Vendors</h3>
-            <button onClick={() => setShowAddItem(true)}>+ New</button>
+            <button onClick={() => setShowAddItem(true)} >+ New</button>
           </div>
 
           <div className={classes.employee_table_container}>
@@ -183,13 +186,10 @@ const VendorPage = () => {
                         <div className={classes.actions}>
                           {idx === updateItem ? (
                             <button
-                              className={classes.done}
-                              onClick={() => {
-                                updateVendor(updateItem);
-                                setUpdateItem(-1);
-                              }}
+                              onClick={() => setUpdateItem(-1)}
+                              className={classes.cancel}
                             >
-                              Done
+                              Cancel
                             </button>
                           ) : (
                             <button
@@ -207,11 +207,15 @@ const VendorPage = () => {
                           )}
 
                           {updateItem === idx ? (
+
                             <button
-                              onClick={() => setUpdateItem(-1)}
-                              className={classes.cancel}
+                              className={classes.done}
+                              onClick={() => {
+                                updateVendor(updateItem);
+                                setUpdateItem(-1);
+                              }}
                             >
-                              Cancel
+                              Done
                             </button>
                           ) : (
                             <button

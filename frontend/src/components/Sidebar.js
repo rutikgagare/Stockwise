@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./Sidebar.css";
 import { MdInventory } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaHistory } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import { MdSell } from "react-icons/md";
@@ -86,6 +86,10 @@ const Sidebar = ({ isOpen }) => {
         >
           <SiHelpdesk className="icon"/>
           Help Desk
+        </NavLink>
+        <NavLink to="/history" className="sidebar-item" activeClassName="active">
+          <FaHistory />
+          Order History
         </NavLink>
       </div>
     )

@@ -26,6 +26,7 @@ const CreateEmployee = ({appendNewEmp}) => {
     })
 
     if (res.status === 200 || res.status === 201) {
+      alert("Employee Created!")
       appendNewEmp(emp.data)
     }
   }

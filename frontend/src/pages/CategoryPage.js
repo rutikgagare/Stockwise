@@ -31,7 +31,6 @@ const CategoryPage = () => {
   const deleCategoryHandler = async () => {
     setShowConfirm(false);
 
-    console.log("Iside delete category handler");
     try {
       const resposnse = await fetch("http://localhost:9999/Category/delete", {
         method: "DELETE",

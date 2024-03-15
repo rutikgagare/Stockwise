@@ -22,6 +22,8 @@ import HelpDesk from "./pages/HelpDesk";
 import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
+import OrderHistoryPage from "./pages/OrderHistoryPage";
+
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.user);

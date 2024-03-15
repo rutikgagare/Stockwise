@@ -172,7 +172,7 @@ const UpdateItem = (props) => {
                     </label>
                     <input
                       id={field.label}
-                      value={customFieldsData[field.label]}
+                      value={customFieldsData && customFieldsData[field?.label]}
                       type={field.type}
                       onChange={(e) =>
                         handleCustomFieldChange(field.label, e.target.value)

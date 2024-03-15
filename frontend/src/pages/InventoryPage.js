@@ -73,7 +73,7 @@ const InventoryPage = () => {
 
   // default category selection and filter logic
   useEffect(() => {
-    if (!selectedCategory && categories && categories.length > 0) {
+    if (categories && !selectedCategory && categories && categories.length > 0) {
       setSelectedCategory(categories[0]);
     }
 
@@ -111,7 +111,7 @@ const InventoryPage = () => {
 
           <div className={classes.inventory_table_container}>
             {filteredInventory &&
-              filteredInventory.length > 0 &&
+              filteredInventory?.length > 0 &&
               selectedCategory?.identificationType === "unique" && (
                 <table className={classes.inventory_table}>
                   <thead>
@@ -217,7 +217,7 @@ const InventoryPage = () => {
               )}
 
             {filteredInventory &&
-              filteredInventory.length > 0 &&
+              filteredInventory?.length > 0 &&
               selectedCategory?.identificationType === "non-unique" && (
                 <table className={classes.inventory_table}>
                   <thead>
