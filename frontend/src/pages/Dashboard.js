@@ -46,7 +46,7 @@ const Dashboard = () => {
     <Layout>
       <div className={classes.dashboard}>
         <h1>Welcome to Dashboard</h1>
-        <button onClick={sendPushNotification}>Send Notification</button>
+        {/* <button onClick={sendPushNotification}>Send Notification</button> */}
       </div>
     </Layout>
   );
