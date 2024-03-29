@@ -5,6 +5,11 @@ import { authActions } from "./store/authSlice";
 import { organizationActions } from "./store/organizationSlice";
 import { useEffect, useState } from "react";
 
+import { generateToken, messaging } from "./notification/firebase.js";
+import { onMessage } from "firebase/messaging";
+
+import toast, { Toaster } from "react-hot-toast";
+
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import EmployeeManagementPage from "./pages/EmployeeManagementPage";
@@ -23,6 +28,7 @@ import { categoryActions } from "./store/categorySlice";
 import { inventoryActions } from "./store/inventorySlice";
 
 import OrderHistoryPage from "./pages/OrderHistoryPage";
+import HelpDeskAdmin from "./pages/HelpDeskAdmin";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +42,14 @@ function App() {
       dispatch(authActions.login(user));
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    generateToken();
+    onMessage(messaging, (payload) => {
+      // console.log("Payload inside onMessage : ", payload);
+      toast(payload.notification.body, { duration: 3000 }); 
+    });
+  }, []);
 
   useEffect(() => {
     const getOrganizationInfo = async () => {
@@ -127,6 +141,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* <Navbar /> */}
+      <Toaster position="top-right" reverseOrder={false} />
 
       {!loading && (
         <Routes>
@@ -223,6 +238,27 @@ function App() {
             element={user ? <HelpDesk /> : <Navigate to="/login" />}
           />
 
+          <Route
+            path="/helpdeskAdmin"
+            element={
+              user && user?.role === "admin" ? (
+                <HelpDeskAdmin />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+
+          <Route
+            path="/history"
+            element={
+              user && user?.role === "admin" ? (
+                <OrderHistoryPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
         </Routes>
       )}
     </BrowserRouter>

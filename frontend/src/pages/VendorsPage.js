@@ -132,7 +132,7 @@ const VendorPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {vendors?.map((vendor, idx) => (
+                  {vendors && vendors?.map((vendor, idx) => (
                     <tr key={vendor?._id}>
                       <td>
                         <input

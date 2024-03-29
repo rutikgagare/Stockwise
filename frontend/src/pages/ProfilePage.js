@@ -64,15 +64,15 @@ const ProfilePage = () => {
 
           <hr />
 
-          <div className={classes.assignedAssets}>
+          {assetList && assetList.length > 0 && <div className={classes.assignedAssets}>
             <h3>Assigned Assets</h3>
 
             <div className={classes.assetList}>
-              {assetList && assetList.length > 0 ? (
+              { (
                 assetList?.map((asset) => (
                   <div className={classes.asset}>
                     <div className={classes.assetImage}>
-                      <img src={asset?.itemImage} alt="" />
+                      <img src={`https://stockwisebucket.s3.ap-south-1.amazonaws.com/${asset?.itemImage}`} alt="" />
                     </div>
 
                     <div className={classes.assetInfo}>
@@ -88,23 +88,21 @@ const ProfilePage = () => {
                         Quantity: <span>{asset?.quantity}</span>{" "}
                       </h4>
 
-                      <div className={classes.customFields}>
-                        {Object.entries(asset.customFieldsData).map(
+                      {asset.customFields && <div className={classes.customFields}>
+                        {Object.entries(asset?.customFieldsData).map(
                           ([key, value]) => (
-                            <h4 key={key}>
+                            key && value && <h4 key={key}>
                               {key}: <span>{value}</span>
                             </h4>
                           )
                         )}
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 ))
-              ) : (
-                <p>No Asset assigned yet</p>
-              )}
+              )} 
             </div>
-          </div>
+          </div>}
         </div>
       </div>
     </Layout>

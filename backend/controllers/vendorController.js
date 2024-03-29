@@ -25,7 +25,6 @@ const getVendors = async (req, res) => {
     }
 
     catch (err) {
-        console.log("err: ", err);
         res.status(400).json(err);
     }
 }
@@ -43,10 +42,6 @@ const updateVendor = async (req, res) => {
         res.json(updatedVendor);
     }
     catch (err) {
-        console.log("Could not update vendor:");
-        console.log(req.body);
-        console.log("err: ", err);
-
         res.status(400).json({ error: err })
     }
 }
@@ -55,14 +50,9 @@ const deleteVendor = async (req, res) => {
     const vendorId = new Object(req.body.vendorId);
     try {
         const result = await Vendor.findOneAndDelete({ _id: vendorId })
-        console.log("deleted: ", vendorId)
-        console.log(res);
         res.json(result);
     }
     catch (err) {
-        console.log("could not delete", vendorId);
-        console.log("err: ", err);
-
         res.status(500).json({ error: err })
     }
 }

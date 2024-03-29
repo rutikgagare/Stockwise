@@ -1,41 +1,43 @@
-const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
+const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 // generating a token
-const createToken = (_id)=>{
-    return jwt.sign({_id}, process.env.SECRET, {expiresIn:'3d'})
-}
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
+};
 
 // login user
-const loginUser = async (req, res)=>{
-    const {email, password} = req.body;
+const loginUser = async (req, res) => {
 
-    try{
-        const user = await User.login(email, password);
+  const { email, password,  } = req.body;
 
-        // create a token
-        const token = createToken(user._id);
-        res.status(200).json({name: user.name, email, token, id: user._id, role: user.role});
+  try {
+    const user = await User.login(email, password);
 
-    }catch(error){
-        res.status(400).json({error: error.message});
-    }
-}
+    // create a token
+    const token = createToken(user._id);
+
+    res
+      .status(200)
+      .json({ name: user.name, email, token, id: user._id, role: user.role });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // signup user
-const signupUser = async (req, res)=>{
-    const {name, email, password, role} = req.body
+const signupUser = async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-    try{
-        const user = await User.signup(name, email, password, role);
+  try {
+    const user = await User.signup(name, email, password, role);
 
-        // create a token
-        const token = createToken(user._id);
-        res.status(200).json({name, email, token, id: user._id, role: user.role});
+    // create a token
+    const token = createToken(user._id);
+    res.status(200).json({ name, email, token, id: user._id, role: user.role });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-    }catch(error){
-        res.status(400).json({error:error.message});
-    }
-}
-
-module.exports = {loginUser, signupUser}
+module.exports = { loginUser, signupUser };

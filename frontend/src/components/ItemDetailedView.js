@@ -5,7 +5,7 @@ const ItemDetailedView = ({ item }) => {
   return (
     <div className={classes.itemContainer}>
       <div className={classes.imageContainer}>
-        <img src={item?.itemImage} alt="" />
+        <img src={`https://stockwisebucket.s3.ap-south-1.amazonaws.com/${item?.itemImage}`} alt="" />
       </div>
 
       <div className={classes.detailsContainer}>
@@ -17,7 +17,7 @@ const ItemDetailedView = ({ item }) => {
 
         {item?.customFieldsData && <div className={classes.customFields}>
           {Object.entries(item.customFieldsData).map(([key, value]) => (
-            <p key={key}>
+            key && value && <p key={key}>
               <strong>{key}:</strong>  {value ? value : '-'}
             </p>
           ))}

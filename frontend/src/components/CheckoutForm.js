@@ -95,7 +95,6 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
         }),
       });
 
-
     } catch (error) {
       setError(error.message);
     }

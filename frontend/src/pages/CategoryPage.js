@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import Sidebar from "../components/Sidebar";
@@ -87,7 +87,7 @@ const CategoryPage = () => {
                             setSelectedCategory(category);
                             toggleShowUdateItem();
                           }}
-                          disabled={category.numberOfAssets > 0}
+                          // disabled={category.numberOfAssets > 0}
                           className={classes.update}
                         >
                           Update

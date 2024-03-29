@@ -6,7 +6,8 @@ const router = express.Router()
 router.use(requireAuth)
 
 const sendMail = require("../controllers/nodeMailer.js")
-const {uploadImageToAWS} = require('../controllers/awsS3.js');
+const {uploadImageToAWS, deleteImageFromAWS, listObjectsInBucket} = require('../controllers/awsS3.js');
+const {sendNotification} = require('../controllers/pushNotification.js')
 
 router.post('/sendMail', sendMail)
 
@@ -18,5 +19,10 @@ const upload = multer({
 })
 
 router.post('/upload', upload.single('file'), uploadImageToAWS);
+router.delete('/deleteImage/:key', deleteImageFromAWS);
+router.get('/list', listObjectsInBucket);
+
+// push Notification
+router.post('/send-push-notification', sendNotification);
 
 module.exports = router

@@ -33,6 +33,37 @@ const getItems = async (req, res) => {
   }
 };
 
+const itemSearch = async (req, res) => {
+  const orgId = req.params.orgId;
+  const { searchText } = req.body;
+
+  try {
+    const items = await Inventory.aggregate([
+      {
+        $search: {
+          text: {
+            query: searchText,
+            path: 'name',
+            fuzzy: {
+              // maxEdits: 2 ,
+              prefixLength: 3,
+            }
+          }
+        }
+      },
+      {
+        $match: {
+          "orgId": new ObjectId(orgId)
+        }
+      }
+    ]);
+
+    res.json(items);
+  } catch (err) {
+    res.send({ error: err.message });
+  }
+};
+
 const deleteItem = async (req, res) => {
   try {
     const { itemId } = req.body;
@@ -81,7 +112,6 @@ const updateItem = async (req, res) => {
 const checkoutItem = async (req, res) => {
   const { itemId, assignedTo } = req.body;
 
-  console.log("checkout item req.body: ", req.body)
   try {
     const item = await Inventory.findById(new ObjectId(itemId));
 
@@ -188,10 +218,9 @@ const checkinItem = async (req, res) => {
       const updatedLifecycle = item.lifecycle;
       updatedLifecycle[updatedLifecycle.length - 1].checkinDate = new Date();;
   
-
       updatedItem = await Inventory.findByIdAndUpdate(
         new ObjectId(itemId),
-        { assignedTo: [], status: "ready to deploy", lifecycle: updatedLifecycle},
+        { $pop:{ assignedTo : -1}, status: "ready to deploy", lifecycle: updatedLifecycle},
         { new: true }
       );
     }
@@ -288,4 +317,5 @@ module.exports = {
   checkoutItem,
   checkinItem,
   getUserAssets,
+  itemSearch
 };

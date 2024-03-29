@@ -66,8 +66,11 @@ const AddItem = (props) => {
         body: formData,
       });
 
-      const { link } = await res.json();
-      console.log(link);
+      // const { link} = await res.json();
+      // console.log(link);
+
+      const {key} = await res.json();
+      console.log("key",key);
 
       // Create an object to hold all item details including custom fields
       const itemDetails = {
@@ -77,7 +80,7 @@ const AddItem = (props) => {
         orgId: org._id,
         identificationType: selectedCategory.identificationType,
         assignedTo: [], // Set assignedTo to an empty array
-        itemImage: link,
+        itemImage: key,
       };
 
       // Add identification type specific details

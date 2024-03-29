@@ -10,11 +10,9 @@ const categorySlice = createSlice({
 
   reducers: {
     setCategory: (state, action) => {
-      console.log("Inside set category", action.payload);
-      state.data = [...action.payload];
+      state.data = action.payload;
     },
     addCategory: (state, action) => {
-      console.log("Inside add category");
       state.data = [...state.data, action.payload];
     },
     deleteCategory: (state, action) => {
@@ -35,11 +33,12 @@ const categorySlice = createSlice({
     incrementItemCount: (state, action) => {
       console.log("Inside increment ", action.payload);
       state.data = state.data.map((item) => {
-
         if (item._id === action.payload.categoryId) {
           return {
             ...item,
-            numberOfAssets: item.numberOfAssets ? item.numberOfAssets + action.payload.quantity : action.payload.quantity,
+            numberOfAssets: item.numberOfAssets
+              ? item.numberOfAssets + action.payload.quantity
+              : action.payload.quantity,
           };
         }
         return item;
@@ -51,7 +50,9 @@ const categorySlice = createSlice({
         if (item._id === action.payload.categoryId) {
           return {
             ...item,
-            numberOfAssets: item.numberOfAssets ? item.numberOfAssets - action.payload.quantity : action.payload.quantity,
+            numberOfAssets: item.numberOfAssets
+              ? item.numberOfAssets - action.payload.quantity
+              : action.payload.quantity,
           };
         }
         return item;

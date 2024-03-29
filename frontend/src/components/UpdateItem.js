@@ -6,10 +6,10 @@ import { inventoryActions } from "../store/inventorySlice";
 const UpdateItem = (props) => {
   const dispatch = useDispatch();
 
-  const [name, setName] = useState(props.item.name);
+  const [name, setName] = useState(props?.item?.name);
   const [identificationType, setIdentificationType] = useState();
-  const [quantity, setQuantity] = useState(props.item.quantity);
-  const [serialNumber, setSerialNumber] = useState(props.item.serialNumber);
+  const [quantity, setQuantity] = useState(props?.item?.quantity);
+  const [serialNumber, setSerialNumber] = useState(props?.item?.serialNumber);
 
   const user = useSelector((state) => state.auth.user);
   const categories = useSelector((state) => state.category.data);
@@ -41,17 +41,11 @@ const UpdateItem = (props) => {
         throw Error("Required fields must be filled");
       }
 
-      if (
-        props.item.identificationType === "unique" &&
-        !serialNumber.trim()
-      ) {
+      if (props.item.identificationType === "unique" && !serialNumber.trim()) {
         throw Error("Serial Number must be filled");
       }
 
-      if (
-        props.item.identificationType === "non-unique" &&
-        !quantity.trim()
-      ) {
+      if (props.item.identificationType === "non-unique" && !quantity) {
         throw Error("Quantity must be filled");
       }
 

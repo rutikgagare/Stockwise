@@ -8,7 +8,8 @@ const getCategorys = async (req, res) => {
   const orgId = req.params.orgId;
 
   try {
-    const categoryInformation = await Category.aggregate([
+    // Perform $lookup stage to join "categories" and "inventories" collections
+    const categoriesWithInventories = await Category.aggregate([
       {
         $match: {
           orgId: new ObjectId(orgId),
@@ -21,42 +22,27 @@ const getCategorys = async (req, res) => {
           foreignField: "categoryId",
           as: "inventoryItems",
         },
-      },
-      {
-        $unwind: { path: "$inventoryItems", preserveNullAndEmptyArrays: true },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          name: { $first: "$name" },
-          identificationType: { $first: "$identificationType" },
-          orgId: { $first: "$orgId" },
-          customFields: { $first: "$customFields" },
-          vendors: { $first: "$vendors" },
-          // Sum of quantities or default to 0 if inventoryItems array is empty
-          numberOfAssets: {
-            $sum: {
-              $cond: [
-                { $ifNull: ["$inventoryItems.quantity", false] },
-                "$inventoryItems.quantity",
-                0,
-              ],
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          identificationType: 1,
-          orgId: 1,
-          customFields: 1,
-          vendors: 1,
-          numberOfAssets: 1,
-        },
-      },
+      }
     ]);
+
+    const categoryInformation = categoriesWithInventories.map(category => {
+      const numberOfAssets = category.inventoryItems.reduce((total, inventory) => {
+        return total + (inventory.quantity || 0); 
+      }, 0);
+
+      return {
+        _id: category._id,
+        name: category.name,
+        identificationType: category.identificationType,
+        orgId: category.orgId,
+        customFields: category.customFields,
+        vendors: category.vendors,
+        numberOfAssets: numberOfAssets,
+      };
+    });
+
+    categoryInformation.sort((a, b) => b.numberOfAssets - a.numberOfAssets);
+
     res.json(categoryInformation);
   } catch (err) {
     res.send({ error: err.message });

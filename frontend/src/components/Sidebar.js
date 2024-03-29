@@ -8,6 +8,7 @@ import { BiSolidCategory } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import { MdSell } from "react-icons/md";
 import { SiHelpdesk } from "react-icons/si";
+import { IoTicketSharp } from "react-icons/io5";
 
 const Sidebar = ({ isOpen }) => {
   const user = useSelector((state) => state?.auth?.user);
@@ -15,14 +16,14 @@ const Sidebar = ({ isOpen }) => {
   return (
     isOpen && (
       <div className="sidebar-container">
-        <NavLink
+        {user && <NavLink
           to="/dashboard"
           className="sidebar-item"
           activeClassName="active"
         >
           <MdDashboard className="icon" />
           Dashboard
-        </NavLink>
+        </NavLink>}
 
         {user && user?.role === "admin" && (
           <NavLink
@@ -79,18 +80,28 @@ const Sidebar = ({ isOpen }) => {
           </NavLink>
         )}
 
-        <NavLink
+        {user && <NavLink
           to="/helpdesk"
           className="sidebar-item"
           activeClassName="active"
         >
           <SiHelpdesk className="icon"/>
           Help Desk
-        </NavLink>
-        <NavLink to="/history" className="sidebar-item" activeClassName="active">
+        </NavLink>}
+
+        {user && user.role === "admin" && <NavLink
+          to="/helpdeskadmin"
+          className="sidebar-item"
+          activeClassName="active"
+        >
+          <IoTicketSharp className="icon"/>
+          Ticket Administration
+        </NavLink>}
+
+        {user && user.role === "admin" &&<NavLink to="/history" className="sidebar-item" activeClassName="active">
           <FaHistory />
           Order History
-        </NavLink>
+        </NavLink>}
       </div>
     )
   );

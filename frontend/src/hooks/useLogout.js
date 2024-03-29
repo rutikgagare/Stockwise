@@ -1,6 +1,10 @@
 import { useDispatch } from "react-redux"
 import { authActions } from "../store/authSlice"
 import { organizationActions } from "../store/organizationSlice";
+import { inventoryActions } from "../store/inventorySlice";
+import { ticketActions } from "../store/ticketSlice";
+import { ticketAdminActions } from "../store/ticketAdminSlice";
+import { categoryActions } from "../store/categorySlice";
 
 export const useLogout = () => {
 
@@ -15,6 +19,10 @@ export const useLogout = () => {
 
         // dispatch reset org
         dispatch(organizationActions.setOrg(null))
+        dispatch(categoryActions.setCategory(null))
+        dispatch(inventoryActions.setInventory(null))
+        dispatch(ticketActions.setTickets(null))
+        dispatch(ticketAdminActions.setTickets(null))
     }
 
     return {logout};

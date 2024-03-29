@@ -42,6 +42,20 @@ const InventoryPage = () => {
   const deleteItemHandler = async () => {
     setShowConfirm(false);
     try {
+
+
+      const res = await fetch(`http://localhost:9999/service/deleteImage/${selectedItem.itemImage}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+
+      if(!res){
+        return;
+      }
+
       const resposnse = await fetch("http://localhost:9999/inventory/delete", {
         method: "DELETE",
         headers: {
@@ -81,6 +95,9 @@ const InventoryPage = () => {
       inventory?.filter((item) => item?.categoryId === selectedCategory?._id)
     );
   }, [categories, selectedCategory, inventory]);
+
+  console.log("data type inv", typeof(inventory))
+
 
   return (
     <Layout>

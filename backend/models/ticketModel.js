@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const Organization = require("./organizationModel.js");
 
 const ticketSchema = new mongoose.Schema({
-  title: {
+  issueType: {
     type: String,
     required: true
   },
@@ -16,15 +17,32 @@ const ticketSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Open', 'In Progress', 'Resolved'],
-    default: 'Open'
+    enum: ['open', 'processing', 'resolved', 'closed'],
+    default: 'open'
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  userName: {
+    type: String,
+    required: true
+  },
+  assetId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Inventory'
+  },
+  orgId:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Organization",
+  },
+  remark:{
+    type: String,
   }
 }, { timestamps: true });
+
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
 

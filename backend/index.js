@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+// const socketio = require("socket.io");
+// const http = require("http");
+
 const authRoutes = require("./routes/authRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
@@ -10,10 +13,14 @@ const vendorRoutes = require("./routes/vendorRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const serviceRoutes = require("./routes/serviceRoutes.js");
 const ticketRoutes = require("./routes/ticketRoutes.js");
+const userRoutes = require("./routes/userRoutes.js");
 
 require("dotenv").config();
 
 const app = express();
+
+// const server = http.createServer(app);
+// const io = socketio(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

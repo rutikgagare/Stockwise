@@ -19,12 +19,12 @@ const Modal = ({ onClose, children, width }) => {
     padding: '1.5rem',
     boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)', 
     width: width || '40%',
-    maxHeight: "60%",
+    maxHeight: "80%",
+    overflowY: 'scroll',
   };
 
   const modalBodyStyle = {
-    overflowY: 'scroll',
-    maxHeight: 'calc(100% - 3rem)', // Subtract padding from maxHeight
+    height:"100%",
   };
 
   return (

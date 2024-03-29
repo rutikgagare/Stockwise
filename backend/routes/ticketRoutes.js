@@ -1,12 +1,15 @@
 const express = require('express')
-const { createTicket, updateTicket, deleteTicket } = require('../controllers/ticketController.js')
-const requireAuth = require('./authRoutes.js');
+const { createTicket, updateTicket, deleteTicket,getMyTickets, getTickets} = require('../controllers/ticketController.js')
+const requireAuth = require('../middleware/requireAuth.js');
+const requireAdmin = require('../middleware/requireAdmin.js');
 
 const router = express.Router()
 router.use(requireAuth)
 
 router.post('/create', createTicket);
-router.put('/update',updateTicket);
+router.put('/update',requireAdmin, updateTicket);
 router.delete('/delete',deleteTicket);
+router.get('/userTickets',getMyTickets);
+router.get('/:orgId', requireAdmin, getTickets);
 
 module.exports = router
