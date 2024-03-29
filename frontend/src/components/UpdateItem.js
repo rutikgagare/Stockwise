@@ -151,6 +151,7 @@ const UpdateItem = (props) => {
                   type="number"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
+                  min={props.item.checkedOutQuantity}
                 />
               </div>
             )}
