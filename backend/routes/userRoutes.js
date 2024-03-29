@@ -2,6 +2,8 @@ const express = require("express")
 const bcrypt = require('bcrypt');
 const User = require("../models/userModel");
 const { ObjectId } = require("mongodb");
+const { generateRandomPassword } = require("../utils/generators");
+const { sendMail } = require("../utils/mail")
 const router = express.Router()
 
 const saltRounds = 10;
@@ -28,12 +30,36 @@ router.get("/getUser/:username", async (req, res) => {
 
 router.post("/createUser", async (req, res) => {
     const userData = req.body;
-
+    const randomPassword = generateRandomPassword();
+    userData["password"] = randomPassword;
     try {
         const hashedPassword = await bcrypt.hash(userData["password"], saltRounds);
         userData["password"] = hashedPassword;
 
         const newUser = await User.create(userData);
+
+        sendMail(
+            "Stockwise Admin",
+            userData["email"],
+            "Welcome to Stockwise",
+            "",
+            `
+            <h3>We welcome you to the Stockwise</h3>
+            <p>
+                You have been added to the Organization: <br>
+                as a ${userData["role"]} <br>
+                As a next step <br>
+                We recommend you to login to the account change your password
+            </p>
+                <strong>Here are your credentials<strong>
+                email: ${userData["email"]}
+                password: ${randomPassword}
+
+            <h4>
+                We hope you have a long and lovely relationship with Stockwise
+            </h4>
+            `
+        )
         res.json(newUser);
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error. Could not create user." });
@@ -83,7 +109,7 @@ router.delete("/deleteUser", async (req, res) => {
 
         res.json({ message: "User deleted successfully" });
     } catch (error) {
-        console.log("error: " ,error);
+        console.log("error: ", error);
         res.status(500).json({ message: "Internal Server Error. Could not delete user." });
     }
 });
