@@ -43,6 +43,6 @@ app.use("/ticket", ticketRoutes);
 app.use("/service", serviceRoutes);
 
 
-app.listen(process.env.PORT, () => {
+module.exports = app.listen(process.env.PORT, () => {
   console.log(`Server started on port: ${process.env.PORT}`);
 });
