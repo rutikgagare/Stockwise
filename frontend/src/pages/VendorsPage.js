@@ -5,6 +5,11 @@ import AddVendor from "../components/AddVendor";
 import classes from "./VendorsPage.module.css";
 import Layout from "../components/Layout";
 import NoItem from "../components/NoItem";
+import ReactPaginate from 'react-paginate';
+
+import { FiSearch } from "react-icons/fi";
+
+import "./reactPaginate.css"
 
 const VendorPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -14,6 +19,9 @@ const VendorPage = () => {
   const [updateItem, setUpdateItem] = useState(-1);
 
   const [vendors, setVendors] = useState([]);
+  const [vendorsCopy, setVendorsCopy] = useState([]);
+
+  const [searchText, setSearchText] = useState('');
 
   const toggleShowAddItem = () => {
     setShowAddItem((prevState) => !prevState);
@@ -78,12 +86,32 @@ const VendorPage = () => {
       const updatedVendors = vendors.filter((v, i) => i !== idx);
       console.log("updatedVendors", updatedVendors);
       setVendors(updatedVendors);
+      setVendorsCopy(updatedVendors);
     }
 
     if (res.ok) {
       alert("Vendor deleted successfully");
     }
   };
+
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+    if (!searchText) {
+      console.log('setall')
+      setVendors(vendorsCopy);
+      return;
+    }
+    const resultVendors = vendorsCopy.filter((value, index, array) => {
+      for (const v of Object.values(value)) {
+        if (typeof (v) == "string" && v.includes(searchText)) return true;
+      }
+      return false;
+    })
+
+    // console.log("searchvendors: ", resultVendors);
+    setVendors(resultVendors);
+  }
+
   useEffect(() => {
     console.log("useEffect triggered");
     const fetchVendors = async () => {
@@ -105,10 +133,25 @@ const VendorPage = () => {
 
       if (res.ok) {
         setVendors(resJson);
+        setVendorsCopy(resJson);
       }
     };
     fetchVendors();
   }, [org]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 10;
+  const endOffset = itemOffset + itemsPerPage;
+  const currentVendors = vendors.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(vendors.length / itemsPerPage);
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % vendors.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
 
   return (
     <Layout>
@@ -119,6 +162,12 @@ const VendorPage = () => {
             <button onClick={() => setShowAddItem(true)} >+ New</button>
           </div>
 
+          <div className={classes.searchBar}>
+            <input value={searchText} onChange={(e) => { handleSearch(e) }} />
+            <button>
+              <FiSearch />
+            </button>
+          </div>
           <div className={classes.employee_table_container}>
             {vendors && vendors?.length > 0 && (
               <table className={classes.employee_table}>
@@ -132,7 +181,7 @@ const VendorPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {vendors && vendors?.map((vendor, idx) => (
+                  {currentVendors && currentVendors?.map((vendor, idx) => (
                     <tr key={vendor?._id}>
                       <td>
                         <input
@@ -140,9 +189,10 @@ const VendorPage = () => {
                           disabled={idx === updateItem ? false : true}
                           value={vendor?.name}
                           onChange={(e) => {
-                            const vendorsCopy = [...vendors];
-                            vendorsCopy[idx].name = e.target.value;
-                            setVendors(vendorsCopy);
+                            const _vendorsCopy = [...vendors];
+                            _vendorsCopy[idx].name = e.target.value;
+                            setVendors(_vendorsCopy);
+                            setVendorsCopy(_vendorsCopy)
                           }}
                         />
                       </td>
@@ -152,9 +202,10 @@ const VendorPage = () => {
                           disabled={idx === updateItem ? false : true}
                           value={vendor?.address}
                           onChange={(e) => {
-                            const vendorsCopy = [...vendors];
-                            vendorsCopy[idx].address = e.target.value;
-                            setVendors(vendorsCopy);
+                            const _vendorsCopy = [...vendors];
+                            _vendorsCopy[idx].address = e.target.value;
+                            setVendors(_vendorsCopy);
+                            setVendorsCopy(_vendorsCopy)
                           }}
                         />
                       </td>
@@ -164,9 +215,10 @@ const VendorPage = () => {
                           disabled={idx === updateItem ? false : true}
                           value={vendor?.email}
                           onChange={(e) => {
-                            const vendorsCopy = [...vendors];
-                            vendorsCopy[idx].email = e.target.value;
-                            setVendors(vendorsCopy);
+                            const _vendorsCopy = [...vendors];
+                            _vendorsCopy[idx].email = e.target.value;
+                            setVendors(_vendorsCopy);
+                            setVendorsCopy(_vendorsCopy)
                           }}
                         />
                       </td>
@@ -176,9 +228,10 @@ const VendorPage = () => {
                           disabled={idx === updateItem ? false : true}
                           value={vendor?.phone}
                           onChange={(e) => {
-                            const vendorsCopy = [...vendors];
-                            vendorsCopy[idx].phone = e.target.value;
-                            setVendors(vendorsCopy);
+                            const _vendorsCopy = [...vendors];
+                            _vendorsCopy[idx].phone = e.target.value;
+                            setVendors(_vendorsCopy);
+                            setVendorsCopy(_vendorsCopy);
                           }}
                         />
                       </td>
@@ -236,9 +289,23 @@ const VendorPage = () => {
             )}
 
             {vendors && vendors.length === 0 && (
-             <NoItem></NoItem>
+              <NoItem></NoItem>
             )}
           </div>
+
+          <ReactPaginate
+            activeClassName='pagination-active'
+            breakClassName='pagination-break'
+            containerClassName='pagination-container'
+            marginPagesDisplayed={2}
+            nextClassName='pagination-next-prev'
+            onPageChange={handlePageClick}
+            pageCount={pageCount}
+            pageRangeDisplayed={3}
+            pageClassName='pagination-page'
+            previousClassName='pagination-next-prev'
+          />
+
         </div>
       )}
 

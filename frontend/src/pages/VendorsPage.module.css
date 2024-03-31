@@ -97,3 +97,41 @@ td input {
 }
 
 
+.searchBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px; /* Adjust width as needed */
+  margin: 0 auto;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.searchBar input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.searchBar button {
+  background-color: #5f27cd; /* Beautiful purple, change as desired */
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.searchBar button:hover {
+  background-color: #341f97; /* Darker shade of purple on hover */
+}
+
+/* Icon styling */
+.searchBar button svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff; /* Icon color */
+}
