@@ -8,7 +8,6 @@ const app = require("../index.js");
 const Inventory = require("../models/inventoryModel.js");
 const Category = require("../models/categoryModel.js");
 const User = require("../models/userModel.js");
-const Organization = require("../models/organizationModel.js");
 
 const expect = chai.expect;
 chai.use(chaiHttp);
