@@ -10,8 +10,6 @@ const getCategorys = async (req, res) => {
 
     const org = await Organization.findById(new ObjectId(orgId));
 
-    console.log(org);
-
     if (!org) {
       throw Error("Organization with orgId does not exist");
     }
@@ -119,7 +117,6 @@ const updateCategory = async (req, res) => {
     const { categoryId } = req.body;
 
     if (!categoryId) {
-      console.log("not provided");
       throw Error("category Id not provided");
     }
 

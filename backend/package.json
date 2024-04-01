@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha ./test/category.spec.js --timeout 10000 --exit ",
-    "test:watch": "mocha --watch ./test/category.spec.js",
+    "test": "mocha ./test/inventory.spec.js --timeout 10000 --exit ",
+    "test:watch": "mocha --watch ./test/inventory.spec.js",
     "coverage":"nyc --reporter=lcov --reporter=text npm test"
   },
   "nyc" :{

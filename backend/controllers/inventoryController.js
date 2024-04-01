@@ -8,7 +8,7 @@ const createItem = async (req, res) => {
   const { categoryId } = req.body;
 
   try {
-    const category = Category.findById(new ObjectId(categoryId));
+    const category = await Category.findById(new ObjectId(categoryId));
 
     if (!category) {
       throw Error(`Category with orgId: ${categoryId} does not exist`);
@@ -25,11 +25,12 @@ const createItem = async (req, res) => {
 
 const getItems = async (req, res) => {
   const orgId = req.params.orgId;
+
   try {
     const items = await Inventory.find({ orgId });
-    res.json(items);
+    res.status(201).json(items);
   } catch (err) {
-    res.send({ error: err.message });
+    res.status(400).send({ error: err.message });
   }
 };
 
@@ -43,24 +44,23 @@ const itemSearch = async (req, res) => {
         $search: {
           text: {
             query: searchText,
-            path: 'name',
+            path: "name",
             fuzzy: {
               // maxEdits: 2 ,
               prefixLength: 3,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       {
         $match: {
-          "orgId": new ObjectId(orgId)
-        }
-      }
+          orgId: new ObjectId(orgId),
+        },
+      },
     ]);
-
-    res.json(items);
+    res.status(201).json(items);
   } catch (err) {
-    res.send({ error: err.message });
+    res.status(400).send({ error: err.message });
   }
 };
 
@@ -122,7 +122,6 @@ const checkoutItem = async (req, res) => {
     let updatedItem;
 
     if (item?.identificationType === "unique") {
-
       if (item?.assignedTo && item?.assignedTo.length > 0) {
         throw Error(`Item already assigned, cannot reassign`);
       }
@@ -133,10 +132,12 @@ const checkoutItem = async (req, res) => {
         checkoutDate: new Date(),
       };
 
-
       updatedItem = await Inventory.findByIdAndUpdate(
         new ObjectId(itemId),
-        { $push: { assignedTo: assignedTo, lifecycle: lifecycleEvent}, status: "deployed"},
+        {
+          $push: { assignedTo: assignedTo, lifecycle: lifecycleEvent },
+          status: "deployed",
+        },
         { new: true }
       );
     }
@@ -189,7 +190,7 @@ const checkoutItem = async (req, res) => {
         );
       }
     }
-    res.status(200).json(updatedItem);
+    res.status(201).json(updatedItem);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -216,18 +217,21 @@ const checkinItem = async (req, res) => {
       }
 
       const updatedLifecycle = item.lifecycle;
-      updatedLifecycle[updatedLifecycle.length - 1].checkinDate = new Date();;
-  
+      updatedLifecycle[updatedLifecycle.length - 1].checkinDate = new Date();
+
       updatedItem = await Inventory.findByIdAndUpdate(
         new ObjectId(itemId),
-        { $pop:{ assignedTo : -1}, status: "ready to deploy", lifecycle: updatedLifecycle},
+        {
+          $pop: { assignedTo: -1 },
+          status: "ready to deploy",
+          lifecycle: updatedLifecycle,
+        },
         { new: true }
       );
     }
 
     if (item.identificationType === "non-unique") {
       const userId = new ObjectId(req.body.userId);
-
       const existingAssignment = item.assignedTo.find((assignment) =>
         assignment.userId.equals(userId)
       );
@@ -241,44 +245,42 @@ const checkinItem = async (req, res) => {
           );
         }
 
-        if (existingAssignment) {
-          const updatedAssignedTo = item.assignedTo
-            .map((assignment) => {
-              if (assignment.userId.equals(userId)) {
-                const newQuantity = assignment.quantity - parseInt(quantity);
-                return {
-                  userId: assignment.userId,
-                  userName: assignment.userName,
-                  quantity: newQuantity <= 0 ? null : newQuantity,
-                };
-              }
-              return assignment;
-            })
-            .filter((assignment) => assignment && assignment.quantity !== null);
+        const updatedAssignedTo = item.assignedTo
+          .map((assignment) => {
+            if (assignment.userId.equals(userId)) {
+              const newQuantity = assignment.quantity - parseInt(quantity);
+              return {
+                userId: assignment.userId,
+                userName: assignment.userName,
+                quantity: newQuantity <= 0 ? null : newQuantity,
+              };
+            }
+            return assignment;
+          })
+          .filter((assignment) => assignment && assignment.quantity !== null);
 
-          const newCheckedOutQuantity =
-            item.checkedOutQuantity - parseInt(quantity);
+        const newCheckedOutQuantity =
+          item.checkedOutQuantity - parseInt(quantity);
 
-          updatedItem = await Inventory.findByIdAndUpdate(
-            new ObjectId(itemId),
-            {
-              $set: {
-                assignedTo: updatedAssignedTo,
-                checkedOutQuantity: newCheckedOutQuantity,
-              },
+        updatedItem = await Inventory.findByIdAndUpdate(
+          new ObjectId(itemId),
+          {
+            $set: {
+              assignedTo: updatedAssignedTo,
+              checkedOutQuantity: newCheckedOutQuantity,
             },
-            { new: true }
-          );
-        } else {
-          throw Error(
-            `User ${assignedTo.userName} has not checked out this item`
-          );
-        }
+          },
+          { new: true }
+        );
+      } else {
+        throw Error(
+          `User ${assignedTo.userName} has not checked out this item`
+        );
       }
     }
-    res.status(200).json(updatedItem);
+    res.status(201).json(updatedItem);
   } catch (error) {
-    console.log(error);
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -297,15 +299,15 @@ const getUserAssets = async (req, res) => {
           name: 1,
           itemImage: 1,
           serialNumber: 1,
-          customFieldsData:1,
+          customFieldsData: 1,
           quantity: "$assignedTo.quantity",
         },
       },
     ]);
 
-    res.json(userAssets);
+    res.status(201).json(userAssets);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -317,5 +319,5 @@ module.exports = {
   checkoutItem,
   checkinItem,
   getUserAssets,
-  itemSearch
+  itemSearch,
 };
