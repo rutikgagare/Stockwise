@@ -1,0 +1,52 @@
+.pagination-container {
+    align-items: left;
+    display: flex;
+    flex-direction: flex-row;
+    justify-content: center;
+    list-style: none;
+    gap: 16px;
+    padding: 0;
+    background-color: red;
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #5f27cd;
+    text-align: center;
+}
+
+.pagination-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: black;
+}
+
+.pagination-active>a {
+    font-weight: bolder;
+}
+
+.pagination-next-prev {
+    display: flex;
+    padding: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    cursor: pointer;
+
+}
+
+.pagination-break {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    cursor: pointer;
+}
