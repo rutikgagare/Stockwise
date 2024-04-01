@@ -26,7 +26,6 @@ const userSchema = new Schema({
 
 }, { timestamps: true })
 
-
 // static method
 userSchema.statics.signup = async function(name, email, password, role = "admin"){
     // validation

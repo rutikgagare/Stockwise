@@ -254,7 +254,7 @@ describe("Category Controllers", () => {
           orgId: mockOrgId,
           customFields: [],
           vendors: ["Vendor3", "Vendor4"],
-          inventoryItems: [{ quantity: 8 }, { quantity: 2 }],
+          inventoryItems: [{ quantity: 8 }, { }],
         },
       ];
 
@@ -268,6 +268,52 @@ describe("Category Controllers", () => {
 
       expect(res).to.have.status(201);
     });
+
+    it("should return category information with inventory count when qunatity of any  item is zero", async () => {
+      const mockOrgId = "65f316a1991edde66ee55fc1";
+
+      const mockOrganization = {
+        _id: mockOrgId,
+        name: "Mock Organization",
+        email: "test@gmail.com",
+        admins: [],
+        employees: [],
+      };
+
+      sinon.stub(Organization, "findById").resolves(mockOrganization);
+
+      const mockCategoriesWithInventories = [
+        {
+          _id: "mockCategoryId1",
+          name: "Category1",
+          identificationType: "unique",
+          orgId: mockOrgId,
+          customFields: [],
+          vendors: ["Vendor1", "Vendor2"],
+          inventoryItems: [{ quantity: 5 }, { quantity: 3 }],
+        },
+        {
+          _id: "mockCategoryId2",
+          name: "Category2",
+          identificationType: "unique",
+          orgId: mockOrgId,
+          customFields: [],
+          vendors: ["Vendor3", "Vendor4"],
+          inventoryItems: [{ quantity: 8 }, { }],
+        },
+      ];
+
+      sinon.stub(Category, "aggregate").resolves(mockCategoriesWithInventories);
+
+      const res = await chai
+        .request(app)
+        .get(`/category/${mockOrgId}`)
+        .set("Authorization", "Bearer Mockedtoken")
+        .send();
+
+      expect(res).to.have.status(201);
+    });
+
 
     it("org doen't exist", async () => {
       const mockOrgId = "65f316a1991edde66ee55fc1";
