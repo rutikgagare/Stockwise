@@ -2,3 +2,5 @@ backend/node_modules
 run.desktop
 .env
 frontend/node_modules
+.nyc_output/
+coverage/

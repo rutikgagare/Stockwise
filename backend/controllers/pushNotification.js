@@ -1,5 +1,5 @@
 // In your controller file
-const sendPushNotification = require('../services/pushNotification');
+const sendPushNotification = require('../utils/pushNotification');
 
 const sendNotification = async (req, res) => {
   const { pushToken } = req.body;

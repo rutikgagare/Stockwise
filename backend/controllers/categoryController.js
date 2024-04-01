@@ -5,10 +5,15 @@ const Category = require("../models/categoryModel.js");
 const Organization = require("../models/organizationModel.js");
 
 const getCategorys = async (req, res) => {
-  const orgId = req.params.orgId;
-
   try {
-    // Perform $lookup stage to join "categories" and "inventories" collections
+    const orgId = req.params.orgId;
+
+    const org = await Organization.findById(new ObjectId(orgId));
+
+    if (!org) {
+      throw Error("Organization with orgId does not exist");
+    }
+
     const categoriesWithInventories = await Category.aggregate([
       {
         $match: {
@@ -22,13 +27,16 @@ const getCategorys = async (req, res) => {
           foreignField: "categoryId",
           as: "inventoryItems",
         },
-      }
+      },
     ]);
 
-    const categoryInformation = categoriesWithInventories.map(category => {
-      const numberOfAssets = category.inventoryItems.reduce((total, inventory) => {
-        return total + (inventory.quantity || 0); 
-      }, 0);
+    const categoryInformation = categoriesWithInventories.map((category) => {
+      const numberOfAssets = category.inventoryItems.reduce(
+        (total, inventory) => {
+          return total + (inventory.quantity || 0);
+        },
+        0
+      );
 
       return {
         _id: category._id,
@@ -43,9 +51,9 @@ const getCategorys = async (req, res) => {
 
     categoryInformation.sort((a, b) => b.numberOfAssets - a.numberOfAssets);
 
-    res.json(categoryInformation);
-  } catch (err) {
-    res.send({ error: err.message });
+    res.status(201).json(categoryInformation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 
   // const orgId = req.params.orgId;
@@ -61,9 +69,10 @@ const createCategory = async (req, res) => {
   const { name, identificationType, vendors, customFields, orgId } = req.body;
 
   try {
-    const organization = Organization.findById(new ObjectId(orgId));
+    const organization = await Organization.findById(new ObjectId(orgId));
 
-    if (!organization) {
+    if (organization === null) {
+      console.log("org is null");
       throw Error(`Organization with orgId: ${orgId} does not exist`);
     }
 

@@ -8,7 +8,6 @@ router.use(requireAuth)
 
 router.post('/create', createTicket);
 router.put('/update',requireAdmin, updateTicket);
-router.delete('/delete',deleteTicket);
 router.get('/userTickets',getMyTickets);
 router.get('/:orgId', requireAdmin, getTickets);
 
