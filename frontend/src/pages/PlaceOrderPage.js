@@ -4,6 +4,7 @@ import {useSelector } from "react-redux";
 import axios from "axios";
 import "./PlaceOrderPage.module.css";
 import Layout from "../components/Layout";
+import { BASE_URL } from "../constants";
 
 const PlaceOrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -42,7 +43,7 @@ const PlaceOrderPage = () => {
 
     if (user) console.log("user: ", user);
     try {
-      const res = await axios.post("http://localhost:9999/order/create", {
+      const res = await axios.post(`${BASE_URL}/order/create`, {
         org,
         admin: user,
         cart: orders,
@@ -83,7 +84,7 @@ const PlaceOrderPage = () => {
     const fetchVendors = async () => {
       try {
         if (org) {
-          const res = await fetch(`http://localhost:9999/vendor/vendors`, {
+          const res = await fetch(`${BASE_URL}/vendor/vendors`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -116,7 +117,7 @@ const PlaceOrderPage = () => {
       try {
         if (org) {
           const res = await fetch(
-            `http://localhost:9999/inventory/${org?._id}`,
+            `${BASE_URL}/inventory/${org?._id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.token}`,
@@ -143,7 +144,7 @@ const PlaceOrderPage = () => {
     };
 
     const fetchCategories = async () => {
-      const res = await fetch(`http://localhost:9999/category/${org?._id}`, {
+      const res = await fetch(`${BASE_URL}/category/${org?._id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

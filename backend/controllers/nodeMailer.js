@@ -5,6 +5,7 @@ const sendMail = async (req, res) => {
   const { userEmail, messageContent, itemImage, subject } = req.body;
 
   try {
+    
     let config = {
       service: "gmail",
       auth: {
@@ -46,9 +47,11 @@ const sendMail = async (req, res) => {
     };
 
     const info = await transporter.sendMail(message);
+
+    res.status(201).json({Message: "mail sent successfully"});
+
   } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).send("Error sending email");
+    res.status(400).json({message:"Error sending email"});
   }
 };
 

@@ -7,7 +7,6 @@ const {
 const uniqid = require("uniqid");
 
 const uploadImageToAWS = async (req, res) => {
-  console.log("Inside upload");
   try {
     const file = req.file;
 

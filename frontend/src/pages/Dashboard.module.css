@@ -1,9 +1,61 @@
 .dashboard{
-    min-height: 90vh;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    justify-content: center;
     align-items: center;
 }
+
+.dashboard .header{
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e4e4e4;
+}
+
+.header h3{
+    font-weight: 500;
+}
+
+.dashboard .categories{
+    padding: 2rem 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.categories .category{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid #0183ff;
+    border-radius: 0.5rem;
+    min-width: 15rem;
+    transition: transform 0.3s;
+}
+
+.category:hover {
+    transform: scale(1.05); /* Increase size on hover */
+}
+
+.category:hover h3{
+    color: rgb(32, 32, 32);
+    color: blue;
+}
+
+.category h2{
+    font-weight: 500;
+}
+
+.category h3{
+    font-size: 3rem;
+    font-weight: 500;
+    color: rgb(65, 64, 64);
+}
+

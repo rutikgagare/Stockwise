@@ -2,6 +2,7 @@ import { useState } from "react";
 import { authActions } from "../store/authSlice";
 import { organizationActions } from "../store/organizationSlice";
 import { useDispatch} from "react-redux";
+import { BASE_URL } from "../constants";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
@@ -12,7 +13,7 @@ export const useSignup = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:9999/auth/signup", {
+    const response = await fetch(`${BASE_URL}/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, role: "admin" }),
@@ -39,7 +40,7 @@ export const useSignup = () => {
     }
 
 
-    const res = await fetch("http://localhost:9999/org/create", {
+    const res = await fetch(`${BASE_URL}/org/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

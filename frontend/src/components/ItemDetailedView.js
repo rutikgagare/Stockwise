@@ -2,6 +2,9 @@ import React from "react";
 import classes from "./ItemDetailedView.module.css"; 
 
 const ItemDetailedView = ({ item }) => {
+
+  
+
   return (
     <div className={classes.itemContainer}>
       <div className={classes.imageContainer}>

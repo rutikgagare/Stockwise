@@ -3,6 +3,7 @@ import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
 import { categoryActions } from "../store/categorySlice";
+import { BASE_URL } from "../constants";
 
 const AddItem = (props) => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const AddItem = (props) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("http://localhost:9999/service/upload", {
+      const res = await fetch(`${BASE_URL}/service/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -66,13 +67,9 @@ const AddItem = (props) => {
         body: formData,
       });
 
-      // const { link} = await res.json();
-      // console.log(link);
-
       const {key} = await res.json();
       console.log("key",key);
 
-      // Create an object to hold all item details including custom fields
       const itemDetails = {
         name,
         categoryId: selectedCategory._id,
@@ -101,7 +98,7 @@ const AddItem = (props) => {
         itemDetails.customFieldsData = customFieldsData;
       }
 
-      const response = await fetch("http://localhost:9999/inventory/create", {
+      const response = await fetch(`${BASE_URL}/inventory/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

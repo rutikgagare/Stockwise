@@ -20,6 +20,7 @@ import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { BsInfoLg } from "react-icons/bs";
 import { GrPowerCycle } from "react-icons/gr";
+import { BASE_URL } from "../constants";
 
 const InventoryPage = () => {
   const dispatch = useDispatch();
@@ -38,25 +39,27 @@ const InventoryPage = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showLifecycle, setShowLifecycle] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
+  const [searchText, setSearchText] = useState(null);
 
   const deleteItemHandler = async () => {
     setShowConfirm(false);
     try {
+      const res = await fetch(
+        `${BASE_URL}/service/deleteImage/${selectedItem.itemImage}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
 
-
-      const res = await fetch(`http://localhost:9999/service/deleteImage/${selectedItem.itemImage}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-
-      if(!res){
+      if (!res) {
         return;
       }
 
-      const resposnse = await fetch("http://localhost:9999/inventory/delete", {
+      const resposnse = await fetch(`${BASE_URL}/inventory/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -87,17 +90,25 @@ const InventoryPage = () => {
 
   // default category selection and filter logic
   useEffect(() => {
-    if (categories && !selectedCategory && categories && categories.length > 0) {
+    if (categories && !selectedCategory && categories.length > 0) {
       setSelectedCategory(categories[0]);
     }
 
-    setFilteredInventory(() =>
-      inventory?.filter((item) => item?.categoryId === selectedCategory?._id)
+    let fiteredItem = inventory?.filter(
+      (item) => item?.categoryId === selectedCategory?._id
     );
-  }, [categories, selectedCategory, inventory]);
 
-  console.log("data type inv", typeof(inventory))
-
+    if (searchText && searchText !== "") {
+      const regex = new RegExp(searchText, "i"); // "i" flag for case-insensitive matching
+      fiteredItem = fiteredItem?.filter(
+        (item) =>
+          regex.test(item?.name?.toLowerCase()) ||
+          regex.test(item?.serialNumber?.toLowerCase()) ||
+          regex.test(item?.status?.toLowerCase())
+      );
+    }
+    setFilteredInventory(fiteredItem);
+  }, [categories, selectedCategory, inventory, searchText]);
 
   return (
     <Layout>
@@ -107,25 +118,44 @@ const InventoryPage = () => {
             <h3>Inventory Items</h3>
             <button onClick={() => setShowAddItem(true)}>+ Add Item</button>
           </div>
+          {categories && categories.length > 0 && (
+            <div className={classes.filterOptions}>
+              <div className={classes.searchBar}>
+                <input
+                  type="text"
+                  placeholder="Search Item"
+                  value={searchText}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                  }}
+                />
+              </div>
 
-          {categories && categories.length > 0 &&<div className={classes.filter}>
-            <select
-              onChange={(e) => {
-                const selectedValue = JSON.parse(e.target.value);
-                setSelectedCategory(selectedValue);
-              }}
-              value={selectedCategory ? JSON.stringify(selectedCategory) : ""}
-            >
-              {categories?.map((category) => {
-                return (
-                  <option value={JSON.stringify(category)} key={category?._id}>
-                    {category?.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>}
-
+              <div className={classes.filter}>
+                <select
+                  onChange={(e) => {
+                    const selectedValue = JSON.parse(e.target.value);
+                    setSelectedCategory(selectedValue);
+                  }}
+                  value={
+                    selectedCategory ? JSON.stringify(selectedCategory) : ""
+                  }
+                >
+                  {categories?.map((category) => {
+                    return (
+                      <option
+                        value={JSON.stringify(category)}
+                        key={category?._id}
+                      >
+                        {category?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+          )}
+          
           <div className={classes.inventory_table_container}>
             {filteredInventory &&
               filteredInventory?.length > 0 &&
@@ -257,7 +287,7 @@ const InventoryPage = () => {
                             {item?.assignedTo &&
                               item?.assignedTo?.map((item) => {
                                 if (!item) {
-                                  return;
+                                  return null;
                                 }
                                 return (
                                   <div>
@@ -336,9 +366,7 @@ const InventoryPage = () => {
                 </table>
               )}
           </div>
-
           {filteredInventory && filteredInventory.length === 0 && <NoItem />}
-
           {showCheckout && (
             <Modal onClose={() => setShowCheckout(false)}>
               <CheckoutForm
@@ -347,7 +375,6 @@ const InventoryPage = () => {
               />
             </Modal>
           )}
-
           {showCheckin && (
             <Modal onClose={() => setShowCheckin(false)}>
               <CheckinForm
@@ -356,13 +383,11 @@ const InventoryPage = () => {
               />
             </Modal>
           )}
-
           {showDetailedView && (
             <Modal onClose={() => setShowDetailedView(false)} width="50%">
               <ItemDetailedView item={selectedItem}></ItemDetailedView>
             </Modal>
           )}
-
           {showLifecycle && (
             <Modal onClose={() => setShowLifecycle(false)} width="50%">
               <Lifecycle

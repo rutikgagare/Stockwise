@@ -5,10 +5,7 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 const app = require("../index.js");
-const Inventory = require("../models/inventoryModel.js");
-const Category = require("../models/categoryModel.js");
 const User = require("../models/userModel.js");
-const Organization = require("../models/organizationModel.js");
 const Ticket = require("../models/ticketModel.js");
 
 const expect = chai.expect;
@@ -198,8 +195,6 @@ describe("Ticket controller", () => {
         .get(`/ticket/${mockedOrgId}`)
         .set("Authorization", "Bearer mocktoken")
         .send();
-
-      console.log(res.body);
 
       expect(res).to.have.status(201);
       expect(res.body).to.deep.equal(mockedTicketArraySorted);

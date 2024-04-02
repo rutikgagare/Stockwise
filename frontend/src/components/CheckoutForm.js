@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { BASE_URL } from "../constants";
 
 const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
     try {
       if (org) {
         const res = await axios.get(
-          `http://localhost:9999/org/employees/${org?._id}`,
+          `${BASE_URL}/org/employees/${org?._id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.token}`,
@@ -52,7 +53,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
         throw new Error("Selected quantity exceeds available quantity");
       }
 
-      const res = await fetch("http://localhost:9999/inventory/checkout", {
+      const res = await fetch(`${BASE_URL}/inventory/checkout`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +81,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
       closeCheckout();
 
       // sending mail to user regarding device is assigned to you
-      await fetch("http://localhost:9999/service/sendMail", {
+      await fetch(`${BASE_URL}/service/sendMail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

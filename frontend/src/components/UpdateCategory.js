@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../store/categorySlice";
+import { BASE_URL } from "../constants";
 
 const UpdateCategory = (props) => {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const UpdateCategory = (props) => {
       const selectedVendorsIds = [];
       for (const sv of selectedVendors) selectedVendorsIds.push(sv._id);
       
-      const response = await fetch("http://localhost:9999/Category/update", {
+      const response = await fetch(`${BASE_URL}/Category/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +93,7 @@ const UpdateCategory = (props) => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const res = await fetch("http://localhost:9999/vendor/vendors", {
+        const res = await fetch(`${BASE_URL}/vendor/vendors`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

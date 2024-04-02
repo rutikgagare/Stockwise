@@ -3,6 +3,7 @@ import classes from "./CheckoutForm.module.css";
 import { useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
 import { useDispatch } from "react-redux";
+import { BASE_URL } from "../constants";
 
 const CheckinForm = ({ checkinItem, closeCheckin }) => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const CheckinForm = ({ checkinItem, closeCheckin }) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:9999/inventory/checkin", {
+      const res = await fetch(`${BASE_URL}/inventory/checkin`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -92,6 +93,7 @@ const CheckinForm = ({ checkinItem, closeCheckin }) => {
             <label htmlFor="">CheckIn Quantity</label>
             <input
               type="number"
+              min = "1"
               max={assignment.quantity}
               onChange={(e) => setQuantity(e.target.value)}
               required

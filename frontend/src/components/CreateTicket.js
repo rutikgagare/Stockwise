@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import classes from "./CreateTicket.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { ticketActions } from "../store/ticketSlice";
+import { BASE_URL } from "../constants";
 
 const CreateTicket = (props) => {
   const user = useSelector((state) => state.auth.user);
@@ -23,7 +24,7 @@ const CreateTicket = (props) => {
         throw Error("All required field must be field");
       }
 
-      const response = await fetch("http://localhost:9999/ticket/create/", {
+      const response = await fetch(`${BASE_URL}/ticket/create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +58,7 @@ const CreateTicket = (props) => {
   useEffect(() => {
     const getUserAssets = async () => {
       const response = await fetch(
-        "http://localhost:9999/inventory/item/getUserAssets",
+        `${BASE_URL}/inventory/item/getUserAssets`,
         {
           headers: {
             "Content-Type": "application/json",

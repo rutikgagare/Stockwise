@@ -7,6 +7,7 @@ import { IoIosCalendar } from "react-icons/io";
 import NoItem from "../components/NoItem.js";
 import UpdateTicketStatus from "../components/UpdateTicketStatus.js";
 import { ticketAdminActions } from "../store/ticketAdminSlice.js";
+import { BASE_URL } from "../constants/index.js";
 
 const HelpDeskAdmin = () => {
   const user = useSelector((state) => state.auth.user);
@@ -21,7 +22,7 @@ const HelpDeskAdmin = () => {
   const [filteredTickets, setFilteredTickets] = useState([]);
 
   const fetchTickets = async () => {
-    const res = await fetch(`http://localhost:9999/ticket/${org?._id}`, {
+    const res = await fetch(`${BASE_URL}/ticket/${org?._id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user?.token}`,
@@ -148,6 +149,14 @@ const HelpDeskAdmin = () => {
                     <div className={classes.ticketDetails}>
                       <h3>{ticket?.issueType}</h3>
                       <p>{ticket.description}</p>
+                    </div>
+
+                    <div className={classes.additionalDetails}>
+                      {ticket?.remark && (
+                        <h4>
+                          Remark: <span>{ticket?.remark}</span>
+                        </h4>
+                      )}
                     </div>
 
                     <div className={classes.actions}>
