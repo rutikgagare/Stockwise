@@ -16,7 +16,7 @@ const getOrders = async (req, res) => {
 
 const createOrder = async (req, res) => {
     const { org, admin, cart } = req.body;
-    console.log("req.body = ", req.body)
+    console.log("[createOrder]req.body = ", req.body)
 
     try {
         const newOrder = new Order({ org, admin, cart });
