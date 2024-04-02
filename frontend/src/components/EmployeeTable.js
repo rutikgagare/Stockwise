@@ -3,6 +3,7 @@ import classes from "./EmployeeTable.module.css"
 import './EmployeeTable.css';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { BASE_URL } from '../constants';
 
 const EmployeeTable = ({ employees }) => {
   const user = useSelector((state) => state.auth.user);
@@ -21,7 +22,7 @@ const EmployeeTable = ({ employees }) => {
       return;
     }
 
-    const res = await fetch("http://localhost:9999/user/updateUser", {
+    const res = await fetch(`${BASE_URL}/user/updateUser`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +50,7 @@ const EmployeeTable = ({ employees }) => {
     if (!c) return;
 
     try {
-      const res = await axios.delete("http://localhost:9999/user/deleteUser", {
+      const res = await axios.delete(`${BASE_URL}/user/deleteUser`, {
         data: {
           _id: emps[employeeIdx]._id
         }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import HorizontalDataComponent from "../components/HorizontalDataComponent";
+import { BASE_URL } from "../constants";
 
 const OrderHistoryPage = () => {
   const org = useSelector((state) => state.org.organization);
@@ -12,7 +13,7 @@ const OrderHistoryPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.post("http://localhost:9999/order/orders", {
+        const res = await axios.post(`${BASE_URL}/order/orders`, {
           orgId: org?._id,
         });
         console.log("res: ", res);

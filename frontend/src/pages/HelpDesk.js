@@ -7,6 +7,7 @@ import { ticketActions } from "../store/ticketSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { IoIosCalendar } from "react-icons/io";
 import NoItem from "../components/NoItem.js";
+import { BASE_URL } from "../constants/index.js";
 
 const HelpDesk = () => {
   const user = useSelector((state) => state.auth.user);
@@ -21,7 +22,7 @@ const HelpDesk = () => {
 
   useEffect(() => {
     const fetchTickets = async () => {
-      const res = await fetch("http://localhost:9999/ticket/userTickets", {
+      const res = await fetch(`${BASE_URL}/ticket/userTickets`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.token}`,

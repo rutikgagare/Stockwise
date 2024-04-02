@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classes from "./AddVendor.module.css";
 import { useDispatch, useSelector } from "react-redux";
+import { BASE_URL } from "../constants";
 
 const AddVendor = (props) => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const AddVendor = (props) => {
         throw Error("All field must be field");
       }
 
-      const response = await fetch("http://localhost:9999/vendor/create", {
+      const response = await fetch(`${BASE_URL}/vendor/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

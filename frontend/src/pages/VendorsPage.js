@@ -10,6 +10,7 @@ import ReactPaginate from 'react-paginate';
 import { FiSearch } from "react-icons/fi";
 
 import "./reactPaginate.css"
+import { BASE_URL } from "../constants";
 
 const VendorPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -37,7 +38,7 @@ const VendorPage = () => {
       return;
     }
 
-    const res = await fetch("http://localhost:9999/vendor/update", {
+    const res = await fetch(`${BASE_URL}/vendor/update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +55,6 @@ const VendorPage = () => {
     if (!res.ok) {
       alert("Could not update the vendor");
     }
-
     if (res.ok) {
       alert("Vendor udpated successfully!");
     }
@@ -64,7 +64,7 @@ const VendorPage = () => {
     const c = window.confirm("Are sure want to delete the vendor?");
     if (!c) return;
 
-    const res = await fetch("http://localhost:9999/vendor/delete", {
+    const res = await fetch(`${BASE_URL}/vendor/delete`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const VendorPage = () => {
   useEffect(() => {
     console.log("useEffect triggered");
     const fetchVendors = async () => {
-      const res = await fetch("http://localhost:9999/vendor/vendors", {
+      const res = await fetch(`${BASE_URL}/vendor/vendors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

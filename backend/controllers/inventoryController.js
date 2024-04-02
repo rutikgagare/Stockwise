@@ -44,20 +44,17 @@ const itemSearch = async (req, res) => {
         $search: {
           text: {
             query: searchText,
-            path: "name",
-            fuzzy: {
-              // maxEdits: 2 ,
-              prefixLength: 3,
-            },
+            path: ['name', 'serialNumber'], 
           },
         },
       },
       {
         $match: {
-          orgId: new ObjectId(orgId),
+          orgId: new mongoose.Types.ObjectId(orgId),
         },
       },
     ]);
+    console.log(searchText,)
     res.status(201).json(items);
   } catch (err) {
     res.status(400).send({ error: err.message });

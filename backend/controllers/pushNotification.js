@@ -7,9 +7,9 @@ const sendNotification = async (req, res) => {
   const notificationSent = await sendPushNotification(pushToken, "Stockwise", "👋 Welcome to Dashboard");
 
   if (notificationSent) {
-    res.status(200).json({ success: true, message: "Notification sent successfully" });
+    res.status(201).json({ success: true, message: "Notification sent successfully" });
   } else {
-    res.status(500).json({ success: false, error: "Failed to send notification" });
+    res.status(400).json({ success: false, error: "Failed to send notification" });
   }
 };
 

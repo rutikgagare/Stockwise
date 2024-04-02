@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import classes from "./AddCategory.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
+import { BASE_URL } from "../constants";
 
 const UpdateItem = (props) => {
   const dispatch = useDispatch();
@@ -71,7 +72,7 @@ const UpdateItem = (props) => {
         itemDetails.customFieldsData = updatedCustomFieldsData;
       }
 
-      const response = await fetch("http://localhost:9999/inventory/update", {
+      const response = await fetch(`${BASE_URL}/inventory/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

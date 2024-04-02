@@ -9,6 +9,7 @@ import { categoryActions } from "../store/categorySlice";
 import Layout from "../components/Layout";
 import NoItem from "../components/NoItem";
 import Confirm from "../components/Confirm";
+import { BASE_URL } from "../constants";
 
 const CategoryPage = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const CategoryPage = () => {
     setShowConfirm(false);
 
     try {
-      const resposnse = await fetch("http://localhost:9999/Category/delete", {
+      const resposnse = await fetch(`${BASE_URL}/Category/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

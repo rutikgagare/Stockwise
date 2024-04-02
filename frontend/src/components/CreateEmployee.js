@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useSelector } from "react-redux";
 import axios from "axios";
 import './CreateEmployee.css';
+import { BASE_URL } from '../constants';
 
 const CreateEmployee = ({appendNewEmp}) => {
   const user = useSelector(state => state.auth.user);
@@ -37,7 +38,7 @@ const CreateEmployee = ({appendNewEmp}) => {
       setIsCreatingUser(true);
       // let newEmp;
       try {
-        const newEmp = await axios.post("http://localhost:9999/user/createUser/", { name, email, role },{
+        const newEmp = await axios.post(`${BASE_URL}/user/createUser/`, { name, email, role },{
           headers: {
             "Authorization": `Bearer ${user?.token}`
           }

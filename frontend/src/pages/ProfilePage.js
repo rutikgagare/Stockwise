@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import classes from "./ProfilePage.module.css";
 import { useSelector } from "react-redux";
 import { useLogout } from "../hooks/useLogout";
+import { BASE_URL } from "../constants";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -15,7 +16,7 @@ const ProfilePage = () => {
 
   const getAssetList = async () => {
     const response = await fetch(
-      "http://localhost:9999/inventory/item/getUserAssets",
+      `${BASE_URL}/inventory/item/getUserAssets`,
       {
         headers: {
           "Content-Type": "application/json",

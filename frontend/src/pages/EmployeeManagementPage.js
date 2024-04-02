@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import EmployeeTable from "../components/EmployeeTable";
 import CreateEmployee from "../components/CreateEmployee";
-import Sidebar from "../components/Sidebar";
 import classes from "./EmployeeManagementPage.module.css";
 import axios from "axios";
 import noItem from "../Images/noItem.jpg";
 import Layout from "../components/Layout";
+import { BASE_URL } from "../constants";
 
 const EmployeeManagementPage = () => {
   const user = useSelector((state) => state?.auth?.user);
@@ -18,7 +18,7 @@ const EmployeeManagementPage = () => {
     try {
       if (org) {
         const res = await axios.get(
-          `http://localhost:9999/org/employees/${org?._id}`,
+          `${BASE_URL}/org/employees/${org?._id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.token}`,
@@ -51,7 +51,6 @@ const EmployeeManagementPage = () => {
     fetchEmployees();
   }, [org]);
 
-  // console.log("Employees ", employees);
 
   return (
     <Layout>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { authActions } from "../store/authSlice";
 import { useDispatch } from "react-redux";
+import { BASE_URL } from "../constants";
 
 export const useLogin = () => {
   const [error, setError] = useState(null);
@@ -11,7 +12,7 @@ export const useLogin = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:9999/auth/login", {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

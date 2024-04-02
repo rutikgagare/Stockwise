@@ -30,6 +30,8 @@ import { inventoryActions } from "./store/inventorySlice";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import HelpDeskAdmin from "./pages/HelpDeskAdmin";
 
+import { BASE_URL } from "./constants/index.js";
+
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.auth?.user);
@@ -55,7 +57,7 @@ function App() {
     const getOrganizationInfo = async () => {
       try {
         if (user) {
-          const response = await fetch(`http://localhost:9999/org/getOrg`, {
+          const response = await fetch(`${BASE_URL}/org/getOrg`, {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
@@ -75,7 +77,7 @@ function App() {
       try {
         if (org) {
           const res = await fetch(
-            `http://localhost:9999/Category/${org?._id}`,
+            `${BASE_URL}/Category/${org?._id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.token}`,
@@ -109,7 +111,7 @@ function App() {
       try {
         if (org) {
           const res = await fetch(
-            `http://localhost:9999/inventory/${org?._id}`,
+            `${BASE_URL}/inventory/${org?._id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.token}`,
@@ -141,7 +143,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* <Navbar /> */}
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
 
       {!loading && (
         <Routes>

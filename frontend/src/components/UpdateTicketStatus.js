@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import classes from "./CreateTicket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { ticketAdminActions } from "../store/ticketAdminSlice";
+import { BASE_URL } from "../constants";
 
 const UpdateTicketStatus = ({ ticket, onClose }) => {
   const user = useSelector((state) => state?.auth?.user);
@@ -24,7 +25,7 @@ const UpdateTicketStatus = ({ ticket, onClose }) => {
         updatedTicket.remark = remark;
       }
 
-      const response = await fetch("http://localhost:9999/ticket/update", {
+      const response = await fetch(`${BASE_URL}/ticket/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

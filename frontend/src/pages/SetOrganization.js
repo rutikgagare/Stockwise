@@ -3,6 +3,7 @@ import classes from "./Signup.module.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Layout from "../components/Layout";
+import { BASE_URL } from "../constants";
 
 const SetOrganization = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const SetOrganization = () => {
         throw Error("All required filed must be filled");
       }
 
-      await fetch("/org/update", {
+      await fetch(`${BASE_URL}/org/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
