@@ -22,7 +22,7 @@ const HelpDeskAdmin = () => {
   const [filteredTickets, setFilteredTickets] = useState([]);
 
   const fetchTickets = async () => {
-    const res = await fetch(`${BASE_URL}/${org?._id}`, {
+    const res = await fetch(`${BASE_URL}/ticket/${org?._id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user?.token}`,
