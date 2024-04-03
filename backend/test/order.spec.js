@@ -6,26 +6,28 @@ const app = require('../index');
 chai.use(chaiHttp);
 const expect = chai.expect;
 
+const Organization = require("../models/organizationModel")
+
 describe("POST /order/orders", () => {
-    it("should return a list of all the orders given by an organization", (done) => {
-        chai.request(app)
+    it("should return a list of all the orders given by an organization", async () => {
+        const org = await Organization.findOne();
+        const res = await chai.request(app)
             .post("/order/orders")
             .send({
-                orgId: "65f316a1991edde66ee55fc1" // get orgId dynamically...
+                orgId: org._id // get orgId dynamically...
             })
-            .end((err, res) => {
-                expect(res.status).to.be.equal(200);
-                // more assertions goes here...
-                // ...
-            })
-        done();
+
+        expect(res.status).to.be.equal(200);
+        // more assertions goes here...
+        // ...
+
     })
 
 
 });
 
 describe("POST /order/create", () => {
-    it("should create an empty order...", (done) => {
+    it("should create an empty order...", async () => {
         const org = {
             "name": "Google",
             "email": "test@gmail.com",
@@ -66,17 +68,6 @@ describe("POST /order/create", () => {
                     "$oid": "65f2b144581bb1df8eae52c8"
                 }
             ],
-            "createdAt": {
-                "$date": {
-                    "$numberLong": "1709549347025"
-                }
-            },
-            "updatedAt": {
-                "$date": {
-                    "$numberLong": "1710403909084"
-                }
-            },
-            "__v": 10,
             "address": "Hyderabad"
         }
 
@@ -84,28 +75,15 @@ describe("POST /order/create", () => {
             "name": "Rutik Gagare",
             "email": "test@gmail.com",
             "password": "$2b$10$ABGCbW1LAPAJWW5BvFciA.8Vjb0jWBRR9peto/bNhldwv9hA.X64e",
-            "role": "admin",
-            "createdAt": {
-                "$date": {
-                    "$numberLong": "1710737088569"
-                }
-            },
-            "updatedAt": {
-                "$date": {
-                    "$numberLong": "1710737088569"
-                }
-            },
-            "__v": 0
+            "role": "admin"
         }
 
-        chai.request(app)
+        const res = await chai.request(app)
             .post("/order/create")
             .send({ org, admin, cart: [] })
-            .end((err, res) => {
-                expect(res.status).to.be.equal(200);
-            })
 
-        done();
+        expect(res.status).to.be.equal(200);
+
     })
 
 
