@@ -5,11 +5,14 @@ const { ObjectId } = require("mongodb");
 
 // Create a new organization
 const createOrganization = async (req, res) => {
+    const orgData = req.body;
+    const adminId = new ObjectId(req.user._id)
 
-    console.log("Inside create organiZation");
+    if (!orgData || !adminId) {
+        res.status(400).json({ error: "Please provide org data and admin id"})
+    }
+    
     try{
-        const orgData = req.body;
-        const adminId = new ObjectId(req.user._id)
         
         const org = new Organization({
             name: orgData.name,
@@ -19,7 +22,7 @@ const createOrganization = async (req, res) => {
         })
 
         await org.save()        
-        res.status(200).json(org);
+        res.status(201).json(org);
 
     }catch (error) {
         res.status(400).json({ error: error.message });
@@ -81,6 +84,8 @@ const updateOrganization = async(req, res)=>{
 const addEmployeeToOrganization = async (req, res) => {
     const { employeeId, orgId } = req.body;
 
+    console.log("[addEmployeeToOrganization]req.body:", req.body)
+
     const employeeObjectId = new ObjectId(employeeId)
     const orgObjectId = new ObjectId(orgId)
     
@@ -128,6 +133,8 @@ const removeEmployeeFromOrganization = async (req, res) => {
 
 const deleteOrganization = async (req, res) => {
     const { orgId } = req.body;
+
+    console.log("[deleteOrganization]req.body: ", req.body)
 
     try {
         const result = await Organization.findByIdAndDelete(new ObjectId(orgId));

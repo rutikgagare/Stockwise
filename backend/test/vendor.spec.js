@@ -92,9 +92,16 @@ describe("Vendor Controllers", () => {
             const res = await chai
                 .request(app)
                 .delete("/vendor/delete")
-                .send({ vendorId: vendorToDelete._id })
+                .send({ vendorId: vendorToDelete._id || "660cd1c80bf90c2bcafe755a" })
 
             expect(res).to.have.status(200)
         })
+
+
+    // const res = await chai
+    //     .request(app)
+    //     .delete("/inventory/delete")
+    //     .set("Authorization", "Bearer mocktoken")
+    //     .send({ itemId: mockedItemId });
     })
 })
