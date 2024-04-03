@@ -8,10 +8,6 @@ const router = express.Router()
 
 const saltRounds = 10;
 
-router.get("/test", (req, res) => {
-    res.send({ msg: "gotcha!" })
-})
-
 router.get("/getAllUsers", async (req, res) => {
     try {
         const allUsers = await User.find();
@@ -21,9 +17,9 @@ router.get("/getAllUsers", async (req, res) => {
     }
 });
 
-router.get("/getUser/:username", async (req, res) => {
-    const username = req.params.username;
-    const user = await User.findOne({ username });
+router.get("/getUser/:id", async (req, res) => {
+    const id = req.params.id;
+    const user = await User.findOne({ _id: new ObjectId(id) });
     if (user) res.json(user);
     res.status(404).json({ message: "User not found" })
 })
@@ -74,13 +70,10 @@ router.put("/updateUser", async (req, res) => {
 
     try {
         const existingUser = await User.findOne({ _id: new ObjectId(_id) });
+
         if (!existingUser) {
             return res.status(404).json({ message: "User not found" });
         }
-
-        // if (updateData.password) {
-        //     updateData.password = await bcrypt.hash(updateData.password, saltRounds);
-        // }
 
         const updatedUser = await User.findOneAndUpdate({ _id: new ObjectId(_id) }, updateData, {
             new: true,
@@ -89,15 +82,12 @@ router.put("/updateUser", async (req, res) => {
 
         res.json(updatedUser);
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: "Internal Server Error. Could not update user." });
     }
 });
 
 router.delete("/deleteUser", async (req, res) => {
     const _id = req.body._id;
-
-    console.log("req.boyd: ", req.body);
 
     try {
         const existingUser = await User.findOne({ _id: new Object(_id) });
@@ -109,7 +99,6 @@ router.delete("/deleteUser", async (req, res) => {
 
         res.json({ message: "User deleted successfully" });
     } catch (error) {
-        console.log("error: ", error);
         res.status(500).json({ message: "Internal Server Error. Could not delete user." });
     }
 });

@@ -11,7 +11,7 @@ const createOrganization = async (req, res) => {
     if (!orgData || !adminId) {
         res.status(400).json({ error: "Please provide org data and admin id"})
     }
-    
+
     try{
         
         const org = new Organization({
@@ -40,7 +40,7 @@ const getOrganization = async (req, res)=>{
             {"employees":new ObjectId(userId)},
         ]})
 
-        if(org){
+        if(org.length){
            return res.status(200).json(org[0]);
         }
         else{
@@ -92,6 +92,7 @@ const addEmployeeToOrganization = async (req, res) => {
     const employee = await User.findById(employeeObjectId);
     const org = await Organization.findById(orgObjectId);
     
+    console.log("[addEmployeeToOrganization]employee: ", employee)
     if (!employee) {
         res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
         return;
@@ -118,11 +119,13 @@ const removeEmployeeFromOrganization = async (req, res) => {
     const org = await Organization.findById(new ObjectId(orgId));
 
     if (!employee) {
-        res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
+        return res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
+        return;
     }
 
     if (!org) {
-        res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
+        return res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
+        return;
     }
 
     org.employees = org.employees.filter(id => id.toString() !== employeeId);
@@ -141,7 +144,7 @@ const deleteOrganization = async (req, res) => {
 
         if (!result) {
             res.status(404).json({ error: `Organization with orgId: ${orgId} not found` });
-            return;
+            // return;
         }
 
         console.log("result", result)
@@ -161,7 +164,7 @@ const getEmployees = async (req, res) => {
 
         if (!org) {
             res.status(404).json({ error: `Organization with orgId: ${orgId} not found` });
-            return;
+            // return;
         }
 
         const employeeIds = [...org?.employees, ...org?.admins];

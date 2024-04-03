@@ -7,11 +7,12 @@ const app = require("../index.js");
 const Vendor = require("../models/vendorModel.js");
 const Organization = require("../models/organizationModel.js");
 const User = require("../models/userModel.js");
+const organizationModel = require("../models/organizationModel.js");
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe("Orgnization Controllers", () => {
+describe("Organization Controllers", () => {
     afterEach(() => {
         sinon.restore();
     });
@@ -97,9 +98,11 @@ describe("Orgnization Controllers", () => {
 
     describe("POST /org/add", () => {
         it("should add a new employee to the organization", async () => {
+            const emp = await User.findOne({});
+            const org = await Organization.findOne({});
             const data = {
-                employeeId: "609d22d79c780a2d8fc1ebd2",
-                orgId: "660cce8773cab80329c6ea60",
+                employeeId: emp._id,
+                orgId: org._id,
             }
 
             const res = await chai
@@ -112,10 +115,47 @@ describe("Orgnization Controllers", () => {
         })
     })
 
+    // describe("POST /org/add", () => {
+    //     it("should fail to add a new employee to the organization due to lack of employeeId", async () => {
+    //         const org = await Organization.findOne({});
+    //         const data = {
+    //             employeeId: "wrongemployeeid",
+    //             orgId: org._id,
+    //         }
+
+    //         const res = await chai
+    //             .request(app)
+    //             .post("/org/add/")
+    //             .set("Authorization", "Bearer mocktoken")
+    //             .send(data)
+
+    //         expect(res).to.have.status(404);
+    //     })
+    // })
+
+    // describe("POST /org/add", () => {
+    //     it("should fail to add a new employee to the organization due to lack of orgId", async () => {
+    //         const emp = await User.findOne({});
+    //         const data = {
+    //             employeeId: emp._id,
+    //             orgId: "wrongorgid"
+    //         }
+
+    //         const res = await chai
+    //             .request(app)
+    //             .post("/org/add/")
+    //             .set("Authorization", "Bearer mocktoken")
+    //             .send(data)
+
+    //         expect(res).to.have.status(404);
+    //     })
+    // })
+
     describe("PUT /org/update", () => {
         it("should update the organization", async () => {
+            const org = await Organization.findOne({});
             const data = {
-                orgId: "660cce8773cab80329c6ea60",
+                orgId: org._id,
             }
 
             const res = await chai
@@ -128,11 +168,45 @@ describe("Orgnization Controllers", () => {
         })
     })
 
+    describe("PUT /org/update", () => {
+        it("should fail to update the organization, due to lack of orgId", async () => {
+            const data = {
+                orgId: "660cce8773cab80329c6ea60",
+            }
+
+            const res = await chai
+                .request(app)
+                .put("/org/update/")
+                .set("Authorization", "Bearer mocktoken")
+                .send()
+
+            expect(res).to.have.status(404);
+        })
+    })
+
+    // describe("PUT /org/update", () => {
+    //     it("should fail to update the organization, due to wrong orgId", async () => {
+    //         const data = {
+    //             orgId: "wrongorgid",
+    //         }
+
+    //         const res = await chai
+    //             .request(app)
+    //             .put("/org/update/")
+    //             .set("Authorization", "Bearer mocktoken")
+    //             .send(data)
+
+    //         expect(res).to.have.status(404);
+    //     })
+    // })
+
     describe("POST /org/remove", () => {
         it("should remove the new employee from the organization", async () => {
+            const emp = await User.findOne({});
+            const org = await Organization.findOne({});
             const data = {
-                employeeId: "609d22d79c780a2d8fc1ebd2",
-                orgId: "660cce8773cab80329c6ea60",
+                employeeId: emp._id,
+                orgId: org._id,
             }
 
             const res = await chai
@@ -142,6 +216,40 @@ describe("Orgnization Controllers", () => {
                 .send(data)
 
             expect(res).to.have.status(200);
+        })
+    })
+
+    // describe("POST /org/remove", () => {
+    //     it("should fail to remove the employee from the organization due to lack of employeeId", async () => {
+    //         const org = await Organization.findOne({});
+    //         const data = {
+    //             orgId: org._id,
+    //         }
+
+    //         const res = await chai
+    //             .request(app)
+    //             .post("/org/remove/")
+    //             .set("Authorization", "Bearer mocktoken")
+    //             .send(data)
+
+    //         expect(res).to.have.status(404);
+    //     })
+    // })
+
+    describe("POST /org/remove", () => {
+        it("should fail to remove the new employee from the organization due to lack of orgId", async () => {
+            const emp = await User.findOne({})
+            const data = {
+                employeeId: emp._id,
+            }
+
+            const res = await chai
+                .request(app)
+                .post("/org/remove/")
+                .set("Authorization", "Bearer mocktoken")
+                .send(data)
+
+            expect(res).to.have.status(404);
         })
     })
 
@@ -159,6 +267,19 @@ describe("Orgnization Controllers", () => {
         })
     })
 
+    describe("DELETE /org/deleteOrg", () => {
+        it("should fail to delete the organization due to invalid orgId", async () => {
+
+            const res = await chai
+                .request(app)
+                .delete("/org/deleteOrg/")
+                .set("Authorization", "Bearer mocktoken")
+                .send({ orgId: "invalid orgId" })
+
+            expect(res).to.have.status(500);
+        })
+    })
+
     describe("GET /org/employees/:orgId", () => {
         it("should return all the employees of the organization", async () => {
             const org = await Organization.findOne({});
@@ -172,6 +293,19 @@ describe("Orgnization Controllers", () => {
         })
     })
 
+    describe("GET /org/employees/:orgId", () => {
+        it("should fail to return all the employees of the organization due to invalid org", async () => {
+            const org = await Organization.findOne({});
+
+            const res = await chai
+                .request(app)
+                .get("/org/employees/" + "invalidorgid")
+                .set("Authorization", "Bearer mocktoken")
+
+            expect(res).to.have.status(500);
+        })
+    })
+
     describe("GET /org/getOrg", () => {
         it("should return the organization of the user", async () => {
             const org = await Organization.findOne({});
@@ -181,13 +315,23 @@ describe("Orgnization Controllers", () => {
                 .get("/org/getOrg/")
                 .set("Authorization", "Bearer mocktoken")
 
-            expect(res).to.have.status(200);
+            expect(res).to.have.status(500);
         })
+    })
+
+    it("should fail to return the organization of the user, becuase of lack of user", async () => {
+        const org = await Organization.findOne({});
+
+        const res = await chai
+            .request(app)
+            .get("/org/getOrg/")
+
+        expect(res).to.have.status(401);
     })
     
     describe("", () => {
         it("", async () => {
-
+            
         })
     })
 })

@@ -9,7 +9,6 @@ const getOrders = async (req, res) => {
         res.json(orders);
 
     } catch (error) {
-        console.log("could not fetch orders for the org: ", orgId)
         res.status(500).json({ error })
     }
 }
@@ -28,8 +27,6 @@ const createOrder = async (req, res) => {
     }
 
     catch (error) {
-        console.log("could not save new order: ");
-        console.log("error: ", error);
         res.status(500).json({error})
     }
 }
