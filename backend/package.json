@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha ./test/*.spec.js --timeout 10000 --exit ",
+    "test": "mocha ./test/*.js --timeout 10000 --exit ",
     "test:watch": "mocha --watch ./test/inventory.spec.js",
-    "coverage":"nyc --reporter=lcov --reporter=text npm test"
+    "coverage": "nyc --reporter=lcov --reporter=text npm test"
   },
-  
+
+  "nyc" : {
+    "exclude": [
+     "models/userModel.js","models/inventoryModel.js", "models/categoryModel.js"
+    ]
+  },
+
   "author": "",
   "license": "ISC",
   "dependencies": {

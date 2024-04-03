@@ -10,6 +10,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe("POST /service/send-push-notification", () => {
+  
   const mockedPushToken = "DummyToken";
 
   afterEach(() => {

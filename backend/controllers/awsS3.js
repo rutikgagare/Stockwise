@@ -7,6 +7,7 @@ const {
 const uniqid = require("uniqid");
 
 const uploadImageToAWS = async (req, res) => {
+
   try {
     const file = req.file;
 
@@ -37,22 +38,18 @@ const uploadImageToAWS = async (req, res) => {
       })
     );
 
-    console.log("REsult", result);
-
-    // const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
-
-    // return res.status(200).json({link});
     return res.status(200).json({ key: newFilename });
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 const deleteImageFromAWS = async (req, res) => {
+
   const key = req.params.key;
   const bucketName = process.env.BUCKET_NAME;
 
-  console.log(key);
 
   try {
     const s3Client = new S3Client({
@@ -80,27 +77,27 @@ const deleteImageFromAWS = async (req, res) => {
   }
 };
 
-const listObjectsInBucket = async (req, res) => {
-  try {
-    const bucketName = process.env.BUCKET_NAME;
-    const s3Client = new S3Client({
-      region: "ap-south-1",
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      },
-    });
+// const listObjectsInBucket = async (req, res) => {
+//   try {
+//     const bucketName = process.env.BUCKET_NAME;
+//     const s3Client = new S3Client({
+//       region: "ap-south-1",
+//       credentials: {
+//         accessKeyId: process.env.S3_ACCESS_KEY,
+//         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+//       },
+//     });
 
-    const params = {
-      Bucket: bucketName,
-    };
+//     const params = {
+//       Bucket: bucketName,
+//     };
 
-    const data = await s3Client.send(new ListObjectsV2Command(params));
-    const objectKeys = data.Contents.map((object) => object.Key);
-    res.status(200).json({ objectKeys });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+//     const data = await s3Client.send(new ListObjectsV2Command(params));
+//     const objectKeys = data.Contents.map((object) => object.Key);
+//     res.status(200).json({ objectKeys });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
-module.exports = { uploadImageToAWS, deleteImageFromAWS, listObjectsInBucket };
+module.exports = { uploadImageToAWS, deleteImageFromAWS };

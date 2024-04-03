@@ -20,7 +20,7 @@ const upload = multer({
 
 router.post('/upload', upload.single('file'), uploadImageToAWS);
 router.delete('/deleteImage/:key', deleteImageFromAWS);
-router.get('/list', listObjectsInBucket);
+// router.get('/list', listObjectsInBucket);
 
 // push Notification
 router.post('/send-push-notification', sendNotification);
