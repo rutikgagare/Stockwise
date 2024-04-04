@@ -53,8 +53,6 @@ const CategoryPage = () => {
     }
   };
 
-  console.log(categories);
-
   return (
     <Layout>
       {!showAddItem && !showUdateItem && (

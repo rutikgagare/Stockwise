@@ -54,7 +54,6 @@ const itemSearch = async (req, res) => {
         },
       },
     ]);
-    console.log(searchText,)
     res.status(201).json(items);
   } catch (err) {
     res.status(400).send({ error: err.message });
@@ -282,7 +281,8 @@ const checkinItem = async (req, res) => {
 };
 
 const getUserAssets = async (req, res) => {
-  const userId = new ObjectId(req.user._id);
+
+  const userId = new ObjectId(req.user?._id);
 
   try {
     const userAssets = await Inventory.aggregate([
@@ -301,6 +301,7 @@ const getUserAssets = async (req, res) => {
         },
       },
     ]);
+
 
     res.status(201).json(userAssets);
   } catch (error) {

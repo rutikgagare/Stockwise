@@ -29,7 +29,6 @@ const HelpDeskAdmin = () => {
       },
     });
     const json = await res.json();
-    console.log("all", json);
     dispatch(ticketAdminActions.setTickets(json));
   };
 

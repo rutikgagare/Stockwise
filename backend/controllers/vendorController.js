@@ -48,7 +48,6 @@ const updateVendor = async (req, res) => {
 
 const deleteVendor = async (req, res) => {
     const vendorId = new Object(req.body.vendorId);
-    console.log("[deleteVendor]req.body: ", req.body)
     try {
         const result = await Vendor.findOneAndDelete({ _id: vendorId })
         res.status(200).json(result);

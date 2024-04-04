@@ -29,7 +29,6 @@ const HelpDesk = () => {
         },
       });
       const json = await res.json();
-      console.log("userTickets", json);
       dispatch(ticketActions.setTickets(json));
     };
     fetchTickets();
@@ -39,8 +38,6 @@ const HelpDesk = () => {
   const handleFilterChange = (newFilter) => {
     setFilterTag(newFilter);
   };
-
-  console.log("data type", typeof tickets);
 
   useEffect(() => {
     const filteredTicketHandler = () => {

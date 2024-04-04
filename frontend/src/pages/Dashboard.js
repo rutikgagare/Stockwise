@@ -33,7 +33,6 @@ const Dashboard = () => {
       }
 
       const json = await response.json();
-      console.log("Notification recieved : ", json);
     } catch (error) {
       console.error("Error sending push notification:", error);
     }

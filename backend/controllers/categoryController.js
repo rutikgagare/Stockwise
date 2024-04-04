@@ -72,7 +72,6 @@ const createCategory = async (req, res) => {
     const organization = await Organization.findById(new ObjectId(orgId));
 
     if (organization === null) {
-      console.log("org is null");
       throw Error(`Organization with orgId: ${orgId} does not exist`);
     }
 

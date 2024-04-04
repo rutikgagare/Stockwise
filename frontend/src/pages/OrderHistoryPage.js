@@ -16,7 +16,6 @@ const OrderHistoryPage = () => {
         const res = await axios.post(`${BASE_URL}/order/orders`, {
           orgId: org?._id,
         });
-        console.log("res: ", res);
         if (res.statusText === "OK") {
           setOrders(res.data);
         }

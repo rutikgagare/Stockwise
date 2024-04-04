@@ -38,23 +38,25 @@ function App() {
   const org = useSelector((state) => state?.org?.organization);
   const [loading, setIsloading] = useState(true);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(async() => {
+    const user =  JSON.parse(localStorage.getItem("user"));
     if (user) {
       dispatch(authActions.login(user));
+    }else{
+      dispatch(authActions.logout(user))
     }
   }, [dispatch]);
 
   useEffect(() => {
     generateToken();
     onMessage(messaging, (payload) => {
-      // console.log("Payload inside onMessage : ", payload);
       toast(payload.notification.body, { duration: 3000 }); 
     });
   }, []);
 
   useEffect(() => {
     const getOrganizationInfo = async () => {
+      
       try {
         if (user) {
           const response = await fetch(`${BASE_URL}/org/getOrg`, {

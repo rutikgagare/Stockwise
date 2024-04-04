@@ -18,7 +18,6 @@ const Signup = () => {
     e.preventDefault();
     await signup(name, email, password, orgName);
     navigate("/setOrg");
-    console.log("hello");
   };
 
   return (

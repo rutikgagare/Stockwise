@@ -31,7 +31,7 @@ const createOrganization = async (req, res) => {
 
 const getOrganization = async (req, res)=>{
 
-    const userId = req.user._id;
+    const userId = req?.user?._id;
     
     try {
     
@@ -40,7 +40,7 @@ const getOrganization = async (req, res)=>{
             {"employees":new ObjectId(userId)},
         ]})
 
-        if(org.length){
+        if(org){
            return res.status(200).json(org[0]);
         }
         else{
@@ -84,15 +84,12 @@ const updateOrganization = async(req, res)=>{
 const addEmployeeToOrganization = async (req, res) => {
     const { employeeId, orgId } = req.body;
 
-    console.log("[addEmployeeToOrganization]req.body:", req.body)
-
     const employeeObjectId = new ObjectId(employeeId)
     const orgObjectId = new ObjectId(orgId)
     
     const employee = await User.findById(employeeObjectId);
     const org = await Organization.findById(orgObjectId);
     
-    console.log("[addEmployeeToOrganization]employee: ", employee)
     if (!employee) {
         res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
         return;
@@ -137,8 +134,6 @@ const removeEmployeeFromOrganization = async (req, res) => {
 const deleteOrganization = async (req, res) => {
     const { orgId } = req.body;
 
-    console.log("[deleteOrganization]req.body: ", req.body)
-
     try {
         const result = await Organization.findByIdAndDelete(new ObjectId(orgId));
 
@@ -146,8 +141,6 @@ const deleteOrganization = async (req, res) => {
             res.status(404).json({ error: `Organization with orgId: ${orgId} not found` });
             // return;
         }
-
-        console.log("result", result)
 
         res.status(200).json({ message: `Organization '${result.name} (${orgId})' deleted successfully` });
     } catch (error) {

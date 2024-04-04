@@ -29,9 +29,6 @@ const VendorPage = () => {
   };
 
   const updateVendor = async (vendorIdx) => {
-    console.log("vendorIdx", vendorIdx);
-    console.log("vendors", vendors);
-    console.log("updating vendor: ", vendors[vendorIdx]);
 
     if (!vendors[vendorIdx]) {
       alert(vendorIdx, "vendor not found?!");
@@ -51,7 +48,6 @@ const VendorPage = () => {
 
     const resJson = await res.json();
 
-    console.log("updateVendor resJson: ", resJson);
     if (!res.ok) {
       alert("Could not update the vendor");
     }
@@ -75,16 +71,12 @@ const VendorPage = () => {
 
     const resJson = await res.json();
 
-    console.log("res:", res);
-    console.log("resJson:", resJson);
-
     if (!res.ok) {
       alert("Could not delete the vendor");
     }
 
     if (res.ok) {
       const updatedVendors = vendors.filter((v, i) => i !== idx);
-      console.log("updatedVendors", updatedVendors);
       setVendors(updatedVendors);
       setVendorsCopy(updatedVendors);
     }
@@ -97,7 +89,6 @@ const VendorPage = () => {
   const handleSearch = (e) => {
     setSearchText(e.target.value);
     if (!searchText) {
-      console.log('setall')
       setVendors(vendorsCopy);
       return;
     }
@@ -108,12 +99,10 @@ const VendorPage = () => {
       return false;
     })
 
-    // console.log("searchvendors: ", resultVendors);
     setVendors(resultVendors);
   }
 
   useEffect(() => {
-    console.log("useEffect triggered");
     const fetchVendors = async () => {
       const res = await fetch(`${BASE_URL}/vendor/vendors`, {
         method: "POST",
@@ -127,9 +116,6 @@ const VendorPage = () => {
       });
 
       const resJson = await res.json();
-      console.log("resJson", resJson);
-      if (!res.ok) {
-      }
 
       if (res.ok) {
         setVendors(resJson);
@@ -147,9 +133,6 @@ const VendorPage = () => {
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % vendors.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 

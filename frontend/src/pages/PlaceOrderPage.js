@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import classes from "./PlaceOrderPage.module.css";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import "./PlaceOrderPage.module.css";
 import Layout from "../components/Layout";
@@ -16,15 +16,12 @@ const PlaceOrderPage = () => {
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state.org.organization);
 
-
   const handleClearAll = () => {
     // const res = confirm("Are You Sure Want to clear all items?");
     setOrders([]);
   };
 
   const handlePlaceOrder = async () => {
-    console.log(orders);
-
     for (const order of orders) {
       if (!order.vendor || !order.quantity || !order.item) {
         alert("Product, vendor and quantity are required");
@@ -40,15 +37,12 @@ const PlaceOrderPage = () => {
       alert("User not found!");
       return;
     }
-
-    if (user) console.log("user: ", user);
     try {
       const res = await axios.post(`${BASE_URL}/order/create`, {
         org,
         admin: user,
         cart: orders,
       });
-      console.log("res: ", res);
 
       if (res.status) {
         setOrders([]);
@@ -105,7 +99,6 @@ const PlaceOrderPage = () => {
             throw new Error("Response is not an array");
           }
 
-          console.log("vendors fetched: ", json);
           setVendors(json);
         }
       } catch (error) {
@@ -116,14 +109,11 @@ const PlaceOrderPage = () => {
     const fetchInventory = async () => {
       try {
         if (org) {
-          const res = await fetch(
-            `${BASE_URL}/inventory/${org?._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.token}`,
-              },
-            }
-          );
+          const res = await fetch(`${BASE_URL}/inventory/${org?._id}`, {
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          });
 
           if (!res.ok) {
             throw new Error("Network response was not ok");
@@ -134,8 +124,6 @@ const PlaceOrderPage = () => {
           if (!Array.isArray(json)) {
             throw new Error("Response is not an array");
           }
-
-          console.log("json: ", json);
           setProducts(json);
         }
       } catch (error) {
@@ -214,7 +202,6 @@ const PlaceOrderPage = () => {
                   name="vendor"
                   id="vendor"
                   onChange={(e) => {
-                    console.log(idx, e.target.value);
                     const newOrders = [...orders];
                     newOrders[idx] = {
                       ...order,

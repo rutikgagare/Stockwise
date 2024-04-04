@@ -16,7 +16,6 @@ const loginUser = async (req, res) => {
 
     // create a token
     const token = createToken(user._id);
-
     res
       .status(200)
       .json({ name: user.name, email, token, id: user._id, role: user.role });

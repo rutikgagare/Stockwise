@@ -31,7 +31,6 @@ const categorySlice = createSlice({
       });
     },
     incrementItemCount: (state, action) => {
-      console.log("Inside increment ", action.payload);
       state.data = state.data.map((item) => {
         if (item._id === action.payload.categoryId) {
           return {
