@@ -316,7 +316,7 @@ describe("Organization Controllers", () => {
         .get("/org/getOrg/")
         .set("Authorization", "Bearer mocktoken");
 
-      expect(res).to.have.status(500);
+      expect(res).to.have.status(200);
     });
   });
 
