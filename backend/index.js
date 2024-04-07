@@ -15,7 +15,15 @@ const serviceRoutes = require("./routes/serviceRoutes.js");
 const ticketRoutes = require("./routes/ticketRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 
-require("dotenv").config();
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+  console.log("using mock db")
+} else {
+  dotenv.config();
+}
+
 
 const app = express();
 
