@@ -1,6 +1,7 @@
 backend/node_modules
 run.desktop
 .env
+.env.test
 frontend/node_modules
 .nyc_output/
 coverage/
