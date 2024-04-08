@@ -67,6 +67,56 @@ describe("Inventory Controllers", () => {
     lifecycle: [],
   };
 
+  const mockedItem3 = {
+    itemDetails: {
+      name: "Test Item",
+      identificationType: "unique",
+      categoryId: "65f316a1991edde66ee55fc1",
+      orgId: "65f316a1991edde66ee55fc1",
+      quantity: 1,
+      customFieldsData: {},
+      assignedTo: [],
+      status: "ready to deploy",
+      checkedOutQuantity: 0,
+      itemImage: "image-url.jpg",
+      lifecycle: [],
+    },
+    serialNumbers: ["ABC123", "DEF456"],
+  };
+
+  const mockedItem4 = [
+    {
+      _id: "60972d3e8a0d0e001f31b97f",
+      name: "Test Item",
+      identificationType: "unique",
+      categoryId: "65f316a1991edde66ee55fc1",
+      orgId: "65f316a1991edde66ee55fc1",
+      quantity: 1,
+      customFieldsData: {},
+      assignedTo: [],
+      status: "ready to deploy",
+      checkedOutQuantity: 0,
+      itemImage: "image-url.jpg",
+      lifecycle: [],
+      serialNumber: "ABC123",
+    },
+    {
+      _id: "60972d3e8a0d0e001f31b97f",
+      name: "Test Item",
+      identificationType: "unique",
+      categoryId: "65f316a1991edde66ee55fc1",
+      orgId: "65f316a1991edde66ee55fc1",
+      quantity: 1,
+      customFieldsData: {},
+      assignedTo: [],
+      status: "ready to deploy",
+      checkedOutQuantity: 0,
+      itemImage: "image-url.jpg",
+      lifecycle: [],
+      serialNumber: "DEF456",
+    },
+  ];
+
   describe("POST /inventory/create", () => {
     it("create item in inventory if categoryId exist", async () => {
       sinon.stub(Category, "findById").resolves(mockedCategory);
@@ -92,6 +142,61 @@ describe("Inventory Controllers", () => {
         .send(mockedItem1);
       expect(res).to.have.status(400);
     });
+  });
+
+  describe("POST /inventory/createMultiple", () => {
+    it("create multiple items in inventory if categoryId exists", async () => {
+      sinon.stub(Category, "findById").resolves(mockedCategory);
+      sinon.stub(Inventory.prototype, "save").resolves(mockedItem4);
+
+      const res = await chai
+        .request(app)
+        .post("/inventory/createMultiple")
+        .set("Authorization", "Bearer mocktoken")
+        .send(mockedItem3);
+
+      expect(res).to.have.status(201);
+    });
+
+    it("Category with given categoryId doesn't exist", async () => {
+      sinon.stub(Category, "findById").resolves(null);
+
+      const res = await chai
+        .request(app)
+        .post("/inventory/createMultiple")
+        .set("Authorization", "Bearer mocktoken")
+        .send(mockedItem3);
+
+      expect(res).to.have.status(400);
+    });
+
+    it("Error occurred while finding the category", async () => {
+      sinon
+        .stub(Category, "findById")
+        .throws(new Error("Internal server error"));
+
+      const res = await chai
+        .request(app)
+        .post("/inventory/createMultiple")
+        .set("Authorization", "Bearer mocktoken")
+        .send(mockedItem1);
+
+      expect(res).to.have.status(400);
+    });
+
+    it("if inventory has item with serial number",async ()=>{
+      sinon.stub(Category, "findById").resolves(mockedCategory);
+
+      sinon.stub(Inventory, "find").resolves([{}, {}]);
+
+      const res = await chai
+        .request(app)
+        .post("/inventory/createMultiple")
+        .set("Authorization", "Bearer mocktoken")
+        .send(mockedItem3);
+
+      expect(res).to.have.status(201);
+    })
   });
 
   describe("GET /inventory/:orgId", () => {
@@ -564,15 +669,14 @@ describe("Inventory Controllers", () => {
     });
 
     it("cont checkin item if item is not assigned to anyone", async () => {
-
       const mockItem = {
         _id: "610f94305c3d7d4d3e4ebcb0",
         identificationType: "unique",
         assignedTo: [],
       };
-    
+
       sinon.stub(Inventory, "findById").resolves(mockItem);
-    
+
       const res = await request(app)
         .put("/inventory/checkin")
         .set("Content-Type", "application/json")
@@ -584,7 +688,6 @@ describe("Inventory Controllers", () => {
 
       expect(res.status).to.equal(400);
     });
-
 
     it("should handle checkin for non-unique item", async () => {
       const mockItem = {
@@ -655,8 +758,8 @@ describe("Inventory Controllers", () => {
           },
         ],
       };
-  
-      sinon.stub(Inventory, "findById").resolves(mockItem)
+
+      sinon.stub(Inventory, "findById").resolves(mockItem);
 
       const res = await request(app)
         .put("/inventory/checkin")
@@ -732,7 +835,7 @@ describe("Inventory Controllers", () => {
       };
 
       sinon.stub(Inventory, "findById").resolves(mockItem);
-     
+
       const res = await request(app)
         .put("/inventory/checkin")
         .set("Content-Type", "application/json")
@@ -744,7 +847,6 @@ describe("Inventory Controllers", () => {
         });
 
       expect(res.status).to.equal(400);
-    
     });
   });
 });
