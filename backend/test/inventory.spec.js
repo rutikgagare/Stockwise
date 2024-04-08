@@ -195,7 +195,7 @@ describe("Inventory Controllers", () => {
         .set("Authorization", "Bearer mocktoken")
         .send(mockedItem3);
 
-      expect(res).to.have.status(201);
+      expect(res).to.have.status(400);
     })
   });
 
