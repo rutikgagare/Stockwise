@@ -40,7 +40,7 @@ function App() {
 
   useEffect(async() => {
     const user =  JSON.parse(localStorage.getItem("user"));
-    if (user) {
+    if(user) {
       dispatch(authActions.login(user));
     }else{
       dispatch(authActions.logout(user))

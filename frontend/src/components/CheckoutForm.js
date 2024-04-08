@@ -93,6 +93,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
           messageContent,
           itemImage: checkoutItem?.itemImage,
           subject: "Asset Checkout Completed",
+          orgName: org?.name
         }),
       });
 
