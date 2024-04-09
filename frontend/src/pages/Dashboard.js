@@ -8,95 +8,16 @@ import NoItem from "../components/NoItem.js";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../constants";
 
-import { organizationActions } from "../store/organizationSlice.js";
-import { categoryActions } from "../store/categorySlice";
-import { inventoryActions } from "../store/inventorySlice";
 
-import { generateToken } from "../notification/firebase.js";
 import { messaging } from "../notification/firebase.js";
 import { getToken } from "firebase/messaging";
-import { onMessage } from "firebase/messaging";
-import toast from "react-hot-toast";
+
 import Loader from "../components/Loader.js";
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
   const org = useSelector((state) => state?.org?.organization);
   const categories = useSelector((state) => state.category.data);
-
-  const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!user) {
-          setLoading(false);
-          return;
-        }
-
-        setLoading(true);
-
-        const orgResponse = await fetch(`${BASE_URL}/org/getOrg`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-
-        if (!orgResponse.ok) {
-          throw new Error("Failed to fetch organization data");
-        }
-
-        const orgDetails = await orgResponse.json();
-        dispatch(organizationActions.setOrg(orgDetails));
-
-        const categoryResponse = await fetch(
-          `${BASE_URL}/Category/${orgDetails._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-
-        if (!categoryResponse.ok) {
-          throw new Error("Failed to fetch category data");
-        }
-
-        const categoryData = await categoryResponse.json();
-        dispatch(categoryActions.setCategory(categoryData));
-
-        const inventoryResponse = await fetch(
-          `${BASE_URL}/inventory/${orgDetails._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-
-        if (!inventoryResponse.ok) {
-          throw new Error("Failed to fetch inventory data");
-        }
-
-        const inventoryData = await inventoryResponse.json();
-        dispatch(inventoryActions.setInventory(inventoryData));
-
-        generateToken();
-        onMessage(messaging, (payload) => {
-          toast(payload.notification.body, { duration: 3000 });
-        });
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [dispatch, user]);
 
   const sendPushNotification = async () => {
     try {
@@ -135,7 +56,6 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      {loading && <Loader></Loader>}
 
       <div className={classes.dashboard}>
         {/* <h1>Welcome to Dashboard</h1> */}

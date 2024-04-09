@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./store/authSlice";
 import { useEffect, useState } from "react";
 
-import  { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 import Signup from "./pages/Signup";
 import EmployeeManagementPage from "./pages/EmployeeManagementPage";
@@ -19,6 +19,16 @@ import ProfilePage from "./pages/ProfilePage";
 import HelpDesk from "./pages/HelpDesk";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import HelpDeskAdmin from "./pages/HelpDeskAdmin";
+
+import { inventoryActions } from "./store/inventorySlice.js";
+import { organizationActions } from "./store/organizationSlice.js";
+import { categoryActions } from "./store/categorySlice.js";
+
+import { BASE_URL } from "./constants/index.js";
+import { generateToken, messaging } from "./notification/firebase.js";
+import { onMessage } from "firebase/messaging";
+
+import toast from "react-hot-toast";
 
 import Loader from "./components/Loader.js";
 
@@ -39,6 +49,75 @@ function App() {
 
     setLoading(false);
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
+
+        const orgResponse = await fetch(`${BASE_URL}/org/getOrg`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+
+        if (!orgResponse.ok) {
+          throw new Error("Failed to fetch organization data");
+        }
+
+        const orgDetails = await orgResponse.json();
+        dispatch(organizationActions.setOrg(orgDetails));
+
+        const categoryResponse = await fetch(
+          `${BASE_URL}/Category/${orgDetails._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+
+        if (!categoryResponse.ok) {
+          throw new Error("Failed to fetch category data");
+        }
+
+        const categoryData = await categoryResponse.json();
+        dispatch(categoryActions.setCategory(categoryData));
+
+        const inventoryResponse = await fetch(
+          `${BASE_URL}/inventory/${orgDetails._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+
+        if (!inventoryResponse.ok) {
+          throw new Error("Failed to fetch inventory data");
+        }
+
+        const inventoryData = await inventoryResponse.json();
+        dispatch(inventoryActions.setInventory(inventoryData));
+
+        generateToken();
+        onMessage(messaging, (payload) => {
+          toast(payload.notification.body, { duration: 3000 });
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, user]);
 
   return (
     <BrowserRouter>
