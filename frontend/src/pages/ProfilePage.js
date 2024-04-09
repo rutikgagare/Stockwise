@@ -4,10 +4,13 @@ import classes from "./ProfilePage.module.css";
 import { useSelector } from "react-redux";
 import { useLogout } from "../hooks/useLogout";
 import { BASE_URL } from "../constants";
+import Loader from "../components/Loader";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
   const [assetList, setAssetList] = useState(null);
+  const [loading, setLoading] = useState();
+
   const { logout } = useLogout();
 
   const logoutHandler = () => {
@@ -30,11 +33,14 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getAssetList();
+    setLoading(false);
   }, []);
 
   return (
     <Layout>
+      {loading && <Loader></Loader>}
       <div className={classes.profilePage}>
         <div className={classes.header}>
           <h3>Profile</h3>

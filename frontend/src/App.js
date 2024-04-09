@@ -124,7 +124,7 @@ function App() {
     <BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />
       {loading && <Loader />}
-
+      {!loading &&
       <Routes>
         <Route
           path="/"
@@ -240,7 +240,7 @@ function App() {
             )
           }
         />
-      </Routes>
+      </Routes>}
     </BrowserRouter>
   );
 }
