@@ -1,5 +1,4 @@
-import React, { useDebugValue, useEffect, useState } from "react";
-import { UseDispatch, useDispatch } from "react-redux";
+import React, { useEffect } from "react";
 
 import classes from "./Dashboard.module.css";
 import Layout from "../components/Layout";
@@ -16,7 +15,6 @@ let firstTime = true
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
-  const org = useSelector((state) => state?.org?.organization);
   const categories = useSelector((state) => state.category.data);
 
   const sendPushNotification = async () => {
@@ -43,8 +41,6 @@ const Dashboard = () => {
       if (!response.ok) {
         throw new Error("Error sending push notification");
       }
-
-      const json = await response.json();
     } catch (error) {
       console.error("Error sending push notification:", error);
     }
@@ -73,8 +69,8 @@ const Dashboard = () => {
             {categories?.map((category) => {
               return (
                 <div className={classes.category}>
-                  <h2>{category?.name}</h2>
                   <h3>{category?.numberOfAssets || 0}</h3>
+                  <h2>{category?.name}</h2>
                 </div>
               );
             })}
