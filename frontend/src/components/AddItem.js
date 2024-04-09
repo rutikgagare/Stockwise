@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
 import { categoryActions } from "../store/categorySlice";
 import { BASE_URL } from "../constants";
+import Loader from "./Loader";
 
 const AddItem = (props) => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const AddItem = (props) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [customFields, setCustomFields] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(null);
 
   const [operationType, setOperationType] = useState("");
 
@@ -34,6 +36,7 @@ const AddItem = (props) => {
   };
 
   const handleAddItem = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     try {
@@ -174,11 +177,13 @@ const AddItem = (props) => {
       }
     } catch (error) {
       setError(error.message);
-    }  
+    } 
+    setLoading(false);
   };
 
   return (
     <div className={classes.main}>
+      {loading && <Loader></Loader>}
       <div className={classes.addCategory}>
         <div className={classes.header}>
           <h3>New Item</h3>

@@ -84,6 +84,12 @@ select {
   border-collapse: collapse;
 }
 
+.inventory_table thead{
+  position: sticky;
+  top: 4rem;
+  z-index: 20;
+}
+
 .inventory_table th,
 .inventory_table td {
   border: 1px solid #ddd;
