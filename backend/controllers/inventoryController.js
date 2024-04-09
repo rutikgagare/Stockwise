@@ -68,7 +68,6 @@ const getItems = async (req, res) => {
 };
 
 const getItem = async (req, res) =>{
-  console.log("hello")
   const itemId = req.params.itemId;
   try {
     const item = await Inventory.findById(new ObjectId(itemId));

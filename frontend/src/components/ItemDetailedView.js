@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import classes from "./ItemDetailedView.module.css"; 
 import { BASE_URL } from "../constants";
 import { useSelector } from "react-redux";
+import Loader from './Loader.js';
 
 const ItemDetailedView = ({itemId}) => {
 
   const user = useSelector((state) => state.auth.user);
   const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState();
 
   const getItemInfo = async () =>{
     const res = await fetch(
@@ -23,12 +25,15 @@ const ItemDetailedView = ({itemId}) => {
   }
 
   useEffect(()=>{
-    console.log("Itemid", itemId)
+    setLoading(true);
     getItemInfo();
+    setLoading(false);
   }, [itemId])
 
   return (
     <div className={classes.itemContainer}>
+      {loading && <Loader></Loader>}
+
       <div className={classes.imageContainer}>
         <img src={`https://stockwisebucket.s3.ap-south-1.amazonaws.com/${item?.itemImage}`} alt="" />
       </div>
