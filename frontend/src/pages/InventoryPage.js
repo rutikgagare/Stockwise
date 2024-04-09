@@ -155,7 +155,7 @@ const InventoryPage = () => {
               </div>
             </div>
           )}
-          
+
           <div className={classes.inventory_table_container}>
             {filteredInventory &&
               filteredInventory?.length > 0 &&
@@ -283,24 +283,20 @@ const InventoryPage = () => {
                         <td>{item?.quantity}</td>
                         <td>{item?.checkedOutQuantity}</td>
                         <td>
-                          <div className={classes.userList}>
-                            {item?.assignedTo &&
-                              item?.assignedTo?.map((item) => {
-                                if (!item) {
-                                  return <span>No Checkout yet</span>;
-                                }
-                                return (
-                                  <div>
-                                    {" "}
-                                    {`${item.userName} | `}
-                                    <span className={classes.quantity}>
-                                      Quantity:
-                                    </span>{" "}
-                                    {item.quantity}
-                                  </div>
-                                );
-                              })}
-                          </div>
+                          {item?.assignedTo && item.assignedTo.length > 0 && (
+                            <div className={classes.userList}>
+                              {item?.assignedTo?.map((assignedItem) => (
+                                <div key={assignedItem.userName}>
+                                  {`${assignedItem.userName} | `}
+                                  <span className={classes.quantity}>
+                                    Quantity: {assignedItem.quantity}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {item?.assignedTo && item.assignedTo.length === 0 && <span>Not Assigned</span>}
                         </td>
 
                         <td>
