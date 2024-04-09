@@ -12,7 +12,7 @@ import { BASE_URL } from "../constants";
 import { messaging } from "../notification/firebase.js";
 import { getToken } from "firebase/messaging";
 
-import Loader from "../components/Loader.js";
+let firstTime = true
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -51,8 +51,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    sendPushNotification();
-  }, []);
+    if(firstTime === true){
+      sendPushNotification();
+    }
+    firstTime = false;
+  }, [user]);
 
   return (
     <Layout>
