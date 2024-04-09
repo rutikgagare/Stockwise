@@ -10,6 +10,10 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 2px solid #e4e4e4;
+    position: sticky;
+    top: 4rem;
+    z-index: 30;
+    background-color: white;
 }
 
 .header h3{

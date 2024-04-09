@@ -11,6 +11,9 @@
   align-items: center;
   border-bottom: 2px solid #e4e4e4;
   width: 100%;
+  position: sticky;
+  top: 4rem;
+  z-index: 30;
   background-color: white;
 }
 
@@ -120,21 +123,21 @@
   background-color: white;
 }
 
-.asset .assetImage{
+.asset .assetImage {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0.8;
 }
 
-.assetImage img{
+.assetImage img {
   min-height: 7rem;
   max-height: 9rem;
   min-width: 8rem;
   max-width: 9rem;
 }
 
-.asset .assetInfo{
+.asset .assetInfo {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -142,7 +145,7 @@
   padding: 1rem;
 }
 
-.assetInfo .customFields{
+.assetInfo .customFields {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -156,7 +159,7 @@
   font-weight: 400;
 }
 
-hr{
+hr {
   color: 1px solid rgb(252, 248, 248);
 }
 
@@ -173,11 +176,11 @@ hr{
     padding: 0.5rem;
   }
 
-  .asset{
+  .asset {
     flex-direction: column;
   }
 
-  .userInfo{
+  .userInfo {
     gap: 2rem;
   }
 }
