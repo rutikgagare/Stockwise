@@ -7,7 +7,6 @@ import NoItem from "../components/NoItem.js";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../constants";
 
-
 import { messaging } from "../notification/firebase.js";
 import { getToken } from "firebase/messaging";
 

@@ -19,6 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import HelpDesk from "./pages/HelpDesk";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import HelpDeskAdmin from "./pages/HelpDeskAdmin";
+import ErrorPage from "./pages/ErrorPage.js";
 import Home from "./pages/Home.js";
 
 import { inventoryActions } from "./store/inventorySlice.js";
@@ -240,6 +241,7 @@ function App() {
             )
           }
         />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>}
     </BrowserRouter>
   );
