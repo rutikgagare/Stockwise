@@ -287,7 +287,7 @@ const InventoryPage = () => {
                             {item?.assignedTo &&
                               item?.assignedTo?.map((item) => {
                                 if (!item) {
-                                  return null;
+                                  return <span>No Checkout yet</span>;
                                 }
                                 return (
                                   <div>
