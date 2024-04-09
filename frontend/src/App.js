@@ -19,7 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import HelpDesk from "./pages/HelpDesk";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import HelpDeskAdmin from "./pages/HelpDeskAdmin";
-import Home from './pages/Home.js';
+import Home from "./pages/Home.js";
 
 import { inventoryActions } from "./store/inventorySlice.js";
 import { organizationActions } from "./store/organizationSlice.js";
@@ -124,124 +124,123 @@ function App() {
     <BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />
       {loading && <Loader />}
-      {!loading && (
-        <Routes>
-          <Route
-            path="/"
-            element={user ? <Navigate to="/dashboard" /> : <Home />}
-          />
-          <Route
-            path="/login"
-            element={!user ? <Login /> : <Navigate to="/dashboard" />}
-          />
-          <Route
-            path="/signup"
-            element={!user ? <Signup /> : <Navigate to="/dashboard" />}
-          />
-          <Route
-            path="/setOrg"
-            element={
-              user && user?.role === "admin" ? (
-                <SetOrganization />
-              ) : user ? (
-                <Navigate to="/dashboard" />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={user ? <Dashboard /> : <Navigate to="/login" />}
-          />
 
-          <Route
-            path="/inventory"
-            element={
-              user && user?.role === "admin" ? (
-                <InventoryPage />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
+      <Routes>
+        <Route
+          path="/"
+          element={user ? <Navigate to="/dashboard" /> : <Home />}
+        />
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/signup"
+          element={!user ? <Signup /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/setOrg"
+          element={
+            user && user?.role === "admin" ? (
+              <SetOrganization />
+            ) : user ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={user ? <Dashboard /> : <Navigate to="/login" />}
+        />
 
-          <Route
-            path="/vendors"
-            element={
-              user && user?.role === "admin" ? (
-                <VendorsPage />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            path="/employees"
-            element={
-              user && user?.role === "admin" ? (
-                <EmployeeManagementPage />
-              ) : user ? (
-                <Navigate to="/dashboard" />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            path="/order"
-            element={
-              user && user?.role === "admin" ? (
-                <PlaceOrderPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            path="/category"
-            element={
-              user && user?.role === "admin" ? (
-                <CategoryPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+        <Route
+          path="/inventory"
+          element={
+            user && user?.role === "admin" ? (
+              <InventoryPage />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
 
-          <Route
-            path="/profile"
-            element={user ? <ProfilePage /> : <Navigate to="/login" />}
-          />
+        <Route
+          path="/vendors"
+          element={
+            user && user?.role === "admin" ? (
+              <VendorsPage />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/employees"
+          element={
+            user && user?.role === "admin" ? (
+              <EmployeeManagementPage />
+            ) : user ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            user && user?.role === "admin" ? (
+              <PlaceOrderPage />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/category"
+          element={
+            user && user?.role === "admin" ? (
+              <CategoryPage />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
 
-          <Route
-            path="/helpdesk"
-            element={user ? <HelpDesk /> : <Navigate to="/login" />}
-          />
+        <Route
+          path="/profile"
+          element={user ? <ProfilePage /> : <Navigate to="/login" />}
+        />
 
-          <Route
-            path="/helpdeskAdmin"
-            element={
-              user && user?.role === "admin" ? (
-                <HelpDeskAdmin />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+        <Route
+          path="/helpdesk"
+          element={user ? <HelpDesk /> : <Navigate to="/login" />}
+        />
 
-          <Route
-            path="/history"
-            element={
-              user && user?.role === "admin" ? (
-                <OrderHistoryPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-        </Routes>
-      )}
+        <Route
+          path="/helpdeskAdmin"
+          element={
+            user && user?.role === "admin" ? (
+              <HelpDeskAdmin />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/history"
+          element={
+            user && user?.role === "admin" ? (
+              <OrderHistoryPage />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
