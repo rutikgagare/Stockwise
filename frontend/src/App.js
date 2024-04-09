@@ -19,6 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import HelpDesk from "./pages/HelpDesk";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import HelpDeskAdmin from "./pages/HelpDeskAdmin";
+import Home from './pages/Home.js';
 
 import { inventoryActions } from "./store/inventorySlice.js";
 import { organizationActions } from "./store/organizationSlice.js";
@@ -127,7 +128,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Navigate to="/dashboard" /> : <Login />}
+            element={user ? <Navigate to="/dashboard" /> : <Home />}
           />
           <Route
             path="/login"
