@@ -56,7 +56,6 @@ const createMultipleItem = async (req, res) => {
   }
 };
 
-
 const getItems = async (req, res) => {
   const orgId = req.params.orgId;
 
@@ -67,6 +66,17 @@ const getItems = async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 };
+
+const getItem = async (req, res) =>{
+  console.log("hello")
+  const itemId = req.params.itemId;
+  try {
+    const item = await Inventory.findById(new ObjectId(itemId));
+    res.status(201).json(item);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+}
 
 const itemSearch = async (req, res) => {
   const orgId = req.params.orgId;
@@ -346,6 +356,7 @@ const getUserAssets = async (req, res) => {
 module.exports = {
   createItem,
   getItems,
+  getItem,
   deleteItem,
   updateItem,
   checkoutItem,

@@ -228,6 +228,35 @@ describe("Inventory Controllers", () => {
     });
   });
 
+  describe("GET /inventory/getItem/:itemId", () => {
+    const mockedItemId = "66093a62bb4b6781a41472c0";
+
+    it("should get item if itemId exist", async () => {
+      sinon.stub(Inventory, "findById").resolves(mockedItem2);
+
+      const res = await chai
+        .request(app)
+        .get(`/inventory/getItem/${mockedItemId}`)
+        .set("Authorization", "Bearer mocktoken")
+        .send();
+      expect(res).to.have.status(201);
+    });
+
+    it("should throw error if itemId doesn't exist", async () => {
+     
+      sinon.stub(Inventory, "findById").throws(new Error());
+
+      const res = await chai
+        .request(app)
+        .get(`/inventory/getItem/${mockedItemId}`)
+        .set("Authorization", "Bearer mocktoken")
+        .send();
+
+      expect(res).to.have.status(400);
+    });
+  });
+
+
   describe("DELETE /inventory/delete", async () => {
     it("Should delete item if item with itemId exist", async () => {
       const mockedItemId = "60972d3e8a0d0e001f31b97f";

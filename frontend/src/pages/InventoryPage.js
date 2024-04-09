@@ -381,7 +381,7 @@ const InventoryPage = () => {
           )}
           {showDetailedView && (
             <Modal onClose={() => setShowDetailedView(false)} width="50%">
-              <ItemDetailedView item={selectedItem}></ItemDetailedView>
+              <ItemDetailedView itemId={selectedItem?._id}></ItemDetailedView>
             </Modal>
           )}
           {showLifecycle && (

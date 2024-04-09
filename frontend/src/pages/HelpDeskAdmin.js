@@ -8,6 +8,8 @@ import NoItem from "../components/NoItem.js";
 import UpdateTicketStatus from "../components/UpdateTicketStatus.js";
 import { ticketAdminActions } from "../store/ticketAdminSlice.js";
 import { BASE_URL } from "../constants/index.js";
+import ItemDetailedView from "../components/ItemDetailedView.js";
+import { BsInfoLg } from "react-icons/bs";
 
 const HelpDeskAdmin = () => {
   const user = useSelector((state) => state.auth.user);
@@ -20,6 +22,8 @@ const HelpDeskAdmin = () => {
   const [selectedTicket, setSelectedTicket] = useState();
   const [filterTag, setFilterTag] = useState("new");
   const [filteredTickets, setFilteredTickets] = useState([]);
+  const [selectedAssetId, setSelectedAssetId] = useState();
+  const [showDetailedView, setShowDetailedView] = useState(false);
 
   const fetchTickets = async () => {
     const res = await fetch(`${BASE_URL}/ticket/${org?._id}`, {
@@ -55,8 +59,7 @@ const HelpDeskAdmin = () => {
       if (filterTag === "all") {
         updatedTickets = tickets;
       } else if (filterTag === "new") {
-        updatedTickets = tickets?.filter(
-          (ticket) => ticket.status === "open");
+        updatedTickets = tickets?.filter((ticket) => ticket.status === "open");
       } else {
         updatedTickets = tickets?.filter(
           (ticket) => ticket.status === filterTag
@@ -128,8 +131,13 @@ const HelpDeskAdmin = () => {
                       <div className={classes.ticketInfo}>
                         <span className={classes.ticket_id}>#A12Bc3</span>
 
-                        <span className={`${classes.ticketStatus} ${classes[ticket.status]}`}>
-                          {ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
+                        <span
+                          className={`${classes.ticketStatus} ${
+                            classes[ticket.status]
+                          }`}
+                        >
+                          {ticket.status.charAt(0).toUpperCase() +
+                            ticket.status.slice(1)}
                         </span>
                       </div>
 
@@ -159,6 +167,14 @@ const HelpDeskAdmin = () => {
                     </div>
 
                     <div className={classes.actions}>
+                      {}<button
+                        onClick={() => {
+                          setSelectedAssetId(ticket?.assetId);
+                          setShowDetailedView(true);
+                        }}
+                      >
+                        <BsInfoLg className={classes.icon} />
+                      </button>
                       {ticket.status !== "resolved" && (
                         <button
                           onClick={() => {
@@ -183,6 +199,12 @@ const HelpDeskAdmin = () => {
                 ticket={selectedTicket}
                 onClose={() => setShowUpdateStatus(false)}
               ></UpdateTicketStatus>
+            </Modal>
+          )}
+
+          {showDetailedView && (
+            <Modal onClose={() => setShowDetailedView(false)} width="50%">
+              <ItemDetailedView itemId={selectedAssetId}></ItemDetailedView>
             </Modal>
           )}
 
