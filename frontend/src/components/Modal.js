@@ -11,6 +11,7 @@ const Modal = ({ onClose, children, width }) => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 100, // Added z-index
   };
 
   const modalContentStyle = {
@@ -21,10 +22,11 @@ const Modal = ({ onClose, children, width }) => {
     width: width || '40%',
     maxHeight: "80%",
     overflowY: 'scroll',
+    zIndex: 100, // Added z-index
   };
 
   const modalBodyStyle = {
-    height:"100%",
+    height: "100%",
   };
 
   return (
