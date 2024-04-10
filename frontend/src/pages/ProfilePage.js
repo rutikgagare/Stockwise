@@ -18,6 +18,8 @@ const ProfilePage = () => {
   };
 
   const getAssetList = async () => {
+    setLoading(true);
+
     const response = await fetch(
       `${BASE_URL}/inventory/item/getUserAssets`,
       {
@@ -30,18 +32,19 @@ const ProfilePage = () => {
 
     const json = await response.json();
     setAssetList(json);
+
+    setLoading(false);
+
   };
 
   useEffect(() => {
-    setLoading(true);
     getAssetList();
-    setLoading(false);
   }, []);
 
   return (
     <Layout>
-      {loading && <Loader></Loader>}
       <div className={classes.profilePage}>
+      {loading && <Loader></Loader>}
         <div className={classes.header}>
           <h3>Profile</h3>
           <button onClick={logoutHandler}>Logout</button>

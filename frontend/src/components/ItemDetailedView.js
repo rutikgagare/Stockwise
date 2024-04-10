@@ -28,6 +28,7 @@ const ItemDetailedView = ({ itemId }) => {
 
   return (
     <div className={classes.itemContainer}>
+      {loading && <Loader></Loader>}
       <div className={classes.imageContainer}>
         <img
           src={`https://stockwisebucket.s3.ap-south-1.amazonaws.com/${item?.itemImage}`}
