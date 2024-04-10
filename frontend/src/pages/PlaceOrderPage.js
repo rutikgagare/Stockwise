@@ -5,6 +5,7 @@ import axios from "axios";
 import "./PlaceOrderPage.module.css";
 import Layout from "../components/Layout";
 import { BASE_URL } from "../constants";
+import NoItem from "../components/NoItem";
 
 const PlaceOrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -173,7 +174,8 @@ const PlaceOrderPage = () => {
         </div>
 
         <div className={classes.orders}>
-          {orders.map((order, idx) => (
+          {orders.length ? 
+          orders.map((order, idx) => (
             <div className={classes.order_form} key={idx}>
               <div className={classes.inputDiv}>
                 <label htmlFor="product">Select Product</label>
@@ -242,7 +244,9 @@ const PlaceOrderPage = () => {
                 Remove
               </button>
             </div>
-          ))}
+          )) :
+          <NoItem/>
+          }
         </div>
 
         <div className={classes.action_buttons}>

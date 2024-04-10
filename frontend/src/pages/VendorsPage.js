@@ -94,7 +94,7 @@ const VendorPage = () => {
     }
     const resultVendors = vendorsCopy.filter((value, index, array) => {
       for (const v of Object.values(value)) {
-        if (typeof (v) == "string" && v.includes(searchText)) return true;
+        if (typeof (v) == "string" && v.toLowerCase().includes(searchText.toLocaleLowerCase())) return true;
       }
       return false;
     })

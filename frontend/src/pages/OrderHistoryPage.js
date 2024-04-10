@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import HorizontalDataComponent from "../components/HorizontalDataComponent";
 import { BASE_URL } from "../constants";
+import NoItem from "../components/NoItem";
 
 const OrderHistoryPage = () => {
   const org = useSelector((state) => state.org.organization);
@@ -30,9 +31,13 @@ const OrderHistoryPage = () => {
   return (
     <>
       <Layout>
-        {orders.map((order) => (
-          <HorizontalDataComponent data={order} />
-        ))}
+        {orders.length ? 
+          orders.map((order) => (
+            <HorizontalDataComponent data={order} />
+          ))
+         :
+          <NoItem />
+        }
       </Layout>
     </>
   );
