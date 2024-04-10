@@ -11,6 +11,9 @@
   align-items: center;
   border-bottom: 2px solid #e4e4e4;
   width: 100%;
+  position: sticky;
+  top: 4rem;
+  z-index: 30;
   background-color: white;
 }
 
@@ -82,6 +85,12 @@ select {
 .inventory_table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.inventory_table thead {
+  position: sticky;
+  top: 7.5rem;
+  z-index: 31;
 }
 
 .inventory_table th,

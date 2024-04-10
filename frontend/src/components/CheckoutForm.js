@@ -5,6 +5,7 @@ import { inventoryActions } from "../store/inventorySlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../constants";
+import Loader from "./Loader";
 
 const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
   const dispatch = useDispatch();
@@ -16,23 +17,23 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
   const [selectedUser, setSelectedUser] = useState();
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState();
+  const [loading, setLoading] = useState();
 
   const fetchEmployees = async () => {
+    setLoading(true);
     try {
       if (org) {
-        const res = await axios.get(
-          `${BASE_URL}/org/employees/${org?._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/org/employees/${org?._id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
 
         const employees = await res.data;
         setEmployees(employees);
       }
     } catch (error) {}
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -40,6 +41,8 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
   }, [org]);
 
   const submitHandler = async (e) => {
+    setLoading(true);
+
     e.preventDefault();
 
     try {
@@ -74,7 +77,7 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
       }
 
       const json = await res.json();
-      
+
       const messageContent = `You've been assigned a new asset: ${checkoutItem?.name}. Please visit your profile to view the details of the new asset.`;
 
       dispatch(inventoryActions.updateItem(json));
@@ -93,18 +96,21 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
           messageContent,
           itemImage: checkoutItem?.itemImage,
           subject: "Asset Checkout Completed",
+          orgName: org?.name,
         }),
       });
-
     } catch (error) {
       setError(error.message);
     }
+    setLoading(false);
+
   };
 
   return (
     <div>
-      <div className={classes.error}>{error}</div>
+      {loading && <Loader></Loader>}
 
+      <div className={classes.error}>{error}</div>
       <form onSubmit={submitHandler} className={classes.checkoutForm}>
         <div className={classes.inputDiv}>
           <label htmlFor="">Asset Name</label>

@@ -4,6 +4,7 @@ import classes from "./Signup.module.css";
 import Layout from "../components/Layout";
 import ForgotPassword from "../components/ForgotPassword";
 import Modal from "../components/Modal";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +20,8 @@ const Login = () => {
 
   return (
     <Layout>
+      {isLoading && <Loader></Loader>}
+      
       <div className={classes.main}>
         
         <form className={classes.signupForm} onSubmit={handleSubmit}>

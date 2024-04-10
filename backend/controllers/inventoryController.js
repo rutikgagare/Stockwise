@@ -23,16 +23,59 @@ const createItem = async (req, res) => {
   }
 };
 
+const createMultipleItem = async (req, res) => {
+  const { itemDetails, serialNumbers } = req.body;
+
+  try {
+    const category = await Category.findById(new ObjectId(itemDetails.categoryId));
+
+    if (!category) {
+      throw Error(`Category with orgId: ${itemDetails.categoryId} does not exist`);
+    }
+
+    const existingInventory = await Inventory.find({
+      categoryId: itemDetails.categoryId,
+      serialNumber: { $in: serialNumbers }
+    });
+
+    if (existingInventory.length > 0) {
+      throw Error(`Duplicate serial numbers found in the inventory for the same category`);
+    }
+
+    const items = [];
+
+    for (const serialNumber of serialNumbers) {
+      const item = new Inventory({ ...itemDetails, serialNumber });
+      await item.save();
+      items.push(item);
+    }
+
+    res.status(201).json(items);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const getItems = async (req, res) => {
   const orgId = req.params.orgId;
 
   try {
-    const items = await Inventory.find({ orgId });
+    const items = await Inventory.find({orgId});
     res.status(201).json(items);
   } catch (err) {
     res.status(400).send({ error: err.message });
   }
 };
+
+const getItem = async (req, res) =>{
+  const itemId = req.params.itemId;
+  try {
+    const item = await Inventory.findById(new ObjectId(itemId));
+    res.status(201).json(item);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+}
 
 const itemSearch = async (req, res) => {
   const orgId = req.params.orgId;
@@ -312,10 +355,12 @@ const getUserAssets = async (req, res) => {
 module.exports = {
   createItem,
   getItems,
+  getItem,
   deleteItem,
   updateItem,
   checkoutItem,
   checkinItem,
   getUserAssets,
   itemSearch,
+  createMultipleItem,
 };

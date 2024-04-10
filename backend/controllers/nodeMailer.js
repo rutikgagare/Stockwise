@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 const sendMail = async (req, res) => {
   
-  const { userEmail, messageContent, itemImage, subject } = req.body;
+  const { userEmail, messageContent, itemImage, subject, orgName } = req.body;
 
   try {
     
@@ -22,13 +22,13 @@ const sendMail = async (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>StockWise Notification</title>
+      <title> ${orgName} Notification</title>
     </head>
     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-          <h1 style="color: #333;">StockWise Notification</h1>
+          <h1 style="color: #333;">${orgName} Notification</h1>
           <p style="color: #555;">Hello,</p>
-          <p style="color: #555;">This is a notification from StockWise. You have received a new update or alert.</p>
+          <p style="color: #555;">This is a notification from ${orgName}. You have received a new update or alert.</p>
           <p style="color: #555;">${messageContent}</p>
           <img src=https://stockwisebucket.s3.ap-south-1.amazonaws.com/${itemImage} alt="Asset Image" style="max-width: 100%; height: auto; margin-bottom: 10px;">
           <p style="color: #555;">For more details, please visit StockWise.</p>
@@ -42,7 +42,7 @@ const sendMail = async (req, res) => {
       // from: "stockwise0@gmail.com",
       from: process.env.ID,
       to: userEmail,
-      subject: subject || "Stockwise Notification",
+      subject: subject || `${orgName} Notification`,
       html: htmlContent,
     };
 

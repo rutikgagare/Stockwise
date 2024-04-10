@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { inventoryActions } from "../store/inventorySlice";
 import { categoryActions } from "../store/categorySlice";
 import { BASE_URL } from "../constants";
+import Loader from "./Loader";
 
 const AddItem = (props) => {
   const dispatch = useDispatch();
@@ -15,10 +16,14 @@ const AddItem = (props) => {
   const [file, setFile] = useState();
   const [quantity, setQuantity] = useState(1);
   const [serialNumber, setSerialNumber] = useState("");
+  const [serialNumberList, setSerialNumberList] = useState("");
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [customFields, setCustomFields] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(null);
+
+  const [operationType, setOperationType] = useState("");
 
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
@@ -31,6 +36,7 @@ const AddItem = (props) => {
   };
 
   const handleAddItem = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     try {
@@ -42,11 +48,20 @@ const AddItem = (props) => {
         throw Error("file must be selected");
       }
 
-      if (
-        selectedCategory.identificationType === "unique" &&
-        !serialNumber.trim()
-      ) {
-        throw Error("Serial Number must be filled");
+      if (selectedCategory.identificationType === "unique") {
+        if (operationType) {
+          if (operationType === "single") {
+            if (!serialNumber) {
+              throw Error("serial number must be filled");
+            }
+          } else {
+            if (!serialNumberList) {
+              throw Error("serial number must be filled");
+            }
+          }
+        } else {
+          throw Error("Operation Type must be selected");
+        }
       }
 
       if (
@@ -67,8 +82,8 @@ const AddItem = (props) => {
         body: formData,
       });
 
-      const {key} = await res.json();
-      console.log("key",key);
+      const { key } = await res.json();
+      console.log("key", key);
 
       const itemDetails = {
         name,
@@ -96,6 +111,42 @@ const AddItem = (props) => {
         });
 
         itemDetails.customFieldsData = customFieldsData;
+      }
+
+      if(itemDetails.identificationType === 'unique' && operationType === "multiple"){
+        const serialNumbersArray = serialNumberList.split(",");
+
+        const response = await fetch(`${BASE_URL}/inventory/createMultiple`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+          },
+          body: JSON.stringify({
+            itemDetails,
+            serialNumbers: serialNumbersArray
+          }),
+        });
+  
+        if (!response.ok) {
+          const error = await response.json();
+          setError(error.message);
+          return;
+        }
+  
+        if (response.ok) {
+          const json = await response.json();
+          console.log("json of adding multiple items", json)
+          dispatch(inventoryActions.addMultipleItem(json));
+          dispatch(
+            categoryActions.incrementItemCount({
+              categoryId: json?.categoryId,
+              quantity: quantity,
+            })
+          );
+          props.onClose();
+        }
+        return;
       }
 
       const response = await fetch(`${BASE_URL}/inventory/create`, {
@@ -126,11 +177,13 @@ const AddItem = (props) => {
       }
     } catch (error) {
       setError(error.message);
-    }
+    } 
+    setLoading(false);
   };
 
   return (
     <div className={classes.main}>
+      {loading && <Loader></Loader>}
       <div className={classes.addCategory}>
         <div className={classes.header}>
           <h3>New Item</h3>
@@ -181,6 +234,24 @@ const AddItem = (props) => {
             {selectedCategory &&
               selectedCategory.identificationType === "unique" && (
                 <div className={classes.inputDiv}>
+                  <label htmlFor="operationType" className={classes.required}>
+                    Operation Type
+                  </label>
+                  <select
+                    id="operationType"
+                    onChange={(e) => setOperationType(e.target.value)}
+                  >
+                    <option value="">Select Operation type</option>
+                    <option value="single">Add single Item</option>
+                    <option value="multiple">Add multiple Item</option>
+                  </select>
+                </div>
+              )}
+
+            {selectedCategory &&
+              selectedCategory.identificationType === "unique" &&
+              operationType === "single" && (
+                <div className={classes.inputDiv}>
                   <label htmlFor="serialNumber" className={classes.required}>
                     Serial Number
                   </label>
@@ -188,6 +259,21 @@ const AddItem = (props) => {
                     id="serialNumber"
                     type="text"
                     onChange={(e) => setSerialNumber(e.target.value)}
+                  />
+                </div>
+              )}
+
+            {selectedCategory &&
+              selectedCategory.identificationType === "unique" &&
+              operationType === "multiple" && (
+                <div className={classes.inputDiv}>
+                  <label htmlFor="serialNumber" className={classes.required}>
+                    Serial Number (enter , seperated serial Numbers)
+                  </label>
+                  <input
+                    id="serialNumber"
+                    type="text"
+                    onChange={(e) => setSerialNumberList(e.target.value)}
                   />
                 </div>
               )}

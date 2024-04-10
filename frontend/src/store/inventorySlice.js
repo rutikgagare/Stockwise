@@ -17,6 +17,9 @@ const inventorySlice = createSlice({
         addItem:(state, action)=>{
             state.data = [...state.data, action.payload];
         },
+        addMultipleItem:(state, action)=>{
+            state.data = [...state.data, ...action.payload];
+        },
         deleteItem:(state, action)=>{
             state.data = state.data.filter(item => item._id !== action.payload.id)
         },

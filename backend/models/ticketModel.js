@@ -40,7 +40,7 @@ const ticketSchema = new mongoose.Schema({
   },
   remark:{
     type: String,
-  }
+  },
 }, { timestamps: true });
 
 

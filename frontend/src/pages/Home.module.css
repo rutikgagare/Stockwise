@@ -1,6 +1,6 @@
 .home{
     width: 100%;
-    min-height: 91vh;
+    min-height: 100%;
     display: flex;
     gap: 2rem;
     padding: 2rem;
