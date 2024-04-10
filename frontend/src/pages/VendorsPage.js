@@ -11,6 +11,7 @@ import { FiSearch } from "react-icons/fi";
 
 import "./reactPaginate.css"
 import { BASE_URL } from "../constants";
+import Loader from "../components/Loader";
 
 const VendorPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -23,6 +24,7 @@ const VendorPage = () => {
   const [vendorsCopy, setVendorsCopy] = useState([]);
 
   const [searchText, setSearchText] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleShowAddItem = () => {
     setShowAddItem((prevState) => !prevState);
@@ -120,6 +122,7 @@ const VendorPage = () => {
       if (res.ok) {
         setVendors(resJson);
         setVendorsCopy(resJson);
+        setIsLoading(false);
       }
     };
     fetchVendors();
@@ -138,7 +141,8 @@ const VendorPage = () => {
 
   return (
     <Layout>
-      {!showAddItem && (
+      {isLoading ? <Loader/> :
+      !showAddItem && (
         <div className={classes.vendor}>
           <div className={classes.header}>
             <h3>Active Vendors</h3>
