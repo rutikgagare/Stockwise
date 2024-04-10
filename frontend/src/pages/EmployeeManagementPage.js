@@ -7,14 +7,18 @@ import axios from "axios";
 import noItem from "../Images/noItem.jpg";
 import Layout from "../components/Layout";
 import { BASE_URL } from "../constants";
+import Loader from '../components/Loader';
 
 const EmployeeManagementPage = () => {
   const user = useSelector((state) => state?.auth?.user);
   const org = useSelector((state) => state?.org?.organization);
 
   const [employees, setEmployees] = useState(null);
+  const [loading, setLoading] = useState(null);
 
   const fetchEmployees = async () => {
+    setLoading(true);
+
     try {
       if (org) {
         const res = await axios.get(
@@ -32,6 +36,9 @@ const EmployeeManagementPage = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setLoading(false);
+
   };
 
   const appendNewEmp = (emp) => {
@@ -51,10 +58,10 @@ const EmployeeManagementPage = () => {
     fetchEmployees();
   }, [org]);
 
-
   return (
     <Layout>
       <div className={classes.employees}>
+      {loading && <Loader></Loader>}
         <div className={classes.header}>
           <h3>Employees</h3>
           <CreateEmployee appendNewEmp={appendNewEmp} />
