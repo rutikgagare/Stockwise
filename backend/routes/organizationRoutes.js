@@ -7,7 +7,8 @@ const {
     deleteOrganization,
     updateOrganization,
     getOrganization,
-    getEmployees
+    getEmployees,
+    getOrgOfUser
 } = require("../controllers/organizationController")
 
 const requireAuth = require('../middleware/requireAuth.js');
@@ -25,5 +26,6 @@ router.delete('/deleteOrg', requireAdmin, deleteOrganization);
 // don not require admin access
 router.get('/employees/:orgId', getEmployees);
 router.get('/getOrg', getOrganization);
+router.get("/getOrgOfUser/:userId", getOrgOfUser)
 
 module.exports = router

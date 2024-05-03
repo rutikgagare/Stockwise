@@ -9,11 +9,11 @@ const createOrganization = async (req, res) => {
     const adminId = new ObjectId(req.user._id)
 
     if (!orgData || !adminId) {
-        res.status(400).json({ error: "Please provide org data and admin id"})
+        res.status(400).json({ error: "Please provide org data and admin id" })
     }
 
-    try{
-        
+    try {
+
         const org = new Organization({
             name: orgData.name,
             email: orgData.email,
@@ -21,38 +21,40 @@ const createOrganization = async (req, res) => {
             employees: []
         })
 
-        await org.save()        
+        await org.save()
         res.status(201).json(org);
 
-    }catch (error) {
+    } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
-const getOrganization = async (req, res)=>{
+const getOrganization = async (req, res) => {
 
     const userId = req?.user?._id;
-    
-    try {
-    
-        const org = await Organization.find({$or:[
-            {"admins":new ObjectId(userId)},
-            {"employees":new ObjectId(userId)},
-        ]})
 
-        if(org){
-           return res.status(200).json(org[0]);
+    try {
+
+        const org = await Organization.find({
+            $or: [
+                { "admins": new ObjectId(userId) },
+                { "employees": new ObjectId(userId) },
+            ]
+        })
+
+        if (org) {
+            return res.status(200).json(org[0]);
         }
-        else{
+        else {
             throw Error("Internal server error");
         }
-        
-    }catch (error) {
-        res.status(500).json({ error: error.message});
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
-const updateOrganization = async(req, res)=>{
+const updateOrganization = async (req, res) => {
     const orgData = req.body
 
     const orgId = new ObjectId(orgData.orgId)
@@ -63,20 +65,20 @@ const updateOrganization = async(req, res)=>{
 
     const organization = await Organization.findById(orgId);
 
-    if(!organization){
+    if (!organization) {
         res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
         return;
     }
 
     const result = await Organization.updateOne(
-        { _id: orgId}, 
-        { $set: req.body}
+        { _id: orgId },
+        { $set: req.body }
     );
 
-    if(result){
+    if (result) {
         res.status(200).json({ message: "Organization updated successfully" });
     }
-    else{
+    else {
         res.status(400).json({ message: "Update Unsuccessful" });
     }
 }
@@ -86,10 +88,10 @@ const addEmployeeToOrganization = async (req, res) => {
 
     const employeeObjectId = new ObjectId(employeeId)
     const orgObjectId = new ObjectId(orgId)
-    
+
     const employee = await User.findById(employeeObjectId);
     const org = await Organization.findById(orgObjectId);
-    
+
     if (!employee) {
         res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
         return;
@@ -164,15 +166,15 @@ const getEmployees = async (req, res) => {
 
         const query = {
             _id: {
-              $in: employeeIds
+                $in: employeeIds
             }
         };
 
         // const user = await User.find(query).select('-password');
-        const user = await User.find(query,{password:0});
+        const user = await User.find(query, { password: 0 });
 
-        const employeeDetails = user.map(user =>{
-            return{
+        const employeeDetails = user.map(user => {
+            return {
                 _id: user?._id,
                 name: user?.name,
                 email: user?.email,
@@ -188,12 +190,32 @@ const getEmployees = async (req, res) => {
     }
 }
 
-module.exports = { 
+const getOrgOfUser = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const organization = await Organization.findOne({
+            $or: [
+                { admins: { $in: [userId] } },
+                { employees: { $in: [userId] } }
+            ]
+        });
+        console.log("org: ", organization)
+        return res.json(organization);
+    } catch (error) {
+        console.error('Error fetching organization:', error);
+        res.status(400).json(error);
+    }
+
+}
+
+module.exports = {
     createOrganization,
     addEmployeeToOrganization,
     removeEmployeeFromOrganization,
     deleteOrganization,
     updateOrganization,
     getOrganization,
-    getEmployees
+    getEmployees,
+    getOrgOfUser
 };
