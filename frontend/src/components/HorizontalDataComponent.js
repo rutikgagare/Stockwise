@@ -1,12 +1,39 @@
 // HorizontalDataComponent.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './HorizontalDataComponent.css';
+import axios from 'axios';
+import { BASE_URL } from '../constants';
 
 const HorizontalDataComponent = ({ data }) => {
-  const { org, admin, cart, status, createdAt } = data;
+  const { _id, org, admin, cart, status, createdAt } = data;
+  
+  const [_status, setStatus] = useState(status);
     console.log("data: ", data);
+
+   const markAsComplete = async () => {
+    try {
+
+      // const res = await axios.post(BASE_URL + "/order/complete")
+      setStatus("complete")
+    } catch (err) {
+      setStatus("complete")
+
+    }
+    }
+
+    const markAsPlaced = async () => {
+      try {
+
+        // const res = await axios.post(BASE_URL + "/order/placed")
+        setStatus("placed")
+      } catch (err) {
+        setStatus("placed")
+
+      }
+    }
+
   return (
     <div className="horizontal-data-container">
       <div className="header">
@@ -36,7 +63,12 @@ const HorizontalDataComponent = ({ data }) => {
         </div>
         <div className="order-status">
           <h3>Status</h3>
-          <p>{status}</p>
+          <p>{_status??"loading..."}</p>
+          {_status === "placed" ? 
+          <button onClick={() => { markAsComplete(_id) }}>Mark as complete</button>
+          : 
+          <button onClick={() => { markAsPlaced(_id) }}>Mark as Placed</button>
+        }
         </div>
       </div>
     </div>
