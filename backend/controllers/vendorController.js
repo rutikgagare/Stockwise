@@ -49,8 +49,10 @@ const getProductVendors = async (req, res) => {
                 vendors: filtered
             };
         });
+
+        const productVendorsFiltered = productVendors.filter((p) => p.vendors.length)
         
-        res.status(200).json(productVendors);
+        res.status(200).json(productVendorsFiltered);
     }
     
     catch (err) {
