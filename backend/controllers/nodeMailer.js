@@ -46,12 +46,11 @@ const sendMail = async (req, res) => {
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(message);
-
+    await transporter.sendMail(message);
     res.status(201).json({Message: "mail sent successfully"});
 
   } catch (error) {
-    res.status(400).json({message:"Error sending email"});
+    // res.status(400).json({message:"Error sending email"});
   }
 };
 

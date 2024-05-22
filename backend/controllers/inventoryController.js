@@ -105,7 +105,7 @@ const itemSearch = async (req, res) => {
 
 const deleteItem = async (req, res) => {
   try {
-    const { itemId } = req.body;
+    const itemId = req.params.itemId;
 
     if (!itemId) {
       throw Error("Item Id not provided");

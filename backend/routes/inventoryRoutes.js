@@ -11,7 +11,7 @@ router.post('/createMultiple', requireAdmin, createMultipleItem);
 router.get('/:orgId', requireAdmin, getItems);
 router.get('/getItem/:itemId', requireAdmin, getItem);
 router.post('/searchItems/:orgId', requireAdmin, itemSearch);
-router.delete('/delete',  requireAdmin, deleteItem);
+router.delete('/delete/:itemId',  requireAdmin, deleteItem);
 router.put('/update',  requireAdmin, updateItem);
 router.put('/checkout', requireAdmin, checkoutItem);
 router.put('/checkin', requireAdmin, checkinItem);
