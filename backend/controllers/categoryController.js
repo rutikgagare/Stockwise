@@ -93,7 +93,7 @@ const createCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    const { categoryId } = req.body;
+    const categoryId = req.params.categoryId;
 
     if (!categoryId) {
       throw Error("category Id not provided");
