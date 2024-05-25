@@ -5,3 +5,4 @@ run.desktop
 frontend/node_modules
 .nyc_output/
 coverage/
+socket/node_modules
