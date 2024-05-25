@@ -34,9 +34,26 @@ const getVendors = async (req, res) => {
 const getProductVendors = async (req, res) => {
     const orgId = new ObjectId(req.body.orgId);
     try {
-        const vendors = await Vendor.find({ orgId });
-        const items = await Inventory.find({ orgId })
-        const categories = await Category.find({ orgId })
+        let vendors = await Vendor.find({ orgId });
+        let items = await Inventory.find({ orgId })
+        const categories = await Category.find({ orgId });
+
+        vendors = vendors.map(vendor => {
+            return {
+                _id: vendor._id,
+                name: vendor.name,
+            }
+        })
+
+        items = items.map(item => {
+            return {
+                _id: item._id,
+                name: item.name,
+                categoryId: item.categoryId
+            }
+        })
+
+
         console.log("vendors: ", vendors, "\n\nitems: ", items, "\n\nCategories: ", categories)
         
         const productVendors = items.map(item => {

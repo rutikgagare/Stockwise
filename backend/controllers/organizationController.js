@@ -119,18 +119,16 @@ const removeEmployeeFromOrganization = async (req, res) => {
 
     if (!employee) {
         return res.status(404).json({ error: `Employee with employeeId: ${employeeId} does not exist` });
-        return;
     }
 
     if (!org) {
         return res.status(404).json({ error: `Organization with orgId: ${orgId} does not exist` });
-        return;
     }
 
     org.employees = org.employees.filter(id => id.toString() !== employeeId);
     await org.save();
 
-    res.status(200).json({ message: `Employee: ${employeeId} was removed to the Organization (${orgId})` })
+    res.status(200).json({ message: `Employee: ${employeeId} was removed from the Organization (${orgId})` })
 }
 
 const deleteOrganization = async (req, res) => {
