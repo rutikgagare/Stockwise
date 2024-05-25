@@ -1,9 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const Organization = require("../models/organizationModel");
 const { ObjectId } = require("mongodb");
 const { generateRandomPassword } = require("../utils/generators");
 const { sendMail } = require("../utils/mail");
+
 const router = express.Router();
 
 const saltRounds = 10;
@@ -13,17 +15,19 @@ router.get("/getAllUsers", async (req, res) => {
     const allUsers = await User.find();
     res.json(allUsers);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error. Could not retrieve users." });
+    res.status(500).json({ error: error.message });
   }
 });
 
 router.get("/getUser/:id", async (req, res) => {
   const id = req.params.id;
-  const user = await User.findOne({ _id: new ObjectId(id) });
-  if (user) res.json(user);
-  res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findOne({ _id: new ObjectId(id) });
+    if (user) res.json(user);
+    else res.status(404).json({ error: "User not found" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 router.post("/createUser", async (req, res) => {
@@ -36,33 +40,36 @@ router.post("/createUser", async (req, res) => {
 
     const newUser = await User.create(userData);
 
-    sendMail(
-      "Stockwise Admin",
-      userData["email"],
-      "Welcome to Stockwise",
-      "",
-      `
-            <h3>We welcome you to the Stockwise</h3>
-            <p>
-                You have been added to the Organization: <br>
-                as a ${userData["role"]} <br>
-                As a next step <br>
-                We recommend you to login to the account change your password
-            </p>
-                <strong>Here are your credentials<strong>
-                email: ${userData["email"]}
-                password: ${randomPassword}
+    try {
+      sendMail(
+        "Stockwise Admin",
+        userData["email"],
+        "Welcome to Stockwise",
+        "",
+        `
+        <h3>We welcome you to the Stockwise</h3>
+        <p>
+        You have been added to the Organization: <br>
+        as a ${userData["role"]} <br>
+        As a next step <br>
+        We recommend you to login to the account change your password
+        </p>
+        <strong>Here are your credentials<strong>
+        email: ${userData["email"]}
+        password: ${randomPassword}
+        
+        <h4>
+        We hope you have a long and lovely relationship with Stockwise
+        </h4>
+        `
+      );
+    } catch (error) {
+      console.log("Could not send mail", error);
+    }
 
-            <h4>
-                We hope you have a long and lovely relationship with Stockwise
-            </h4>
-            `
-    );
     res.json(newUser);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error. Could not create user." });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -76,7 +83,7 @@ router.put("/updateUser", async (req, res) => {
     const existingUser = await User.findOne({ _id: new ObjectId(_id) });
 
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const updatedUser = await User.findOneAndUpdate(
@@ -90,9 +97,7 @@ router.put("/updateUser", async (req, res) => {
 
     res.json(updatedUser);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error. Could not update user." });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -101,17 +106,26 @@ router.delete("/deleteUser", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ _id: new Object(_id) });
+    const org = await Organization.findOne({ employees: new ObjectId(existingUser._id) });
+
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
+
+    if (!org) {
+      return res.status(404).json({ error: `Organization with orgId: ${existingUser._id} does not exist` });
+    }
+
+    // remove employee from the org's employees array
+    org.employees = org.employees.filter(id => id.toString() !== existingUser._id.toString());
+    await org.save();
 
     await User.findOneAndDelete({ _id: new Object(_id) });
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error. Could not delete user." });
+    console.log("error: ", error);
+    res.status(500).json({ error: error.message });
   }
 });
 

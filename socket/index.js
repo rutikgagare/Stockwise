@@ -9,9 +9,9 @@ const server = new Server({
 server.on("connection", (socket) => {
     console.log("connected, ", "socket: ", socket.data, socket.id);
 
-    socket.on("startedEditing", ({room, vendorId}) => {
-        console.log("started editing data: ", room, vendorId);
-        socket.to(room).emit("startedEditing", vendorId);
+    socket.on("startedEditing", ({room, editor}) => {
+        console.log("started editing data: ", room, editor);
+        socket.to(room).emit("startedEditing", editor);
     })
 
     socket.on("cancelledEditing", ({room, vendorId}) => {
