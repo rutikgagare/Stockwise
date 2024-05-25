@@ -39,6 +39,7 @@ const createTicket = async (req, res) => {
     const { issueType, description, priority, assetId, orgId } = req.body;
 
     const userId = new ObjectId(req.user?._id);
+    const assetObjectId = assetId ? new ObjectId(assetId) : null;
     const userName = req.user?.name;
 
     const ticket = new Ticket({
@@ -46,7 +47,7 @@ const createTicket = async (req, res) => {
       description,
       priority,
       createdBy: userId,
-      assetId: new ObjectId(assetId),
+      assetId: assetObjectId,
       orgId,
       userName,
     });
