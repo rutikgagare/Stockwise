@@ -19,7 +19,7 @@ const createItem = async (req, res) => {
 
     res.status(201).json(item);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -52,7 +52,7 @@ const createMultipleItem = async (req, res) => {
 
     res.status(201).json(items);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -62,8 +62,8 @@ const getItems = async (req, res) => {
   try {
     const items = await Inventory.find({orgId});
     res.status(201).json(items);
-  } catch (err) {
-    res.status(400).send({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -72,10 +72,10 @@ const getItem = async (req, res) =>{
   try {
     const item = await Inventory.findById(new ObjectId(itemId));
     res.status(201).json(item);
-  } catch (err) {
-    res.status(400).send({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
 const itemSearch = async (req, res) => {
   const orgId = req.params.orgId;
@@ -98,8 +98,8 @@ const itemSearch = async (req, res) => {
       },
     ]);
     res.status(201).json(items);
-  } catch (err) {
-    res.status(400).send({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -119,7 +119,7 @@ const deleteItem = async (req, res) => {
 
     res.status(201).json(item);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -141,10 +141,9 @@ const updateItem = async (req, res) => {
       throw Error(`Item with itemId ${_id} doesn't exist`);
     }
 
-    // res.status(201).json(`category ${updatecategory.name} (${categoryId}) updated successfully`);
     res.status(201).json(updatedItem);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -231,7 +230,7 @@ const checkoutItem = async (req, res) => {
     }
     res.status(201).json(updatedItem);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -319,7 +318,7 @@ const checkinItem = async (req, res) => {
     }
     res.status(201).json(updatedItem);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -345,10 +344,9 @@ const getUserAssets = async (req, res) => {
       },
     ]);
 
-
     res.status(201).json(userAssets);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
