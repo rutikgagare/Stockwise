@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const { ObjectId } = require("mongodb");
 
 // Generating a token
 const createToken = (_id) => {
@@ -8,7 +10,6 @@ const createToken = (_id) => {
 
 // Login user
 const loginUser = async (req, res) => {
-
   const { email, password } = req.body;
 
   try {
@@ -40,8 +41,32 @@ const signupUser = async (req, res) => {
 };
 
 // change password
-const changePassword = async (req, res)=>{
-  console.log(req.user);
-}
+const changePassword = async (req, res) => {
+  const { password } = req.body;
+  console.log("opopo", password)
+  const userId = new ObjectId(req.user._id);
 
-module.exports = { loginUser, signupUser, changePassword};
+  try {
+    const salt = await bcrypt.genSalt(10);
+    console.log("salt", salt); 
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    console.log("hashedPassword", hashedPassword);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw Error("User not found");
+    }
+    return res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { loginUser, signupUser, changePassword };
