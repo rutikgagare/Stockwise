@@ -1,8 +1,21 @@
 const { ObjectId } = require("mongodb");
 const Order = require("../models/orderModel")
+const Organization = require("../models/organizationModel")
 
 const getOrders = async (req, res) => {
-    const { orgId } = req.body;
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id.toString() : null;
+
     try {
         const orders = await Order.find({ "org._id": orgId });
         res.json(orders);

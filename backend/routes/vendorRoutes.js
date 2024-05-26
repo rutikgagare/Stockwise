@@ -7,13 +7,14 @@ const {
     deleteVendor
 } = require("../controllers/vendorController.js")
 const requireAdmin = require('../middleware/requireAdmin.js');
+const requireAuth = require('../middleware/requireAuth.js');
 
 const router = express.Router()
 
-router.post('/vendors', getVendors);
-router.post('/productVendors', getProductVendors)
-router.post('/create', createVendor);
-router.put('/update', updateVendor);
-router.delete('/delete', deleteVendor);
+router.post('/vendors', requireAuth, requireAdmin, getVendors);
+router.post('/productVendors', requireAuth, requireAdmin, getProductVendors)
+router.post('/create', requireAuth, requireAdmin, createVendor);
+router.put('/update', requireAuth, requireAdmin, updateVendor);
+router.delete('/delete', requireAuth, requireAdmin, deleteVendor);
 
 module.exports = router

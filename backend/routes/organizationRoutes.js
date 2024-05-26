@@ -24,7 +24,7 @@ router.post('/remove', requireAdmin, removeEmployeeFromOrganization);
 router.delete('/deleteOrg', requireAdmin, deleteOrganization);
 
 // don not require admin access
-router.get('/employees/:orgId', getEmployees);
+router.get('/employees/', requireAuth, requireAdmin, getEmployees);
 router.get('/getOrg', getOrganization);
 router.get("/getOrgOfUser/:userId", getOrgOfUser)
 

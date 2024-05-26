@@ -1,11 +1,26 @@
 const { ObjectId } = require("mongodb");
-
+const Organization = require("../models/organizationModel.js")
 const Vendor = require("../models/vendorModel")
 const Inventory = require("../models/inventoryModel.js");
 const Category = require("../models/categoryModel.js");
 
 const createVendor = async (req, res) => {
     const vendorDetails = req.body;
+
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id.toString() : null;
+
+    vendorDetails.orgId = orgId;
 
     try {
         const newVendor = new Vendor(vendorDetails);
@@ -19,7 +34,18 @@ const createVendor = async (req, res) => {
 }
 
 const getVendors = async (req, res) => {
-    const orgId = new ObjectId(req.body.orgId);
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id.toString() : null;
     
     try {
         const vendors = await Vendor.find({ orgId });
@@ -32,12 +58,27 @@ const getVendors = async (req, res) => {
 }
 
 const getProductVendors = async (req, res) => {
-    const orgId = new ObjectId(req.body.orgId);
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id : null;
+
+    console.log("orgId:", orgId);
     try {
         let vendors = await Vendor.find({ orgId });
         let items = await Inventory.find({ orgId })
         const categories = await Category.find({ orgId });
 
+
+        console.log("vendors: ", vendors, "\nitems: ", items, "\ncategories: ", categories)
         vendors = vendors.map(vendor => {
             return {
                 _id: vendor._id,

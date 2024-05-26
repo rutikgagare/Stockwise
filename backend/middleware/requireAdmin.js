@@ -1,5 +1,5 @@
 const requireAdmin = async (req, res, next) =>{
-
+    console.log('req.user in requireAdmin: ', req.user);
     try{
         if(req.user.role === "admin"){
             next();

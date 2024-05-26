@@ -7,11 +7,13 @@ const {
     markOrderAsPending,
     markOrderAsRejected
 
-} = require("../controllers/orderController.js")
+} = require("../controllers/orderController.js");
+const requireAdmin = require('../middleware/requireAdmin.js');
+const requireAuth = require('../middleware/requireAuth.js');
 
 const router = express.Router()
 
-router.post('/orders', getOrders);
+router.post('/orders', requireAuth, requireAdmin, getOrders);
 router.post('/create', createOrder);
 router.post('/fulfilled', markOrderAsComplete);
 router.post('/pending', markOrderAsPending);

@@ -84,7 +84,24 @@ const updateOrganization = async (req, res) => {
 }
 
 const addEmployeeToOrganization = async (req, res) => {
-    const { employeeId, orgId } = req.body;
+    
+    console.log("addEmployeeToOrganization: ", "req.user: ", req.user);
+    const { employeeId } = req.body;
+
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id.toString() : "NO_ORG_ID";
+
+    console.log("transidental orgId: ", orgId);
 
     const employeeObjectId = new ObjectId(employeeId)
     const orgObjectId = new ObjectId(orgId)
@@ -149,7 +166,18 @@ const deleteOrganization = async (req, res) => {
 }
 
 const getEmployees = async (req, res) => {
-    const orgId = req.params.orgId;
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+      $or: [
+        { employees: userId },
+        { admins: userId }
+      ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id : null;
 
     try {
 

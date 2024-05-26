@@ -67,7 +67,8 @@ router.post("/createUser", async (req, res) => {
 
         res.json(newUser);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error. Could not create user." });
+        console.log("createUser Error: ", error);
+        res.status(500).json({ message: "Internal Server Error. Could not create user.", error });
     }
 });
 
