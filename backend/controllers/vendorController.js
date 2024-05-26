@@ -77,7 +77,6 @@ const getProductVendors = async (req, res) => {
         let items = await Inventory.find({ orgId })
         const categories = await Category.find({ orgId });
 
-
         console.log("vendors: ", vendors, "\nitems: ", items, "\ncategories: ", categories)
         vendors = vendors.map(vendor => {
             return {
@@ -93,7 +92,6 @@ const getProductVendors = async (req, res) => {
                 categoryId: item.categoryId
             }
         })
-
 
         console.log("vendors: ", vendors, "\n\nitems: ", items, "\n\nCategories: ", categories)
         

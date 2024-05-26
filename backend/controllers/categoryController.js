@@ -6,7 +6,12 @@ const Organization = require("../models/organizationModel.js");
 
 const getCategorys = async (req, res) => {
   try {
-    const orgId = req.params.orgId;
+
+    const userId = new ObjectId(req.user._id);
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
 
     const org = await Organization.findById(new ObjectId(orgId));
 
@@ -58,7 +63,13 @@ const getCategorys = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
-  const { name, identificationType, vendors, customFields, orgId } = req.body;
+  const { name, identificationType, vendors, customFields } = req.body;
+
+  const userId = new ObjectId(req.user._id);
+  const organization = await Organization.findOne({
+    $or: [{ employees: userId }, { admins: userId }],
+  });
+  const orgId = organization ? organization._id : null;
 
   try {
     const organization = await Organization.findById(new ObjectId(orgId));
@@ -110,6 +121,13 @@ const updateCategory = async (req, res) => {
     if (!categoryId) {
       throw Error("category Id not provided");
     }
+
+    const userId = new ObjectId(req.user._id);
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
+    req.body.orgId = new ObjectId(orgId);
 
     const updatedCategory = await Category.findByIdAndUpdate(
       new ObjectId(categoryId),

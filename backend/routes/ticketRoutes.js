@@ -9,6 +9,6 @@ router.use(requireAuth)
 router.post('/create', createTicket);
 router.put('/update',requireAdmin, updateTicket);
 router.get('/userTickets',getMyTickets);
-router.get('/:orgId', requireAdmin, getTickets);
+router.get('/allTickets', requireAdmin, getTickets);
 
 module.exports = router

@@ -1,5 +1,7 @@
 const Ticket = require("../models/ticketModel.js");
 const { ObjectId } = require("mongodb");
+const Organization = require("../models/organizationModel.js");
+
 
 const getMyTickets = async (req, res) => {
   try {
@@ -17,9 +19,15 @@ const getMyTickets = async (req, res) => {
 };
 
 const getTickets = async (req, res) => {
-  const orgId = req.params.orgId;
+  const userId = new ObjectId(req.user._id);
 
   try {
+
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
+
     const tickets = await Ticket.find({ orgId });
 
     if (!tickets) {
@@ -36,11 +44,16 @@ const getTickets = async (req, res) => {
 
 const createTicket = async (req, res) => {
   try {
-    const { issueType, description, priority, assetId, orgId } = req.body;
+    const { issueType, description, priority, assetId } = req.body;
 
     const userId = new ObjectId(req.user?._id);
     const assetObjectId = assetId ? new ObjectId(assetId) : null;
     const userName = req.user?.name;
+
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
 
     const ticket = new Ticket({
       issueType,
