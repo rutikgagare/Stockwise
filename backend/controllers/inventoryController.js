@@ -153,6 +153,13 @@ const updateItem = async (req, res) => {
       throw Error("Item Id not provided");
     }
 
+    const userId = new ObjectId(req.user._id);
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
+    req.body.orgId = new ObjectId(orgId);
+
     const updatedItem = await Inventory.findByIdAndUpdate(
       new ObjectId(itemId),
       req.body,

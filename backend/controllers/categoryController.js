@@ -122,6 +122,13 @@ const updateCategory = async (req, res) => {
       throw Error("category Id not provided");
     }
 
+    const userId = new ObjectId(req.user._id);
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
+    req.body.orgId = new ObjectId(orgId);
+
     const updatedCategory = await Category.findByIdAndUpdate(
       new ObjectId(categoryId),
       req.body,
