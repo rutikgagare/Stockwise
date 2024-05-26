@@ -55,14 +55,6 @@ const getCategorys = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-
-  // const orgId = req.params.orgId;
-  // try {
-  //   const category = await Category.find({ orgId });
-  //   res.json(category);
-  // } catch (err) {
-  //   res.send({ error: err.message });
-  // }
 };
 
 const createCategory = async (req, res) => {
@@ -87,7 +79,7 @@ const createCategory = async (req, res) => {
 
     res.status(201).json(category);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -107,7 +99,7 @@ const deleteCategory = async (req, res) => {
 
     res.status(201).json(category);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -129,10 +121,9 @@ const updateCategory = async (req, res) => {
       throw Error(`category with categoryId ${categoryId} doesn't exist`);
     }
 
-    // res.status(201).json(`category ${updatecategory.name} (${categoryId}) updated successfully`);
     res.status(201).json(updatedCategory);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 

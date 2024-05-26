@@ -20,7 +20,7 @@
     },
     role:{
       type: String, 
-      enum: ['admin', 'user', 'employee'], 
+      enum: ['admin', 'employee'], 
       default: 'admin' 
     },
 

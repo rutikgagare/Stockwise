@@ -7,10 +7,10 @@ const getMyTickets = async (req, res) => {
     const tickets = await Ticket.find({ createdBy: userId });
 
     if (!tickets) {
-      throw Error(`No ticket found for particular user`);
+      throw Error(`No ticket found for the particular user`);
     }
 
-    res.status(201).json(tickets);
+    res.status(200).json(tickets);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -23,12 +23,12 @@ const getTickets = async (req, res) => {
     const tickets = await Ticket.find({ orgId });
 
     if (!tickets) {
-      throw Error(`No ticket found for particular user`);
+      throw Error(`No ticket found for the particular organization`);
     }
 
     tickets.sort((a, b) => b.createdAt - a.createdAt);
 
-    res.status(201).json(tickets);
+    res.status(200).json(tickets);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -69,7 +69,11 @@ const updateTicket = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedTicket);
+    if (!updatedTicket) {
+      throw Error(`Ticket with ID ${ticketId} not found`);
+    }
+
+    res.status(200).json(updatedTicket);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
