@@ -2,17 +2,24 @@ const { default: mongoose } = require("mongoose");
 const { ObjectId } = require("mongodb");
 
 const Category = require("../models/categoryModel.js");
+const Organization = require("../models/organizationModel.js");
 const Inventory = require("../models/inventoryModel.js");
 
 const createItem = async (req, res) => {
   const { categoryId } = req.body;
+  const userId = new ObjectId(req.user._id);
 
   try {
     const category = await Category.findById(new ObjectId(categoryId));
-
     if (!category) {
       throw Error(`Category with orgId: ${categoryId} does not exist`);
     }
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+
+    const orgId = organization ? organization._id : null;
+    req.body.orgId = new ObjectId(orgId);
 
     const item = new Inventory(req.body);
     await item.save();
@@ -25,13 +32,20 @@ const createItem = async (req, res) => {
 
 const createMultipleItem = async (req, res) => {
   const { itemDetails, serialNumbers } = req.body;
+  const userId = new ObjectId(req.user._id);
 
   try {
     const category = await Category.findById(new ObjectId(itemDetails.categoryId));
-
     if (!category) {
       throw Error(`Category with orgId: ${itemDetails.categoryId} does not exist`);
     }
+
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+
+    const orgId = organization ? organization._id : null;
+    req.body.orgId = new ObjectId(orgId);
 
     const existingInventory = await Inventory.find({
       categoryId: itemDetails.categoryId,
@@ -57,10 +71,15 @@ const createMultipleItem = async (req, res) => {
 };
 
 const getItems = async (req, res) => {
-  const orgId = req.params.orgId;
-
+  const userId = new ObjectId(req.user._id);
   try {
+  
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
     const items = await Inventory.find({orgId});
+
     res.status(201).json(items);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -78,10 +97,13 @@ const getItem = async (req, res) =>{
 };
 
 const itemSearch = async (req, res) => {
-  const orgId = req.params.orgId;
-  const { searchText } = req.body;
-
+  const userId = new ObjectId(req.user._id);
   try {
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;  const { searchText } = req.body;
+
     const items = await Inventory.aggregate([
       {
         $search: {

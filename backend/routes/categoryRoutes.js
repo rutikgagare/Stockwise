@@ -10,7 +10,7 @@ router.use(requireAdmin)
 router.post('/create', createCategory);
 router.put('/update', updateCategory);
 router.delete('/delete/:categoryId', deleteCategory);
-router.get('/:orgId', getCategorys);
+router.get('/categories', getCategorys);
 
 
 module.exports = router

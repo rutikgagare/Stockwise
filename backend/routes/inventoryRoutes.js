@@ -8,7 +8,7 @@ router.use(requireAuth)
 
 router.post('/create', requireAdmin, createItem);
 router.post('/createMultiple', requireAdmin, createMultipleItem);
-router.get('/:orgId', requireAdmin, getItems);
+router.get('/items', requireAdmin, getItems);
 router.get('/getItem/:itemId', requireAdmin, getItem);
 router.post('/searchItems/:orgId', requireAdmin, itemSearch);
 router.delete('/delete/:itemId',  requireAdmin, deleteItem);
