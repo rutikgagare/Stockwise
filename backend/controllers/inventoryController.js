@@ -46,6 +46,7 @@ const createMultipleItem = async (req, res) => {
 
     const orgId = organization ? organization._id : null;
     req.body.orgId = new ObjectId(orgId);
+    itemDetails.orgId = orgId;
 
     const existingInventory = await Inventory.find({
       categoryId: itemDetails.categoryId,
