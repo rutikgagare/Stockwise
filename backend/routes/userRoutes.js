@@ -107,7 +107,7 @@ router.delete("/deleteUser", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ _id: new Object(_id) });
-    const org = await Organization.findOne({ employees: new ObjectId(existingUser._id) });
+    const org = await Organization.findOne({ $or: [ {employees: new ObjectId(existingUser._id)}, {admins: new ObjectId(existingUser._id)}] });
 
     if (!existingUser) {
       return res.status(404).json({ error: "User not found" });
@@ -116,10 +116,16 @@ router.delete("/deleteUser", async (req, res) => {
     if (!org) {
       return res.status(404).json({ error: `Organization with orgId: ${existingUser._id} does not exist` });
     }
-
+    
+    if (org.admins.length === 1 && org.admins[0]._id.toString() === _id) {
+      return res.status(400).json({ error: "Organization must have atleast ONE admin"})
+    }
     // remove employee from the org's employees array
     org.employees = org.employees.filter(id => id.toString() !== existingUser._id.toString());
+    if (org.admins.length > 1)
+      org.admins = org.admins.filter(id => id.toString() !== existingUser._id.toString());
     await org.save();
+
 
     await User.findOneAndDelete({ _id: new Object(_id) });
 
