@@ -32,7 +32,7 @@ server.on("connection", (socket) => {
     socket.on("cancelledEditing", ({room, vendor}) => {
         console.log("cancelled editing data: ", room, vendor);
         if (editors[room]) {
-            editors[room] = editors[room].filter((e) => e._id !== vendor._id);
+            editors[String(room)] = editors[String(room)].filter((e) => e._id !== vendor?._id);
         }
 
         

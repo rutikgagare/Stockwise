@@ -5,6 +5,8 @@ const Organization = require("../models/organizationModel");
 const { ObjectId } = require("mongodb");
 const { generateRandomPassword } = require("../utils/generators");
 const { sendMail } = require("../utils/mail");
+const requireAuth = require("../middleware/requireAuth");
+const requireAdmin = require("../middleware/requireAdmin");
 
 const router = express.Router();
 
@@ -74,18 +76,40 @@ router.post("/createUser", async (req, res) => {
   }
 });
 
-router.put("/updateUser", async (req, res) => {
+router.put("/updateUser", requireAuth, requireAdmin, async (req, res) => {
   const { _id, name, email, role, password } = req.body;
 
+  if (req.user._id.toString() === _id.toString() && role !== req.user.role) {
+    return res.status(400).json({ error: "You cannot update your role!" });
+
+  }
   const updateData = { name, email, role };
   for (const a in updateData) if (!updateData[a]) delete updateData[a];
 
+  let org = await Organization.findOne({ $or: [{employees: new ObjectId(_id)}, {admins: new ObjectId(_id)}] });
   try {
     const existingUser = await User.findOne({ _id: new ObjectId(_id) });
+
+    if (existingUser.role == "admin") {
+      org.admins = org?.admins.filter((e) => e.toString() !== _id.toString())
+      org.employees.push(_id);
+      const adminCount = org.employees.length;
+      console.log("adminCount: ", adminCount);
+      if (adminCount == 1) {
+        return res.status(400).json({ error: "Organization must have atleast ONE admin."})
+      }
+    }
+
+    if (existingUser.role == "employee") {
+      org.employees = org?.employees.filter((e) => e.toString() !== _id.toString())
+      org.admins.push(_id);
+    }
 
     if (!existingUser) {
       return res.status(404).json({ error: "User not found" });
     }
+
+    await org.save();
 
     const updatedUser = await User.findOneAndUpdate(
       { _id: new ObjectId(_id) },
@@ -102,8 +126,13 @@ router.put("/updateUser", async (req, res) => {
   }
 });
 
-router.delete("/deleteUser", async (req, res) => {
+router.delete("/deleteUser", requireAuth, requireAdmin, async (req, res) => {
   const _id = req.body._id;
+  const user = req.user;
+
+  if (_id.toString() === req.user._id.toString()) {
+    return res.status(400).json({ error: "You cannot delete youself!" });
+  }
 
   try {
     const existingUser = await User.findOne({ _id: new Object(_id) });

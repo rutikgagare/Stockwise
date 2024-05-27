@@ -110,7 +110,8 @@ const addEmployeeToOrganization = async (req, res) => {
   try {
     const employee = await User.findById(employeeObjectId);
     const org = await Organization.findById(orgObjectId);
-
+    
+    console.log("employee: ", employee);
     if (!employee) {
       res
         .status(404)
@@ -127,8 +128,16 @@ const addEmployeeToOrganization = async (req, res) => {
       return;
     }
 
-    if (!org.employees.some((id) => id.equals(new ObjectId(employeeId)))) {
-      org.employees.push(new ObjectId(employeeId));
+    if (!org.employees.some((id) => id.equals(new ObjectId(employeeId)))
+    && !org.admins.some((id) => id.equals(new ObjectId(employeeId)))) {
+      if (employee.role == "admin") {
+
+        org.admins.push(new ObjectId(employeeId));
+      }
+      if (employee.role == "employee") {
+
+        org.employees.push(new ObjectId(employeeId));
+      }
       await org.save();
       res
         .status(200)
