@@ -380,6 +380,45 @@ const getUserAssets = async (req, res) => {
   }
 };
 
+const getInventoryCounts = async (req, res) => {
+  const userId = new ObjectId(req.user._id);
+
+  try {
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+    const orgId = organization ? organization._id : null;
+
+    const inventoryCounts = await Inventory.aggregate([
+      { $match: { orgId: new mongoose.Types.ObjectId(orgId) } },
+      {
+        $project: {
+          _id: 0,
+          itemName: "$name",
+          assignedCount: {
+            $cond: {
+              if: { $eq: ["$identificationType", "unique"] },
+              then: { $size: "$assignedTo" },
+              else: { $sum: "$assignedTo.quantity" },
+            },
+          },
+          availableCount: {
+            $cond: {
+              if: { $eq: ["$identificationType", "unique"] },
+              then: { $subtract: [1, { $size: "$assignedTo" }] },
+              else: { $subtract: ["$quantity", "$checkedOutQuantity"] },
+            },
+          },
+        },
+      },
+    ]);
+
+    res.status(200).json(inventoryCounts);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createItem,
   getItems,
@@ -391,4 +430,5 @@ module.exports = {
   getUserAssets,
   itemSearch,
   createMultipleItem,
+  getInventoryCounts
 };
