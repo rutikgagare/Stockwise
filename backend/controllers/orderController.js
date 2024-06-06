@@ -83,4 +83,19 @@ const markOrderAsPlaced = async (req, res) => {
     }
 };
 
-module.exports = { getOrders, createOrder, markOrderAsComplete, markOrderAsPending, markOrderAsRejected, markOrderAsPlaced };
+const deleteOrder = async (req, res) => {
+    console.log("req.body: ", req.body);
+    try {
+        
+        const deletedOrder = await Order.findOneAndDelete({ _id: new ObjectId(req.body._id)} );
+        console.log("deletedOrder: ", deletedOrder);
+        res.status(200).json(deletedOrder);
+    } catch(err) {
+        console.log("err: ", err);
+        res.status(400).json({ error: err.message });
+
+    }
+
+}
+
+module.exports = { getOrders, createOrder, markOrderAsComplete, markOrderAsPending, markOrderAsRejected, markOrderAsPlaced, deleteOrder };

@@ -11,10 +11,10 @@ const createVendor = async (req, res) => {
 
     // Query the organization
     const organization = await Organization.findOne({
-      $or: [
-        { employees: userId },
-        { admins: userId }
-      ]
+        $or: [
+            { employees: userId },
+            { admins: userId }
+        ]
     });
 
     // Extract the organization ID
@@ -38,20 +38,20 @@ const getVendors = async (req, res) => {
 
     // Query the organization
     const organization = await Organization.findOne({
-      $or: [
-        { employees: userId },
-        { admins: userId }
-      ]
+        $or: [
+            { employees: userId },
+            { admins: userId }
+        ]
     });
 
     // Extract the organization ID
     const orgId = organization ? organization._id.toString() : null;
-    
+
     try {
         const vendors = await Vendor.find({ orgId });
         res.status(200).json(vendors);
     }
-    
+
     catch (err) {
         res.status(400).json(err);
     }
@@ -62,10 +62,10 @@ const getProductVendors = async (req, res) => {
 
     // Query the organization
     const organization = await Organization.findOne({
-      $or: [
-        { employees: userId },
-        { admins: userId }
-      ]
+        $or: [
+            { employees: userId },
+            { admins: userId }
+        ]
     });
 
     // Extract the organization ID
@@ -94,12 +94,12 @@ const getProductVendors = async (req, res) => {
         })
 
         console.log("vendors: ", vendors, "\n\nitems: ", items, "\n\nCategories: ", categories)
-        
+
         const productVendors = items.map(item => {
             const category = categories.find(cat => cat._id.equals(item.categoryId));
             const associatedVendors = category ? category.vendors.map(vendorId => vendors.find(vendor => vendor._id.equals(vendorId))) : [];
             const filtered = [];
-            for (const av of associatedVendors) if(av) filtered.push(av);
+            for (const av of associatedVendors) if (av) filtered.push(av);
             return {
                 item: item,
                 vendors: filtered
@@ -107,10 +107,10 @@ const getProductVendors = async (req, res) => {
         });
 
         const productVendorsFiltered = productVendors.filter((p) => p.vendors.length)
-        
+
         res.status(200).json(productVendorsFiltered);
     }
-    
+
     catch (err) {
         res.status(400).json(err);
     }
@@ -121,7 +121,7 @@ const updateVendor = async (req, res) => {
 
     try {
         const updatedVendor = await Vendor.findOneAndUpdate(
-            { _id: new ObjectId(_id)}, 
+            { _id: new ObjectId(_id) },
             { name, address, email, phone },
             { new: true }
         )
@@ -144,4 +144,46 @@ const deleteVendor = async (req, res) => {
     }
 }
 
-module.exports = { createVendor, getProductVendors, getVendors, updateVendor, deleteVendor }
+const searchVendor = async (req, res) => {
+    const searchQuery = req.body.query
+    const userId = new ObjectId(req.user._id);
+
+    // Query the organization
+    const organization = await Organization.findOne({
+        $or: [
+            { employees: userId },
+            { admins: userId }
+        ]
+    });
+
+    // Extract the organization ID
+    const orgId = organization ? organization._id : null;
+
+    try {
+        const users = await Vendor.find({
+            orgId: orgId
+          }).exec();
+
+        const matchedVendors = users.filter(vendor => {
+          const { name, email, phone, address } = vendor;
+    
+          const vendorValues = [name, email, phone, address];
+          return vendorValues.some(value => {
+            if (typeof value === 'string') {
+              return value.toLowerCase().includes(searchQuery);
+            } else if (typeof value === 'number') {
+              return value.toString().includes(searchQuery);
+            } else if (Array.isArray(value)) {
+              return value.some(arrayVal => arrayVal.toString().toLowerCase().includes(searchQuery));
+            }
+            return false;
+          });
+        });
+    
+        res.status(200).json(matchedVendors);
+      } catch (err) {
+        res.status(500).json({ error: `Error executing query:' ${err}` });
+      }
+}
+
+module.exports = { createVendor, getProductVendors, getVendors, updateVendor, deleteVendor, searchVendor }

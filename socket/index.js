@@ -7,7 +7,7 @@ const server = new Server({
 });
 
 let editors = {}
-let activeConnections = [];
+let activeConnections = new Set();
 
 server.on("connection", (socket) => {
     console.log("connected, ", "socket: ", socket.data, socket.id);
@@ -17,6 +17,7 @@ server.on("connection", (socket) => {
         const ed = {...editor, socketId: socket.id}
         if (Array.isArray(editors[room])) {
             console.log("ed push: ", ed);
+            editors[room] = editors[room].filter((e) => e.userId !== editor.userId)
             editors[room].push(ed);
         } else {
             console.log("ed create: ", ed);
@@ -31,12 +32,12 @@ server.on("connection", (socket) => {
 
     socket.on("cancelledEditing", ({room, vendor}) => {
         console.log("cancelled editing data: ", room, vendor);
-        if (editors[room]) {
+        if (editors[room] && room && vendor) {
             editors[String(room)] = editors[String(room)].filter((e) => e._id !== vendor?._id);
+            socket.to(room).emit("cancelledEditing", vendor);
         }
 
         
-        socket.to(room).emit("cancelledEditing", vendor);
         console.log("EDITORS: cancelledEditing:", editors);
         console.log("ACTIVE_CONNECTIONS: cancelledEditing:", activeConnections);
 
@@ -46,7 +47,12 @@ server.on("connection", (socket) => {
         console.log("joining room: ", room);
         socket.join(room);
 
-        activeConnections.push({socketId: socket.id, userId, room})
+        try {
+            activeConnections.add(JSON.stringify({socketId: socket.id, userId, room}))
+        } catch (e) {
+            console.log("cannot add to set: ", e);
+        }
+
 
         // Send the current editors to the newly joined socket
         if (Array.isArray(editors[room])) {
@@ -72,7 +78,8 @@ server.on("connection", (socket) => {
     socket.on("disconnect", () => {
         try {
             let disconnectedUser = {};
-            activeConnections = activeConnections.filter((c) => {
+            activeConnections = Array.from(activeConnections).filter((c) => {
+                c = JSON.parse(c);
                 if (c.socketId === socket.id) {
                     disconnectedUser = c;
                     return false;
@@ -80,21 +87,23 @@ server.on("connection", (socket) => {
 
                 return true;
             })
+            console.log("activeConnections before: ", activeConnections);
+            activeConnections = new Set(activeConnections);
 
             console.log("disconnectedUser; ", disconnectedUser)
             const remEditors = []
-
-            for (let ed of editors[disconnectedUser.room]) {
+            
+            for (let ed of editors[String(disconnectedUser.room)]) {
                 if (ed)
                 if (ed.userId !== disconnectedUser.userId) {
                     remEditors.push(ed);
                 }
             }
-
+            
+            editors[String(disconnectedUser.room)] = remEditors;
             console.log("rem editors: ", remEditors);
-            editors[disconnectedUser.room] = remEditors;
 
-            socket.to(disconnectedUser.room).emit("disconnected", disconnectedUser.userId);
+            socket.to(String(disconnectedUser.room)).emit("disconnected", disconnectedUser.userId);
         }
         catch(e) {
             console.log("could not remove editor from the editors array", e);

@@ -4,7 +4,8 @@ const {
     getProductVendors,
     getVendors, 
     updateVendor,
-    deleteVendor
+    deleteVendor,
+    searchVendor,
 } = require("../controllers/vendorController.js")
 const requireAdmin = require('../middleware/requireAdmin.js');
 const requireAuth = require('../middleware/requireAuth.js');
@@ -16,5 +17,6 @@ router.post('/productVendors', requireAuth, requireAdmin, getProductVendors)
 router.post('/create', requireAuth, requireAdmin, createVendor);
 router.put('/update', requireAuth, requireAdmin, updateVendor);
 router.delete('/delete', requireAuth, requireAdmin, deleteVendor);
+router.post('/search', requireAuth, requireAdmin, searchVendor);
 
 module.exports = router

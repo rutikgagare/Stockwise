@@ -5,7 +5,8 @@ const {
     markOrderAsComplete,
     markOrderAsPlaced,
     markOrderAsPending,
-    markOrderAsRejected
+    markOrderAsRejected,
+    deleteOrder
 
 } = require("../controllers/orderController.js");
 const requireAdmin = require('../middleware/requireAdmin.js');
@@ -19,5 +20,6 @@ router.post('/fulfilled', markOrderAsComplete);
 router.post('/pending', markOrderAsPending);
 router.post('/rejected', markOrderAsRejected);
 router.post('/placed', markOrderAsPlaced);
+router.delete('/delete', deleteOrder);
 
 module.exports = router
