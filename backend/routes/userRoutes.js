@@ -48,7 +48,7 @@ router.post("/createUser", async (req, res) => {
 
   const existingUser = await User.find({ email: userData.email });
   if (existingUser) {
-    res.status(400).json({ error: `User with email '${userData.email}' already exists` });
+    return res.status(400).json({ error: `User with email '${userData.email}' already exists` });
   }
   
   try {
