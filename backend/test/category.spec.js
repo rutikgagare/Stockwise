@@ -39,7 +39,7 @@ describe("Category Controllers", () => {
       const mockCategory = {
         _id: "mockCategoryId",
         name: "TestCategory",
-        identificationType: "unique",
+        identificationType: "Single",
         vendors: ["Vendor1", "Vendor2"],
         customFields: [],
         orgId: "65f316a1991edde66ee55fc1",
@@ -53,7 +53,7 @@ describe("Category Controllers", () => {
         .set("Authorization", "Bearer mocktoken")
         .send({
           name: "TestCategory1",
-          identificationType: "unique",
+          identificationType: "Single",
           vendors: ["Vendor1", "Vendor2"],
           customFields: [],
           orgId: "65f316a1991edde66ee55fc1",
@@ -71,7 +71,7 @@ describe("Category Controllers", () => {
         .set("Authorization", "Bearer Mockedtoken")
         .send({
           name: "TestCategory new",
-          identificationType: "unique",
+          identificationType: "Single",
           vendors: ["Vendor1", "Vendor2"],
           customFields: [],
           orgId: "65f316a1991edde66ee55fc1",
@@ -102,7 +102,7 @@ describe("Category Controllers", () => {
         .set("Authorization", "Bearer Mockedtoken")
         .send({
           name: "TestCategory3",
-          identificationType: "unique",
+          identificationType: "Single",
           vendors: ["Vendor1", "Vendor2"],
           customFields: [],
           orgId: "65f316a1991edde66ee55fc1",
@@ -119,7 +119,7 @@ describe("Category Controllers", () => {
       const mockCategory = {
         _id: mockCategoryId,
         name: "TestCategory",
-        identificationType: "unique",
+        identificationType: "Single",
         vendors: [],
         customFields: [],
         orgId: "65f316a1991edde66ee55fc1",
@@ -186,7 +186,7 @@ describe("Category Controllers", () => {
       const mockCategory = {
         _id: mockCategoryId,
         name: "TestCategory",
-        identificationType: "unique",
+        identificationType: "Single",
         vendors: [],
         customFields: [],
         orgId: "65f316a1991edde66ee55fc1",
@@ -241,7 +241,7 @@ describe("Category Controllers", () => {
         {
           _id: "mockCategoryId1",
           name: "Category1",
-          identificationType: "unique",
+          identificationType: "Single",
           orgId: mockOrgId,
           customFields: [],
           vendors: ["Vendor1", "Vendor2"],
@@ -250,7 +250,7 @@ describe("Category Controllers", () => {
         {
           _id: "mockCategoryId2",
           name: "Category2",
-          identificationType: "unique",
+          identificationType: "Single",
           orgId: mockOrgId,
           customFields: [],
           vendors: ["Vendor3", "Vendor4"],
@@ -286,7 +286,7 @@ describe("Category Controllers", () => {
         {
           _id: "mockCategoryId1",
           name: "Category1",
-          identificationType: "unique",
+          identificationType: "Single",
           orgId: mockOrgId,
           customFields: [],
           vendors: ["Vendor1", "Vendor2"],
@@ -295,7 +295,7 @@ describe("Category Controllers", () => {
         {
           _id: "mockCategoryId2",
           name: "Category2",
-          identificationType: "unique",
+          identificationType: "Single",
           orgId: mockOrgId,
           customFields: [],
           vendors: ["Vendor3", "Vendor4"],

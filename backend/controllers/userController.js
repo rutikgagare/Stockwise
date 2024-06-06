@@ -42,28 +42,29 @@ const signupUser = async (req, res) => {
 
 // change password
 const changePassword = async (req, res) => {
-  const { password } = req.body;
-  console.log("opopo", password)
+  console.log("request recieved at backend");
+  
+  const { currPassword, newPassword } = req.body; 
   const userId = new ObjectId(req.user._id);
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    console.log("salt", salt); 
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    console.log("hashedPassword", hashedPassword);
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { password: hashedPassword },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      throw Error("User not found");
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-    return res.status(200).json({ message: "Password updated successfully" });
 
+    const isMatch = await bcrypt.compare(currPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "current password is incorrect" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

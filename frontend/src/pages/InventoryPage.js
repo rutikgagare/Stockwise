@@ -159,7 +159,7 @@ const InventoryPage = () => {
           <div className={classes.inventory_table_container}>
             {filteredInventory &&
               filteredInventory?.length > 0 &&
-              selectedCategory?.identificationType === "unique" && (
+              selectedCategory?.identificationType === "Single" && (
                 <table className={classes.inventory_table}>
                   <thead>
                     <tr>
@@ -265,7 +265,7 @@ const InventoryPage = () => {
 
             {filteredInventory &&
               filteredInventory?.length > 0 &&
-              selectedCategory?.identificationType === "non-unique" && (
+              selectedCategory?.identificationType === "Mass" && (
                 <table className={classes.inventory_table}>
                   <thead>
                     <tr>

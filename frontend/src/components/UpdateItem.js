@@ -42,11 +42,11 @@ const UpdateItem = (props) => {
         throw Error("Required fields must be filled");
       }
 
-      if (props.item.identificationType === "unique" && !serialNumber.trim()) {
+      if (props.item.identificationType === "Single" && !serialNumber.trim()) {
         throw Error("Serial Number must be filled");
       }
 
-      if (props.item.identificationType === "non-unique" && !quantity) {
+      if (props.item.identificationType === "Mass" && !quantity) {
         throw Error("Quantity must be filled");
       }
 
@@ -55,9 +55,9 @@ const UpdateItem = (props) => {
         name,
       };
 
-      if (identificationType === "unique") {
+      if (identificationType === "Single") {
         itemDetails.serialNumber = serialNumber;
-      } else if (identificationType === "non-unique") {
+      } else if (identificationType === "Mass") {
         itemDetails.quantity = parseInt(quantity);
       }
 
@@ -128,7 +128,7 @@ const UpdateItem = (props) => {
               />
             </div>
 
-            {identificationType && identificationType === "unique" && (
+            {identificationType && identificationType === "Single" && (
               <div className={classes.inputDiv}>
                 <label htmlFor="serialNumber" className={classes.required}>
                   Serial Number
@@ -142,7 +142,7 @@ const UpdateItem = (props) => {
               </div>
             )}
 
-            {identificationType && identificationType === "non-unique" && (
+            {identificationType && identificationType === "Mass" && (
               <div className={classes.inputDiv}>
                 <label htmlFor="qunatity" className={classes.required}>
                   Quantity

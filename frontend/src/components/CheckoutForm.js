@@ -137,14 +137,14 @@ const CheckoutForm = ({ checkoutItem, closeCheckout }) => {
           </select>
         </div>
 
-        {checkoutItem?.identificationType === "unique" && (
+        {checkoutItem?.identificationType === "Single" && (
           <div className={classes.inputDiv}>
             <label htmlFor="">Serial Number</label>
             <input type="text" value={checkoutItem?.serialNumber} disabled />
           </div>
         )}
 
-        {checkoutItem?.identificationType === "non-unique" && (
+        {checkoutItem?.identificationType === "Mass" && (
           <div className={classes.inputDiv}>
             <label htmlFor="">
               Quantity Available:{" "}

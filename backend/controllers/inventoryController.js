@@ -35,9 +35,13 @@ const createMultipleItem = async (req, res) => {
   const userId = new ObjectId(req.user._id);
 
   try {
-    const category = await Category.findById(new ObjectId(itemDetails.categoryId));
+    const category = await Category.findById(
+      new ObjectId(itemDetails.categoryId)
+    );
     if (!category) {
-      throw Error(`Category with orgId: ${itemDetails.categoryId} does not exist`);
+      throw Error(
+        `Category with orgId: ${itemDetails.categoryId} does not exist`
+      );
     }
 
     const organization = await Organization.findOne({
@@ -50,11 +54,13 @@ const createMultipleItem = async (req, res) => {
 
     const existingInventory = await Inventory.find({
       categoryId: itemDetails.categoryId,
-      serialNumber: { $in: serialNumbers }
+      serialNumber: { $in: serialNumbers },
     });
 
     if (existingInventory.length > 0) {
-      throw Error(`Duplicate serial numbers found in the inventory for the same category`);
+      throw Error(
+        `Duplicate serial numbers found in the inventory for the same category`
+      );
     }
 
     const items = [];
@@ -74,12 +80,11 @@ const createMultipleItem = async (req, res) => {
 const getItems = async (req, res) => {
   const userId = new ObjectId(req.user._id);
   try {
-  
     const organization = await Organization.findOne({
       $or: [{ employees: userId }, { admins: userId }],
     });
     const orgId = organization ? organization._id : null;
-    const items = await Inventory.find({orgId});
+    const items = await Inventory.find({ orgId });
 
     res.status(201).json(items);
   } catch (error) {
@@ -87,7 +92,67 @@ const getItems = async (req, res) => {
   }
 };
 
-const getItem = async (req, res) =>{
+const getItems_new = async (req, res) => {
+  console.log("query", req.query);
+  console.log("request for new items ", req.query);
+
+  const userId = new ObjectId(req.user._id);
+  try {
+    const organization = await Organization.findOne({
+      $or: [{ employees: userId }, { admins: userId }],
+    });
+
+    if (!organization) {
+      return res.status(404).json({ error: "Organization not found" });
+    }
+
+    const orgId = organization._id;
+
+    const filter = { orgId };
+
+    if (req.query.identificationType) {
+      filter.identificationType = req.query.identificationType;
+    }
+
+    if (req.query.categoryId) {
+      filter.categoryId = new ObjectId(req.query.categoryId);
+    }
+
+    if (req.query.assetId) {
+      filter._id = new ObjectId(req.query.assetId);
+    }
+
+    if (req.query.assignedStatus) {
+      if (req.query.assignedStatus === "assigned") {
+        filter["assignedTo.0"] = { $exists: true };
+      } else if (req.query.assignedStatus === "not-assigned") {
+        filter.assignedTo = { $eq: [] };
+      }
+    }
+
+    if (req.query.searchText) {
+      const searchTextRegex = new RegExp(req.query.searchText, "i");
+      filter.$or = [
+        { name: searchTextRegex },
+        { serialNumber: searchTextRegex }
+      ];
+    }
+
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    const items = await Inventory.find(filter).limit(limit).skip(skip);
+    const totalItems = await Inventory.countDocuments(filter);
+    
+
+    res.status(200).json({ items, totalItems });
+
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getItem = async (req, res) => {
   const itemId = req.params.itemId;
   try {
     const item = await Inventory.findById(new ObjectId(itemId));
@@ -103,14 +168,15 @@ const itemSearch = async (req, res) => {
     const organization = await Organization.findOne({
       $or: [{ employees: userId }, { admins: userId }],
     });
-    const orgId = organization ? organization._id : null;  const { searchText } = req.body;
+    const orgId = organization ? organization._id : null;
+    const { searchText } = req.body;
 
     const items = await Inventory.aggregate([
       {
         $search: {
           text: {
             query: searchText,
-            path: ['name', 'serialNumber'], 
+            path: ["name", "serialNumber"],
           },
         },
       },
@@ -189,7 +255,7 @@ const checkoutItem = async (req, res) => {
 
     let updatedItem;
 
-    if (item?.identificationType === "unique") {
+    if (item?.identificationType === "Single") {
       if (item?.assignedTo && item?.assignedTo.length > 0) {
         throw Error(`Item already assigned, cannot reassign`);
       }
@@ -210,7 +276,7 @@ const checkoutItem = async (req, res) => {
       );
     }
 
-    if (item.identificationType === "non-unique") {
+    if (item.identificationType === "Mass") {
       if (item.quantity - item.checkedOutQuantity < assignedTo.quantity) {
         throw Error(`Not enough quantity available in inventory`);
       }
@@ -276,7 +342,7 @@ const checkinItem = async (req, res) => {
 
     let updatedItem;
 
-    if (item?.identificationType === "unique") {
+    if (item?.identificationType === "Single") {
       if (
         !item?.assignedTo ||
         (item?.assignedTo && item?.assignedTo.length === 0)
@@ -298,7 +364,7 @@ const checkinItem = async (req, res) => {
       );
     }
 
-    if (item.identificationType === "non-unique") {
+    if (item.identificationType === "Mass") {
       const userId = new ObjectId(req.body.userId);
       const existingAssignment = item.assignedTo.find((assignment) =>
         assignment.userId.equals(userId)
@@ -353,7 +419,6 @@ const checkinItem = async (req, res) => {
 };
 
 const getUserAssets = async (req, res) => {
-
   const userId = new ObjectId(req.user?._id);
 
   try {
@@ -397,14 +462,14 @@ const getInventoryCounts = async (req, res) => {
           itemName: "$name",
           assignedCount: {
             $cond: {
-              if: { $eq: ["$identificationType", "unique"] },
+              if: { $eq: ["$identificationType", "Single"] },
               then: { $size: "$assignedTo" },
               else: { $sum: "$assignedTo.quantity" },
             },
           },
           availableCount: {
             $cond: {
-              if: { $eq: ["$identificationType", "unique"] },
+              if: { $eq: ["$identificationType", "Single"] },
               then: { $subtract: [1, { $size: "$assignedTo" }] },
               else: { $subtract: ["$quantity", "$checkedOutQuantity"] },
             },
@@ -422,6 +487,7 @@ const getInventoryCounts = async (req, res) => {
 module.exports = {
   createItem,
   getItems,
+  getItems_new,
   getItem,
   deleteItem,
   updateItem,
@@ -430,5 +496,5 @@ module.exports = {
   getUserAssets,
   itemSearch,
   createMultipleItem,
-  getInventoryCounts
+  getInventoryCounts,
 };

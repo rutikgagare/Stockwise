@@ -11,12 +11,17 @@ const categorySchema = new Schema(
     identificationType: {
       type: String,
       required: true,
-      enum: ["unique", "non-unique"],
+      enum: ["Single", "Mass"],
     },
     orgId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Organization",
+    },
+    active:{
+      type: Boolean,
+      required: true,
+      default: true
     },
     customFields: [
       {
@@ -50,7 +55,7 @@ categorySchema.pre("save", async function (next) {
 
     if (existingCategory) {
       const error = new Error(
-        "Category name must be unique within the organization."
+        "Category name must be Single within the organization."
       );
       throw error;
     }

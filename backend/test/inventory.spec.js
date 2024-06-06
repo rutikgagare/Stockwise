@@ -30,7 +30,7 @@ describe("Inventory Controllers", () => {
   const mockedCategory = {
     _id: mockedCategoryId,
     name: "TestCategory2",
-    identificationType: "unique",
+    identificationType: "Single",
     orgId: "65f316a1991edde66ee55fc1",
     customFields: [],
     vendors: [],
@@ -38,7 +38,7 @@ describe("Inventory Controllers", () => {
 
   const mockedItem1 = {
     name: "Test Item",
-    identificationType: "unique",
+    identificationType: "Single",
     categoryId: "65f316a1991edde66ee55fc1",
     orgId: "65f316a1991edde66ee55fc1",
     quantity: 1,
@@ -54,7 +54,7 @@ describe("Inventory Controllers", () => {
   const mockedItem2 = {
     _id: "60972d3e8a0d0e001f31b97f",
     name: "Test Item",
-    identificationType: "unique",
+    identificationType: "Single",
     categoryId: "65f316a1991edde66ee55fc1",
     orgId: "65f316a1991edde66ee55fc1",
     quantity: 1,
@@ -70,7 +70,7 @@ describe("Inventory Controllers", () => {
   const mockedItem3 = {
     itemDetails: {
       name: "Test Item",
-      identificationType: "unique",
+      identificationType: "Single",
       categoryId: "65f316a1991edde66ee55fc1",
       orgId: "65f316a1991edde66ee55fc1",
       quantity: 1,
@@ -88,7 +88,7 @@ describe("Inventory Controllers", () => {
     {
       _id: "60972d3e8a0d0e001f31b97f",
       name: "Test Item",
-      identificationType: "unique",
+      identificationType: "Single",
       categoryId: "65f316a1991edde66ee55fc1",
       orgId: "65f316a1991edde66ee55fc1",
       quantity: 1,
@@ -103,7 +103,7 @@ describe("Inventory Controllers", () => {
     {
       _id: "60972d3e8a0d0e001f31b97f",
       name: "Test Item",
-      identificationType: "unique",
+      identificationType: "Single",
       categoryId: "65f316a1991edde66ee55fc1",
       orgId: "65f316a1991edde66ee55fc1",
       quantity: 1,
@@ -443,10 +443,10 @@ describe("Inventory Controllers", () => {
       expect(res.status).to.equal(400);
     });
 
-    it("should checkout unique item successfully", async () => {
+    it("should checkout Single item successfully", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [],
       };
 
@@ -469,7 +469,7 @@ describe("Inventory Controllers", () => {
     it("should handle error if item is already assigned", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [
           { userId: "existingUserId", userName: "Existing User", quantity: 1 },
         ],
@@ -493,10 +493,10 @@ describe("Inventory Controllers", () => {
       );
     });
 
-    it("should checkout non-unique item successfully", async () => {
+    it("should checkout Mass item successfully", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 0,
         assignedTo: [],
@@ -518,7 +518,7 @@ describe("Inventory Controllers", () => {
     it("should handle error if not enough quantity available", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 3,
         assignedTo: [],
@@ -542,10 +542,10 @@ describe("Inventory Controllers", () => {
       );
     });
 
-    it("should checkout non-unique item successfully", async () => {
+    it("should checkout Mass item successfully", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 0,
         assignedTo: [],
@@ -567,7 +567,7 @@ describe("Inventory Controllers", () => {
     it("should handle error if not enough quantity available", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 3,
         assignedTo: [],
@@ -620,7 +620,7 @@ describe("Inventory Controllers", () => {
 
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 2,
         assignedTo: [...existingAssignment],
@@ -628,7 +628,7 @@ describe("Inventory Controllers", () => {
 
       const mockItemUpdated = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         quantity: 5,
         checkedOutQuantity: 4,
         assignedTo: existingAssignmentUpdated, // Remove the array brackets here
@@ -666,17 +666,17 @@ describe("Inventory Controllers", () => {
       expect(res.status).to.equal(400);
     });
 
-    it("should handle checkin for unique item", async () => {
+    it("should handle checkin for Single item", async () => {
       const mockItem = {
         _id: "610f94305c3d7d4d3e4ebcb0",
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [{ userId: "userId", userName: "User", quantity: 1 }],
         lifecycle: [{ checkinDate: "2024-03-31T19:51:19.666Z" }],
       };
 
       const mockItemUpdated = {
         _id: "610f94305c3d7d4d3e4ebcb0",
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [{ userId: "userId", userName: "User", quantity: 1 }],
         lifecycle: [{ checkinDate: "2024-03-31T19:51:19.666Z" }],
       };
@@ -700,7 +700,7 @@ describe("Inventory Controllers", () => {
     it("cont checkin item if item is not assigned to anyone", async () => {
       const mockItem = {
         _id: "610f94305c3d7d4d3e4ebcb0",
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [],
       };
 
@@ -718,10 +718,10 @@ describe("Inventory Controllers", () => {
       expect(res.status).to.equal(400);
     });
 
-    it("should handle checkin for non-unique item", async () => {
+    it("should handle checkin for Mass item", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         assignedTo: [
           {
             userId: new mongoose.Types.ObjectId("610f94305c3d7d4d3e4ebcb2"),
@@ -738,7 +738,7 @@ describe("Inventory Controllers", () => {
 
       const mockItemUpdated = {
         _id: "610f94305c3d7d4d3e4ebcb0",
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [
           {
             userId: "610f94305c3d7d4d3e4ebcb2",
@@ -773,7 +773,7 @@ describe("Inventory Controllers", () => {
     it("assigned quantity to user is less that qunatity requested for checkin", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         assignedTo: [
           {
             userId: new mongoose.Types.ObjectId("610f94305c3d7d4d3e4ebcb2"),
@@ -806,7 +806,7 @@ describe("Inventory Controllers", () => {
     it("If the quantity of items assigned to user becoming zero on checkin", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         assignedTo: [
           {
             userId: new mongoose.Types.ObjectId("610f94305c3d7d4d3e4ebcb2"),
@@ -823,7 +823,7 @@ describe("Inventory Controllers", () => {
 
       const mockItemUpdated = {
         _id: "610f94305c3d7d4d3e4ebcb0",
-        identificationType: "unique",
+        identificationType: "Single",
         assignedTo: [
           {
             userId: "610f94305c3d7d4d3e4ebca2",
@@ -853,7 +853,7 @@ describe("Inventory Controllers", () => {
     it("If existing assignement doesn't exist", async () => {
       const mockItem = {
         _id: mockedItemId,
-        identificationType: "non-unique",
+        identificationType: "Mass",
         assignedTo: [
           {
             userId: new mongoose.Types.ObjectId("610f94305c3d7d4d3e4ebca2"),

@@ -12,7 +12,7 @@
     email: {
       type: String,
       required: true,
-      unique: true
+      Single: true
     },
     password: {
       type: String,

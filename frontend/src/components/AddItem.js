@@ -48,9 +48,9 @@ const AddItem = (props) => {
         throw Error("file must be selected");
       }
 
-      if (selectedCategory.identificationType === "unique") {
+      if (selectedCategory.identificationType === "Single") {
         if (operationType) {
-          if (operationType === "single") {
+          if (operationType === "Single") {
             if (!serialNumber) {
               throw Error("serial number must be filled");
             }
@@ -65,7 +65,7 @@ const AddItem = (props) => {
       }
 
       if (
-        selectedCategory.identificationType === "non-unique" &&
+        selectedCategory.identificationType === "Mass" &&
         !quantity.trim()
       ) {
         throw Error("Quantity must be filled");
@@ -96,9 +96,9 @@ const AddItem = (props) => {
       };
 
       // Add identification type specific details
-      if (selectedCategory.identificationType === "unique") {
+      if (selectedCategory.identificationType === "Single") {
         itemDetails.serialNumber = serialNumber;
-      } else if (selectedCategory.identificationType === "non-unique") {
+      } else if (selectedCategory.identificationType === "Mass") {
         itemDetails.quantity = parseInt(quantity);
       }
 
@@ -113,7 +113,7 @@ const AddItem = (props) => {
         itemDetails.customFieldsData = customFieldsData;
       }
 
-      if(itemDetails.identificationType === 'unique' && operationType === "multiple"){
+      if(itemDetails.identificationType === 'Single' && operationType === "multiple"){
         const serialNumbersArray = serialNumberList.split(",");
 
         const response = await fetch(`${BASE_URL}/inventory/createMultiple`, {
@@ -232,7 +232,7 @@ const AddItem = (props) => {
             </div>
 
             {selectedCategory &&
-              selectedCategory.identificationType === "unique" && (
+              selectedCategory.identificationType === "Single" && (
                 <div className={classes.inputDiv}>
                   <label htmlFor="operationType" className={classes.required}>
                     Operation Type
@@ -242,15 +242,15 @@ const AddItem = (props) => {
                     onChange={(e) => setOperationType(e.target.value)}
                   >
                     <option value="">Select Operation type</option>
-                    <option value="single">Add single Item</option>
+                    <option value="Single">Add Single Item</option>
                     <option value="multiple">Add multiple Item</option>
                   </select>
                 </div>
               )}
 
             {selectedCategory &&
-              selectedCategory.identificationType === "unique" &&
-              operationType === "single" && (
+              selectedCategory.identificationType === "Single" &&
+              operationType === "Single" && (
                 <div className={classes.inputDiv}>
                   <label htmlFor="serialNumber" className={classes.required}>
                     Serial Number
@@ -264,7 +264,7 @@ const AddItem = (props) => {
               )}
 
             {selectedCategory &&
-              selectedCategory.identificationType === "unique" &&
+              selectedCategory.identificationType === "Single" &&
               operationType === "multiple" && (
                 <div className={classes.inputDiv}>
                   <label htmlFor="serialNumber" className={classes.required}>
@@ -279,7 +279,7 @@ const AddItem = (props) => {
               )}
 
             {selectedCategory &&
-              selectedCategory.identificationType === "non-unique" && (
+              selectedCategory.identificationType === "Mass" && (
                 <div className={classes.inputDiv}>
                   <label htmlFor="qunatity" className={classes.required}>
                     Quantity
