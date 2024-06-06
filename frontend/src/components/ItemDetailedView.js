@@ -39,7 +39,7 @@ const ItemDetailedView = ({ itemId }) => {
       <div className={classes.detailsContainer}>
         <h2>{item?.name}</h2>
 
-        {item?.identificationType === "unique" && (
+        {item?.identificationType === "Single" && (
           <p>
             <strong>Serial Number:</strong> {item?.serialNumber}
           </p>

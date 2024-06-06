@@ -33,7 +33,7 @@ const inventorySchema = new Schema(
     identificationType:{
       type: String,
       required: true,
-      enum:['unique', 'non-unique']
+      enum:['Single', 'Mass']
     },
     categoryId: {
       type: Schema.Types.ObjectId,
@@ -87,14 +87,14 @@ const inventorySchema = new Schema(
 );
 
 inventorySchema.pre("save", async function(next) {
-  if (this.identificationType === "unique" && this.isModified("serialNumber")) {
+  if (this.identificationType === "Single" && this.isModified("serialNumber")) {
     const existingInventory = await this.constructor.findOne({
       categoryId: this.categoryId,
       serialNumber: this.serialNumber
     });
 
     if (existingInventory) {
-      const error = new Error("Serial number must be unique within the category.");
+      const error = new Error("Serial number must be Single within the category.");
       next(error); 
     }
   }

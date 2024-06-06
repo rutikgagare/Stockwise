@@ -166,8 +166,8 @@ const UpdateCategory = (props) => {
                 }}
               >
                 <option value="">Select type</option>
-                <option value="unique">unique</option>
-                <option value="non-unique">non-unique</option>
+                <option value="Single">Single</option>
+                <option value="Mass">Mass</option>
               </select>
             </div>
 
@@ -220,7 +220,7 @@ const UpdateCategory = (props) => {
 
             {identificationType && <h4>Fixed fields based on selection</h4>}
 
-            {identificationType === "unique" && (
+            {identificationType === "Single" && (
               <div className={classes.inputDiv}>
                 <label htmlFor="identificationType">Serial Number</label>
                 <input
@@ -231,7 +231,7 @@ const UpdateCategory = (props) => {
               </div>
             )}
 
-            {identificationType === "non-unique" && (
+            {identificationType === "Mass" && (
               <div className={classes.inputDiv}>
                 <label htmlFor="identificationType">Qunatity</label>
                 <input

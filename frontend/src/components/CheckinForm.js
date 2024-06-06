@@ -53,14 +53,14 @@ const CheckinForm = ({ checkinItem, closeCheckin }) => {
           <input type="text" value={checkinItem?.name} disabled />
         </div>
 
-        {checkinItem?.identificationType === "unique" && (
+        {checkinItem?.identificationType === "Single" && (
           <div className={classes.inputDiv}>
             <label htmlFor="">User Name</label>
             <input type="text" value={checkinItem?.assignedTo[0].userName} disabled />
           </div>
         )}
         
-        {checkinItem?.identificationType === "unique" && (
+        {checkinItem?.identificationType === "Single" && (
           <div className={classes.inputDiv}>
             <label htmlFor="">Serial Number</label>
             <input type="text" value={checkinItem?.serialNumber} disabled />
@@ -68,7 +68,7 @@ const CheckinForm = ({ checkinItem, closeCheckin }) => {
         )}
 
 
-        {checkinItem?.identificationType === "non-unique" &&
+        {checkinItem?.identificationType === "Mass" &&
           checkinItem?.assignedTo && (
             <div className={classes.inputDiv}>
               <select
